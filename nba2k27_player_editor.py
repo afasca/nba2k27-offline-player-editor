@@ -403,7 +403,13 @@ class GameMemory:
         self.play_crc_pool = pool
 
     def replace_playbook_slot(self, book: dict, slot: int, crc: int) -> Path:
-        if not 0 <= slot < PLAYBOOK_EDITABLE_SLOTS:
+        return self.edit_playbook_slots(book, {slot: crc})
+
+    def edit_playbook_slots(self, book: dict, updates: dict[int, int]) -> Path:
+        """Validate and save one or more playbook slots as a single undoable edit."""
+        if not updates:
+            raise ValueError("没有选择需要修改的战术槽位。")
+        if any(not 0 <= slot < PLAYBOOK_EDITABLE_SLOTS for slot in updates):
             raise ValueError("只能修改前 80 个标准战术槽位。")
         self.refresh_playbooks()
         if not 0 <= book["index"] < len(self.playbooks):
@@ -411,16 +417,17 @@ class GameMemory:
         current = self.playbooks[book["index"]]
         if (current["id"], current["name"]) != (book["id"], book["name"]):
             raise RuntimeError("游戏已切换名单或战术手册，请重新选择手册。")
-        if current["slots"][slot] != book["slots"][slot]:
-            raise RuntimeError("游戏中的战术槽位已变化，请重新读取后再修改。")
-        if crc and crc not in self.play_crc_pool:
-            raise ValueError("该战术不在当前已载入的手册中，已停止写入。")
-        old = current["slots"][slot]
-        if old == crc:
-            raise ValueError("该槽位已经是所选战术。")
-        address = current["address"] + 108 + slot * 4
-        return self.apply_many({address: struct.pack("<I", crc)},
-                               label=f"战术手册 {current['name']} 槽位 {slot + 1}")
+        changes = {}
+        for slot, crc in updates.items():
+            if current["slots"][slot] != book["slots"][slot]:
+                raise RuntimeError(f"游戏中的第 {slot + 1} 个战术槽位已变化，请重新读取后再修改。")
+            if crc and crc not in self.play_crc_pool:
+                raise ValueError("该战术不在当前已载入的手册中，已停止写入。")
+            if current["slots"][slot] != crc:
+                changes[current["address"] + 108 + slot * 4] = struct.pack("<I", crc)
+        if not changes:
+            raise ValueError("所选战术槽位没有需要修改的变化。")
+        return self.apply_many(changes, label=f"战术手册 {current['name']}：{len(changes)} 个槽位")
 
     def find_current_editor(self, *, deep: bool = False) -> tuple[dict, int] | None:
         """Locate the live player-editor panel for this executable build."""
@@ -968,9 +975,9 @@ class PlayerEditor(tk.Tk):
         self.book_box.bind("<<ComboboxSelected>>", lambda _event: self._show_playbook())
         ttk.Button(top, text="重新读取", command=self._refresh_playbooks).pack(side="left", padx=6)
 
-        note = ("左侧选择球队手册的槽位，右侧从已载入战术中挑选。"
+        note = ("左侧选择球队手册的槽位，右侧从已载入战术中挑选；按住 Ctrl/Shift 可多选并批量添加或删除。"
                 "打法部分来自游戏记录，其余按名称归类；位置为关联位置。")
-        ttk.Label(page, text=note, foreground="#666666").pack(anchor="w", pady=(7, 4))
+        ttk.Label(page, text=note, foreground="#666666", wraplength=1050).pack(anchor="w", pady=(7, 4))
         panes = ttk.PanedWindow(page, orient="horizontal")
         panes.pack(fill="both", expand=True)
         left = ttk.Frame(panes)
@@ -982,7 +989,7 @@ class PlayerEditor(tk.Tk):
         slot_frame = ttk.Frame(left)
         slot_frame.pack(fill="both", expand=True, pady=(4, 5))
         self.play_slot_tree = ttk.Treeview(slot_frame, columns=("type", "position"),
-                                           show="tree headings", selectmode="browse")
+                                           show="tree headings", selectmode="extended")
         self.play_slot_tree.heading("#0", text="槽位 / 战术名称")
         self.play_slot_tree.heading("type", text="打法")
         self.play_slot_tree.heading("position", text="关联位置")
@@ -1001,6 +1008,8 @@ class PlayerEditor(tk.Tk):
             side="left", padx=4)
         ttk.Button(slot_actions, text="清空槽位", command=lambda: self._change_playbook("clear")).pack(
             side="left", padx=4)
+        ttk.Button(slot_actions, text="批量删除所选", command=self._batch_clear_playbook).pack(
+            side="left", padx=4)
 
         filters = ttk.Frame(right)
         filters.pack(fill="x")
@@ -1018,7 +1027,7 @@ class PlayerEditor(tk.Tk):
         catalog_frame = ttk.Frame(right)
         catalog_frame.pack(fill="both", expand=True)
         self.play_catalog_tree = ttk.Treeview(catalog_frame, columns=("detail", "position", "books"),
-                                              show="tree headings", selectmode="browse")
+                                              show="tree headings", selectmode="extended")
         self.play_catalog_tree.heading("#0", text="打法 / 战术名称")
         self.play_catalog_tree.heading("detail", text="细分")
         self.play_catalog_tree.heading("position", text="关联位置")
@@ -1031,6 +1040,8 @@ class PlayerEditor(tk.Tk):
         self.play_catalog_tree.configure(yscrollcommand=catalog_scroll.set)
         self.play_catalog_tree.pack(side="left", fill="both", expand=True)
         catalog_scroll.pack(side="right", fill="y")
+        ttk.Button(right, text="批量添加所选战术到空槽", command=self._batch_add_playbook).pack(
+            anchor="e", pady=(5, 0))
         footer = ttk.Frame(page)
         footer.pack(fill="x", pady=(6, 0))
         ttk.Label(footer, textvariable=self.playbook_status).pack(side="left")
@@ -1699,16 +1710,16 @@ class PlayerEditor(tk.Tk):
                     raise ValueError("当前手册前 80 个槽位已满；请选择一个槽位替换。")
             else:
                 chosen = self.play_slot_tree.selection()
-                if not chosen:
-                    raise ValueError("请先选择左侧的战术槽位。")
+                if len(chosen) != 1:
+                    raise ValueError("单项操作请只选一个左侧槽位；多选请使用批量删除。")
                 slot = int(chosen[0].split(":", 1)[1])
             if action == "clear":
                 crc = 0
             else:
                 chosen = self.play_catalog_tree.selection()
-                crc = self.play_catalog_items.get(chosen[0]) if chosen else None
+                crc = self.play_catalog_items.get(chosen[0]) if len(chosen) == 1 else None
                 if crc is None:
-                    raise ValueError("请先从右侧选择要加入的战术。")
+                    raise ValueError("单项操作请只选一个右侧战术；多选请使用批量添加。")
             backup = self.memory.replace_playbook_slot(book, slot, crc)
             self.playbook_last_backup = backup
             self._refresh_playbooks()
@@ -1717,6 +1728,58 @@ class PlayerEditor(tk.Tk):
             self.playbook_status.set(f"已修改 {book['name']} 的第 {slot + 1} 槽；请保存当前游戏存档或名单。")
         except Exception as exc:
             messagebox.showerror("战术修改失败", str(exc), parent=self)
+
+    def _batch_add_playbook(self):
+        try:
+            if not self.memory:
+                raise RuntimeError("请先连接游戏。")
+            book = self.book_option_map.get(self.book_choice.get())
+            if not book:
+                raise ValueError("请先选择一本战术手册。")
+            selected = set(self.play_catalog_tree.selection())
+            crcs = [self.play_catalog_items[item]
+                    for group in self.play_catalog_tree.get_children("")
+                    for item in self.play_catalog_tree.get_children(group)
+                    if item in selected and item in self.play_catalog_items]
+            if not crcs:
+                raise ValueError("请按住 Ctrl/Shift 在右侧多选要加入的战术。")
+            empty = [slot for slot, crc in enumerate(book["slots"][:PLAYBOOK_EDITABLE_SLOTS]) if not crc]
+            if len(crcs) > len(empty):
+                raise ValueError(f"选择了 {len(crcs)} 个战术，但只有 {len(empty)} 个空槽；请减少选择或先清空槽位。")
+            updates = dict(zip(empty, crcs))
+            backup = self.memory.edit_playbook_slots(book, updates)
+            self.playbook_last_backup = backup
+            self._refresh_playbooks()
+            self.play_slot_tree.selection_set(*(f"slot:{slot}" for slot in updates))
+            self.play_slot_tree.see(f"slot:{next(iter(updates))}")
+            self.playbook_status.set(f"已批量添加 {len(updates)} 个战术到 {book['name']}；可一次撤销。")
+        except Exception as exc:
+            messagebox.showerror("批量添加战术失败", str(exc), parent=self)
+
+    def _batch_clear_playbook(self):
+        try:
+            if not self.memory:
+                raise RuntimeError("请先连接游戏。")
+            book = self.book_option_map.get(self.book_choice.get())
+            if not book:
+                raise ValueError("请先选择一本战术手册。")
+            selected = sorted(int(item.split(":", 1)[1]) for item in self.play_slot_tree.selection()
+                              if item.startswith("slot:"))
+            if not selected:
+                raise ValueError("请按住 Ctrl/Shift 在左侧选择要删除的战术槽位。")
+            if any(slot >= PLAYBOOK_EDITABLE_SLOTS for slot in selected):
+                raise ValueError("所选项目包含 81–88 的保留槽位；请只选择前 80 个标准槽位。")
+            updates = {slot: 0 for slot in selected if book["slots"][slot]}
+            if not updates:
+                raise ValueError("所选槽位均为空，无需删除。")
+            backup = self.memory.edit_playbook_slots(book, updates)
+            self.playbook_last_backup = backup
+            self._refresh_playbooks()
+            self.play_slot_tree.selection_set(*(f"slot:{slot}" for slot in updates))
+            self.play_slot_tree.see(f"slot:{next(iter(updates))}")
+            self.playbook_status.set(f"已批量删除 {len(updates)} 个槽位的战术；可一次撤销。")
+        except Exception as exc:
+            messagebox.showerror("批量删除战术失败", str(exc), parent=self)
 
     def _undo_playbook(self):
         if not self.memory or not self.playbook_last_backup:
