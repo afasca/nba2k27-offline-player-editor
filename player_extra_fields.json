@@ -1,0 +1,2270 @@
+[
+  {
+    "section": "Tendencies",
+    "group": "Jump Shooting",
+    "id": "CONTESTEDJUMPER3POINT",
+    "label": "受干扰三分跳投",
+    "offset": 1168,
+    "bits": 7,
+    "shift": 21
+  },
+  {
+    "section": "Tendencies",
+    "group": "Jump Shooting",
+    "id": "CONTESTEDJUMPERMIDRANGE",
+    "label": "受干扰中距离跳投",
+    "offset": 1172,
+    "bits": 7,
+    "shift": 0
+  },
+  {
+    "section": "Tendencies",
+    "group": "Jump Shooting",
+    "id": "DRIVEPULLUP3POINT",
+    "label": "运球急停三分",
+    "offset": 1176,
+    "bits": 7,
+    "shift": 7
+  },
+  {
+    "section": "Tendencies",
+    "group": "Jump Shooting",
+    "id": "DRIVEPULLUPMIDRANGE",
+    "label": "运球急停中投",
+    "offset": 1176,
+    "bits": 7,
+    "shift": 14
+  },
+  {
+    "section": "Tendencies",
+    "group": "Jump Shooting",
+    "id": "3POINTOFFSCREENSHOT",
+    "label": "绕掩护三分",
+    "offset": 1164,
+    "bits": 7,
+    "shift": 7
+  },
+  {
+    "section": "Tendencies",
+    "group": "Jump Shooting",
+    "id": "MIDOFFSCREENSHOT",
+    "label": "绕掩护中投",
+    "offset": 1156,
+    "bits": 7,
+    "shift": 7
+  },
+  {
+    "section": "Tendencies",
+    "group": "Jump Shooting",
+    "id": "3POINTSHOT",
+    "label": "三分投篮",
+    "offset": 1160,
+    "bits": 7,
+    "shift": 21
+  },
+  {
+    "section": "Tendencies",
+    "group": "Jump Shooting",
+    "id": "3POINTCENTERSHOT",
+    "label": "正面三分",
+    "offset": 1168,
+    "bits": 7,
+    "shift": 0
+  },
+  {
+    "section": "Tendencies",
+    "group": "Jump Shooting",
+    "id": "3POINTLEFTSHOT",
+    "label": "左侧三分",
+    "offset": 1164,
+    "bits": 7,
+    "shift": 14
+  },
+  {
+    "section": "Tendencies",
+    "group": "Jump Shooting",
+    "id": "3POINTCENTERLEFTSHOT",
+    "label": "左侧45度三分",
+    "offset": 1164,
+    "bits": 7,
+    "shift": 21
+  },
+  {
+    "section": "Tendencies",
+    "group": "Jump Shooting",
+    "id": "3POINTRIGHTSHOT",
+    "label": "右侧三分",
+    "offset": 1168,
+    "bits": 7,
+    "shift": 14
+  },
+  {
+    "section": "Tendencies",
+    "group": "Jump Shooting",
+    "id": "3POINTCENTERRIGHTSHOT",
+    "label": "右侧45度三分",
+    "offset": 1168,
+    "bits": 7,
+    "shift": 7
+  },
+  {
+    "section": "Tendencies",
+    "group": "Jump Shooting",
+    "id": "CLOSESHOT",
+    "label": "近距离投篮",
+    "offset": 1148,
+    "bits": 7,
+    "shift": 21
+  },
+  {
+    "section": "Tendencies",
+    "group": "Jump Shooting",
+    "id": "CLOSELEFTSHOT",
+    "label": "左侧近投",
+    "offset": 1152,
+    "bits": 7,
+    "shift": 0
+  },
+  {
+    "section": "Tendencies",
+    "group": "Jump Shooting",
+    "id": "CLOSEMIDDLESHOT",
+    "label": "正面近投",
+    "offset": 1152,
+    "bits": 7,
+    "shift": 7
+  },
+  {
+    "section": "Tendencies",
+    "group": "Jump Shooting",
+    "id": "CLOSERIGHTSHOT",
+    "label": "右侧近投",
+    "offset": 1152,
+    "bits": 7,
+    "shift": 14
+  },
+  {
+    "section": "Tendencies",
+    "group": "Jump Shooting",
+    "id": "MIDSHOT",
+    "label": "中距离投篮",
+    "offset": 1152,
+    "bits": 7,
+    "shift": 21
+  },
+  {
+    "section": "Tendencies",
+    "group": "Jump Shooting",
+    "id": "CENTERMIDSHOT",
+    "label": "正面中投",
+    "offset": 1160,
+    "bits": 7,
+    "shift": 0
+  },
+  {
+    "section": "Tendencies",
+    "group": "Jump Shooting",
+    "id": "LEFTMIDSHOT",
+    "label": "左侧中投",
+    "offset": 1156,
+    "bits": 7,
+    "shift": 14
+  },
+  {
+    "section": "Tendencies",
+    "group": "Jump Shooting",
+    "id": "CENTERLEFTMIDSHOT",
+    "label": "左侧45度中投",
+    "offset": 1156,
+    "bits": 7,
+    "shift": 21
+  },
+  {
+    "section": "Tendencies",
+    "group": "Jump Shooting",
+    "id": "MIDRIGHTSHOT",
+    "label": "右侧中投",
+    "offset": 1160,
+    "bits": 7,
+    "shift": 14
+  },
+  {
+    "section": "Tendencies",
+    "group": "Jump Shooting",
+    "id": "CENTERMIDRIGHTSHOT",
+    "label": "右侧45度中投",
+    "offset": 1160,
+    "bits": 7,
+    "shift": 7
+  },
+  {
+    "section": "Tendencies",
+    "group": "Jump Shooting",
+    "id": "BASKETUNDERSHOT",
+    "label": "篮下投篮",
+    "offset": 1148,
+    "bits": 7,
+    "shift": 14
+  },
+  {
+    "section": "Tendencies",
+    "group": "Jump Shooting",
+    "id": "SPINJUMPER",
+    "label": "转身跳投",
+    "offset": 1172,
+    "bits": 7,
+    "shift": 21
+  },
+  {
+    "section": "Tendencies",
+    "group": "Jump Shooting",
+    "id": "3POINTSPOTUPSHOT",
+    "label": "定点三分",
+    "offset": 1164,
+    "bits": 7,
+    "shift": 0
+  },
+  {
+    "section": "Tendencies",
+    "group": "Jump Shooting",
+    "id": "MIDSPOTUPSHOT",
+    "label": "定点中投",
+    "offset": 1156,
+    "bits": 7,
+    "shift": 0
+  },
+  {
+    "section": "Tendencies",
+    "group": "Jump Shooting",
+    "id": "STEPTHROUGH",
+    "label": "跨步投篮",
+    "offset": 1148,
+    "bits": 7,
+    "shift": 7
+  },
+  {
+    "section": "Tendencies",
+    "group": "Jump Shooting",
+    "id": "STEPBACKJUMPER3POINT",
+    "label": "后撤步三分",
+    "offset": 1172,
+    "bits": 7,
+    "shift": 7
+  },
+  {
+    "section": "Tendencies",
+    "group": "Jump Shooting",
+    "id": "STEPBACKJUMPERMIDRANGE",
+    "label": "后撤步中投",
+    "offset": 1172,
+    "bits": 7,
+    "shift": 14
+  },
+  {
+    "section": "Tendencies",
+    "group": "Jump Shooting",
+    "id": "TRANSITIONPULLUP3POINT",
+    "label": "快攻急停三分",
+    "offset": 1176,
+    "bits": 7,
+    "shift": 0
+  },
+  {
+    "section": "Tendencies",
+    "group": "Jump Shooting",
+    "id": "USEGLASS",
+    "label": "打板投篮",
+    "offset": 1176,
+    "bits": 7,
+    "shift": 21
+  },
+  {
+    "section": "Tendencies",
+    "group": "Layups And Dunks",
+    "id": "ALLEYOOP",
+    "label": "空接",
+    "offset": 1140,
+    "bits": 7,
+    "shift": 14
+  },
+  {
+    "section": "Tendencies",
+    "group": "Layups And Dunks",
+    "id": "CRASH",
+    "label": "冲抢篮板",
+    "offset": 1144,
+    "bits": 7,
+    "shift": 0
+  },
+  {
+    "section": "Tendencies",
+    "group": "Layups And Dunks",
+    "id": "DRIVINGDUNK",
+    "label": "突破扣篮",
+    "offset": 1140,
+    "bits": 7,
+    "shift": 0
+  },
+  {
+    "section": "Tendencies",
+    "group": "Layups And Dunks",
+    "id": "DRIVINGLAYUP",
+    "label": "突破上篮",
+    "offset": 1136,
+    "bits": 7,
+    "shift": 15
+  },
+  {
+    "section": "Tendencies",
+    "group": "Layups And Dunks",
+    "id": "EUROSTEPLAYUP",
+    "label": "欧洲步上篮",
+    "offset": 1144,
+    "bits": 7,
+    "shift": 21
+  },
+  {
+    "section": "Tendencies",
+    "group": "Layups And Dunks",
+    "id": "FLASHYDUNK",
+    "label": "花式扣篮",
+    "offset": 1140,
+    "bits": 7,
+    "shift": 7
+  },
+  {
+    "section": "Tendencies",
+    "group": "Layups And Dunks",
+    "id": "FLOATER",
+    "label": "抛投",
+    "offset": 1148,
+    "bits": 7,
+    "shift": 0
+  },
+  {
+    "section": "Tendencies",
+    "group": "Layups And Dunks",
+    "id": "HOPSTEPLAYUP",
+    "label": "跳步上篮",
+    "offset": 1144,
+    "bits": 7,
+    "shift": 14
+  },
+  {
+    "section": "Tendencies",
+    "group": "Layups And Dunks",
+    "id": "PUTBACK",
+    "label": "补篮",
+    "offset": 1140,
+    "bits": 7,
+    "shift": 21
+  },
+  {
+    "section": "Tendencies",
+    "group": "Layups And Dunks",
+    "id": "SPINLAYUP",
+    "label": "转身上篮",
+    "offset": 1144,
+    "bits": 7,
+    "shift": 7
+  },
+  {
+    "section": "Tendencies",
+    "group": "Layups And Dunks",
+    "id": "STANDINGDUNK",
+    "label": "原地扣篮",
+    "offset": 1136,
+    "bits": 7,
+    "shift": 22
+  },
+  {
+    "section": "Tendencies",
+    "group": "Drive Setup",
+    "id": "NOSETUPDRIBBLE",
+    "label": "无准备运球",
+    "offset": 1188,
+    "bits": 7,
+    "shift": 14
+  },
+  {
+    "section": "Tendencies",
+    "group": "Drive Setup",
+    "id": "SETUPWITHHESITATION",
+    "label": "犹豫步准备",
+    "offset": 1188,
+    "bits": 7,
+    "shift": 7
+  },
+  {
+    "section": "Tendencies",
+    "group": "Drive Setup",
+    "id": "SETUPWITHSIZEUP",
+    "label": "变向运球准备",
+    "offset": 1188,
+    "bits": 7,
+    "shift": 0
+  },
+  {
+    "section": "Tendencies",
+    "group": "Drive Setup",
+    "id": "TRIPLETHREATIDLE",
+    "label": "三威胁持球",
+    "offset": 1184,
+    "bits": 7,
+    "shift": 14
+  },
+  {
+    "section": "Tendencies",
+    "group": "Drive Setup",
+    "id": "TRIPLETHREATJABSTEP",
+    "label": "三威胁试探步",
+    "offset": 1184,
+    "bits": 7,
+    "shift": 7
+  },
+  {
+    "section": "Tendencies",
+    "group": "Drive Setup",
+    "id": "TRIPLETHREATPUMPFAKE",
+    "label": "三威胁投篮假动作",
+    "offset": 1184,
+    "bits": 7,
+    "shift": 0
+  },
+  {
+    "section": "Tendencies",
+    "group": "Drive Setup",
+    "id": "THREATTRIPLESHOT",
+    "label": "三威胁投篮",
+    "offset": 1184,
+    "bits": 7,
+    "shift": 21
+  },
+  {
+    "section": "Tendencies",
+    "group": "Driving",
+    "id": "DRIVE",
+    "label": "突破",
+    "offset": 1180,
+    "bits": 7,
+    "shift": 0
+  },
+  {
+    "section": "Tendencies",
+    "group": "Driving",
+    "id": "DRIVERIGHT",
+    "label": "向右突破",
+    "offset": 1180,
+    "bits": 7,
+    "shift": 21
+  },
+  {
+    "section": "Tendencies",
+    "group": "Driving",
+    "id": "DRIVINGBEHINDTHEBACK",
+    "label": "背后运球突破",
+    "offset": 1196,
+    "bits": 7,
+    "shift": 0
+  },
+  {
+    "section": "Tendencies",
+    "group": "Driving",
+    "id": "DRIBBLECROSSOVER",
+    "label": "交叉运球突破",
+    "offset": 1188,
+    "bits": 7,
+    "shift": 21
+  },
+  {
+    "section": "Tendencies",
+    "group": "Driving",
+    "id": "DRIVINGDOUBLECROSSOVER",
+    "label": "连续交叉运球突破",
+    "offset": 1192,
+    "bits": 7,
+    "shift": 21
+  },
+  {
+    "section": "Tendencies",
+    "group": "Driving",
+    "id": "DRIVINGDRIBBLEHESITATION",
+    "label": "犹豫步突破",
+    "offset": 1196,
+    "bits": 7,
+    "shift": 7
+  },
+  {
+    "section": "Tendencies",
+    "group": "Driving",
+    "id": "DRIVINGHALFSPIN",
+    "label": "半转身突破",
+    "offset": 1192,
+    "bits": 7,
+    "shift": 14
+  },
+  {
+    "section": "Tendencies",
+    "group": "Driving",
+    "id": "DRIVINGINANDOUT",
+    "label": "内外运球突破",
+    "offset": 1196,
+    "bits": 7,
+    "shift": 14
+  },
+  {
+    "section": "Tendencies",
+    "group": "Driving",
+    "id": "DRIBBLESPIN",
+    "label": "转身突破",
+    "offset": 1192,
+    "bits": 7,
+    "shift": 0
+  },
+  {
+    "section": "Tendencies",
+    "group": "Driving",
+    "id": "DRIVINGSTEPBACK",
+    "label": "后撤步突破",
+    "offset": 1192,
+    "bits": 7,
+    "shift": 7
+  },
+  {
+    "section": "Tendencies",
+    "group": "Driving",
+    "id": "ATTACKSTRONGONDRIVE",
+    "label": "强硬突破",
+    "offset": 1200,
+    "bits": 7,
+    "shift": 0
+  },
+  {
+    "section": "Tendencies",
+    "group": "Driving",
+    "id": "NODRIVINGDRIBBLEMOVE",
+    "label": "无运球动作突破",
+    "offset": 1196,
+    "bits": 7,
+    "shift": 21
+  },
+  {
+    "section": "Tendencies",
+    "group": "Driving",
+    "id": "OFFSCREENDRIVE",
+    "label": "绕掩护突破",
+    "offset": 1180,
+    "bits": 7,
+    "shift": 14
+  },
+  {
+    "section": "Tendencies",
+    "group": "Driving",
+    "id": "SPOTUPDRIVE",
+    "label": "定点接球突破",
+    "offset": 1180,
+    "bits": 7,
+    "shift": 7
+  },
+  {
+    "section": "Tendencies",
+    "group": "Passing",
+    "id": "ALLEYOOPPASS",
+    "label": "空接传球",
+    "offset": 1228,
+    "bits": 7,
+    "shift": 0
+  },
+  {
+    "section": "Tendencies",
+    "group": "Passing",
+    "id": "DISHTOOPENMAN",
+    "label": "传给空位队友",
+    "offset": 1200,
+    "bits": 7,
+    "shift": 7
+  },
+  {
+    "section": "Tendencies",
+    "group": "Passing",
+    "id": "FLASHYPASS",
+    "label": "花式传球",
+    "offset": 1224,
+    "bits": 7,
+    "shift": 21
+  },
+  {
+    "section": "Tendencies",
+    "group": "Post Game",
+    "id": "POSTAGGRESSIVEBACKDOWN",
+    "label": "强硬背身推进",
+    "offset": 1212,
+    "bits": 7,
+    "shift": 14
+  },
+  {
+    "section": "Tendencies",
+    "group": "Post Game",
+    "id": "POSTBACKDOWN",
+    "label": "背身推进",
+    "offset": 1212,
+    "bits": 7,
+    "shift": 7
+  },
+  {
+    "section": "Tendencies",
+    "group": "Post Game",
+    "id": "POSTDRIVE",
+    "label": "背身突破",
+    "offset": 1220,
+    "bits": 7,
+    "shift": 21
+  },
+  {
+    "section": "Tendencies",
+    "group": "Post Game",
+    "id": "POSTFACEUP",
+    "label": "背身面框",
+    "offset": 1212,
+    "bits": 7,
+    "shift": 0
+  },
+  {
+    "section": "Tendencies",
+    "group": "Post Game",
+    "id": "POSTFADELEFT",
+    "label": "左侧背身后仰",
+    "offset": 1216,
+    "bits": 7,
+    "shift": 14
+  },
+  {
+    "section": "Tendencies",
+    "group": "Post Game",
+    "id": "POSTFADERIGHT",
+    "label": "右侧背身后仰",
+    "offset": 1216,
+    "bits": 7,
+    "shift": 21
+  },
+  {
+    "section": "Tendencies",
+    "group": "Post Game",
+    "id": "POSTHOOKLEFT",
+    "label": "左侧背身勾手",
+    "offset": 1216,
+    "bits": 7,
+    "shift": 0
+  },
+  {
+    "section": "Tendencies",
+    "group": "Post Game",
+    "id": "POSTHOOKRIGHT",
+    "label": "右侧背身勾手",
+    "offset": 1216,
+    "bits": 7,
+    "shift": 7
+  },
+  {
+    "section": "Tendencies",
+    "group": "Post Game",
+    "id": "HOPPOSTSHOT",
+    "label": "背身跳步投篮",
+    "offset": 1220,
+    "bits": 7,
+    "shift": 7
+  },
+  {
+    "section": "Tendencies",
+    "group": "Post Game",
+    "id": "POSTSHIMMYSHOT",
+    "label": "背身晃肩投篮",
+    "offset": 1208,
+    "bits": 7,
+    "shift": 21
+  },
+  {
+    "section": "Tendencies",
+    "group": "Post Game",
+    "id": "POSTSPIN",
+    "label": "背身转身",
+    "offset": 1224,
+    "bits": 7,
+    "shift": 0
+  },
+  {
+    "section": "Tendencies",
+    "group": "Post Game",
+    "id": "POSTSTEPBACKSHOT",
+    "label": "背身后撤步投篮",
+    "offset": 1220,
+    "bits": 7,
+    "shift": 14
+  },
+  {
+    "section": "Tendencies",
+    "group": "Post Game",
+    "id": "POSTUP",
+    "label": "背身单打",
+    "offset": 1200,
+    "bits": 7,
+    "shift": 21
+  },
+  {
+    "section": "Tendencies",
+    "group": "Post Game",
+    "id": "POSTUPANDUNDER",
+    "label": "背身上下步",
+    "offset": 1220,
+    "bits": 7,
+    "shift": 0
+  },
+  {
+    "section": "Tendencies",
+    "group": "Post Game",
+    "id": "POSTDROPSTEPINSIDE",
+    "label": "内侧背身沉底步",
+    "offset": 1224,
+    "bits": 7,
+    "shift": 14
+  },
+  {
+    "section": "Tendencies",
+    "group": "Post Game",
+    "id": "POSTDROPSTEPOUTSIDE",
+    "label": "外侧背身沉底步",
+    "offset": 1224,
+    "bits": 7,
+    "shift": 7
+  },
+  {
+    "section": "Tendencies",
+    "group": "Post Game",
+    "id": "FROMPOSTSHOT",
+    "label": "背身投篮",
+    "offset": 1212,
+    "bits": 7,
+    "shift": 21
+  },
+  {
+    "section": "Tendencies",
+    "group": "Freelance",
+    "id": "ISOVSAVERAGEDEFENDER",
+    "label": "单打普通防守者",
+    "offset": 1208,
+    "bits": 7,
+    "shift": 0
+  },
+  {
+    "section": "Tendencies",
+    "group": "Freelance",
+    "id": "ISOVSELITEDEFENDER",
+    "label": "单打精英防守者",
+    "offset": 1204,
+    "bits": 7,
+    "shift": 14
+  },
+  {
+    "section": "Tendencies",
+    "group": "Freelance",
+    "id": "ISOVSGOODDEFENDER",
+    "label": "单打优秀防守者",
+    "offset": 1204,
+    "bits": 7,
+    "shift": 21
+  },
+  {
+    "section": "Tendencies",
+    "group": "Freelance",
+    "id": "ISOVSPOORDEFENDER",
+    "label": "单打较弱防守者",
+    "offset": 1208,
+    "bits": 7,
+    "shift": 7
+  },
+  {
+    "section": "Tendencies",
+    "group": "Freelance",
+    "id": "PLAYDISCIPLINE",
+    "label": "战术纪律",
+    "offset": 1208,
+    "bits": 7,
+    "shift": 14
+  },
+  {
+    "section": "Tendencies",
+    "group": "Freelance",
+    "id": "ROLLVSFADE",
+    "label": "挡拆顺下或外弹",
+    "offset": 1204,
+    "bits": 7,
+    "shift": 0
+  },
+  {
+    "section": "Tendencies",
+    "group": "Freelance",
+    "id": "SHOT",
+    "label": "投篮",
+    "offset": 1136,
+    "bits": 7,
+    "shift": 8
+  },
+  {
+    "section": "Tendencies",
+    "group": "Freelance",
+    "id": "TOUCHES",
+    "label": "触球频率",
+    "offset": 1200,
+    "bits": 7,
+    "shift": 14
+  },
+  {
+    "section": "Tendencies",
+    "group": "Freelance",
+    "id": "TRANSITIONSPOTUP",
+    "label": "快攻定点投篮",
+    "offset": 1204,
+    "bits": 7,
+    "shift": 7
+  },
+  {
+    "section": "Tendencies",
+    "group": "Defense",
+    "id": "BLOCKSHOT",
+    "label": "盖帽",
+    "offset": 1232,
+    "bits": 7,
+    "shift": 7
+  },
+  {
+    "section": "Tendencies",
+    "group": "Defense",
+    "id": "CONTESTSHOT",
+    "label": "干扰投篮",
+    "offset": 1232,
+    "bits": 7,
+    "shift": 0
+  },
+  {
+    "section": "Tendencies",
+    "group": "Defense",
+    "id": "FOUL",
+    "label": "犯规",
+    "offset": 1232,
+    "bits": 7,
+    "shift": 14
+  },
+  {
+    "section": "Tendencies",
+    "group": "Defense",
+    "id": "HARDFOUL",
+    "label": "强硬犯规",
+    "offset": 1232,
+    "bits": 7,
+    "shift": 21
+  },
+  {
+    "section": "Tendencies",
+    "group": "Defense",
+    "id": "ONBALLSTEAL",
+    "label": "持球抢断",
+    "offset": 1228,
+    "bits": 7,
+    "shift": 21
+  },
+  {
+    "section": "Tendencies",
+    "group": "Defense",
+    "id": "PASSINTERCEPTION",
+    "label": "拦截传球",
+    "offset": 1228,
+    "bits": 7,
+    "shift": 7
+  },
+  {
+    "section": "Tendencies",
+    "group": "Defense",
+    "id": "TAKECHARGE",
+    "label": "制造进攻犯规",
+    "offset": 1228,
+    "bits": 7,
+    "shift": 14
+  },
+  {
+    "section": "Tendencies",
+    "group": "Hot Zones",
+    "id": "HOTZONECLOSECENTER",
+    "label": "篮下正面热区",
+    "offset": 460,
+    "bits": 2,
+    "shift": 2
+  },
+  {
+    "section": "Tendencies",
+    "group": "Hot Zones",
+    "id": "HOTZONECLOSELEFT",
+    "label": "篮下左侧热区",
+    "offset": 460,
+    "bits": 2,
+    "shift": 26
+  },
+  {
+    "section": "Tendencies",
+    "group": "Hot Zones",
+    "id": "HOTZONECLOSERIGHT",
+    "label": "篮下右侧热区",
+    "offset": 460,
+    "bits": 2,
+    "shift": 28
+  },
+  {
+    "section": "Tendencies",
+    "group": "Hot Zones",
+    "id": "HOTZONEMEDCENTER",
+    "label": "中距离正面热区",
+    "offset": 460,
+    "bits": 2,
+    "shift": 6
+  },
+  {
+    "section": "Tendencies",
+    "group": "Hot Zones",
+    "id": "HOTZONEMEDLEFT",
+    "label": "中距离左侧热区",
+    "offset": 476,
+    "bits": 2,
+    "shift": 3
+  },
+  {
+    "section": "Tendencies",
+    "group": "Hot Zones",
+    "id": "HOTZONEMEDLEFTCENTER",
+    "label": "中距离左侧45度热区",
+    "offset": 460,
+    "bits": 2,
+    "shift": 4
+  },
+  {
+    "section": "Tendencies",
+    "group": "Hot Zones",
+    "id": "HOTZONEMEDRIGHT",
+    "label": "中距离右侧热区",
+    "offset": 892,
+    "bits": 2,
+    "shift": 23
+  },
+  {
+    "section": "Tendencies",
+    "group": "Hot Zones",
+    "id": "HOTZONEMEDRIGHTCENTER",
+    "label": "中距离右侧45度热区",
+    "offset": 880,
+    "bits": 2,
+    "shift": 19
+  },
+  {
+    "section": "Tendencies",
+    "group": "Hot Zones",
+    "id": "HOTZONETHREECENTER",
+    "label": "三分正面热区",
+    "offset": 372,
+    "bits": 2,
+    "shift": 24
+  },
+  {
+    "section": "Tendencies",
+    "group": "Hot Zones",
+    "id": "HOTZONETHREELEFT",
+    "label": "三分左侧热区",
+    "offset": 464,
+    "bits": 2,
+    "shift": 22
+  },
+  {
+    "section": "Tendencies",
+    "group": "Hot Zones",
+    "id": "HOTZONETHREELEFTCENTER",
+    "label": "三分左侧45度热区",
+    "offset": 464,
+    "bits": 2,
+    "shift": 30
+  },
+  {
+    "section": "Tendencies",
+    "group": "Hot Zones",
+    "id": "HOTZONETHREERIGHT",
+    "label": "三分右侧热区",
+    "offset": 460,
+    "bits": 2,
+    "shift": 24
+  },
+  {
+    "section": "Tendencies",
+    "group": "Hot Zones",
+    "id": "HOTZONETHREERIGHTCENTER",
+    "label": "三分右侧45度热区",
+    "offset": 860,
+    "bits": 2,
+    "shift": 29
+  },
+  {
+    "section": "Tendencies",
+    "group": "Hot Zones",
+    "id": "HOTZONEUNDERBASKET",
+    "label": "篮筐下热区",
+    "offset": 460,
+    "bits": 2,
+    "shift": 0
+  },
+  {
+    "section": "Badges",
+    "group": "Inside Scoring",
+    "id": "AERIALWIZARD",
+    "label": "空中魔术师",
+    "offset": 1236,
+    "bits": 3,
+    "shift": 26
+  },
+  {
+    "section": "Badges",
+    "group": "Inside Scoring",
+    "id": "FLOATGAME",
+    "label": "抛投高手",
+    "offset": 1236,
+    "bits": 3,
+    "shift": 17
+  },
+  {
+    "section": "Badges",
+    "group": "Inside Scoring",
+    "id": "GHOSTSTEPPERBADGE",
+    "label": "灵巧步伐",
+    "offset": 1248,
+    "bits": 3,
+    "shift": 27
+  },
+  {
+    "section": "Badges",
+    "group": "Inside Scoring",
+    "id": "HOOKSPECIALIST",
+    "label": "勾手专家",
+    "offset": 1236,
+    "bits": 3,
+    "shift": 29
+  },
+  {
+    "section": "Badges",
+    "group": "Inside Scoring",
+    "id": "ISAERIALWIZARDBADGEBOOSTABLE",
+    "label": "空中魔术师可强化",
+    "offset": 1260,
+    "bits": 1,
+    "shift": 11
+  },
+  {
+    "section": "Badges",
+    "group": "Inside Scoring",
+    "id": "ISFLOATGAMEBADGEBOOSTABLE",
+    "label": "抛投高手可强化",
+    "offset": 1260,
+    "bits": 1,
+    "shift": 8
+  },
+  {
+    "section": "Badges",
+    "group": "Inside Scoring",
+    "id": "ISGHOSTSTEPPERBADGEBOOSTABLE",
+    "label": "灵巧步伐可强化",
+    "offset": 1264,
+    "bits": 1,
+    "shift": 10
+  },
+  {
+    "section": "Badges",
+    "group": "Inside Scoring",
+    "id": "ISHOOKSPECIALISTBADGEBOOSTABLE",
+    "label": "勾手专家可强化",
+    "offset": 1260,
+    "bits": 1,
+    "shift": 12
+  },
+  {
+    "section": "Badges",
+    "group": "Inside Scoring",
+    "id": "ISLAYUPMIXMASTERBADGEBOOSTABLE",
+    "label": "上篮大师可强化",
+    "offset": 1260,
+    "bits": 1,
+    "shift": 31
+  },
+  {
+    "section": "Badges",
+    "group": "Inside Scoring",
+    "id": "ISPAINTPRODIGYBADGEBOOSTABLE",
+    "label": "禁区新星可强化",
+    "offset": 1264,
+    "bits": 1,
+    "shift": 0
+  },
+  {
+    "section": "Badges",
+    "group": "Inside Scoring",
+    "id": "ISPHYSICALFINISHERBADGEBOOSTABLE",
+    "label": "强硬终结者可强化",
+    "offset": 1264,
+    "bits": 1,
+    "shift": 1
+  },
+  {
+    "section": "Badges",
+    "group": "Inside Scoring",
+    "id": "ISPOSTERIZERBADGEBOOSTABLE",
+    "label": "隔人扣篮可强化",
+    "offset": 1260,
+    "bits": 1,
+    "shift": 9
+  },
+  {
+    "section": "Badges",
+    "group": "Inside Scoring",
+    "id": "ISPOSTPOWERHOUSEBADGEBOOSTABLE",
+    "label": "背身强攻可强化",
+    "offset": 1264,
+    "bits": 1,
+    "shift": 2
+  },
+  {
+    "section": "Badges",
+    "group": "Inside Scoring",
+    "id": "ISPOSTSPINCATALYSTBADGEBOOSTABLE",
+    "label": "背身转身可强化",
+    "offset": 1264,
+    "bits": 1,
+    "shift": 11
+  },
+  {
+    "section": "Badges",
+    "group": "Inside Scoring",
+    "id": "ISRISEUPBADGEBOOSTABLE",
+    "label": "原地暴扣可强化",
+    "offset": 1260,
+    "bits": 1,
+    "shift": 10
+  },
+  {
+    "section": "Badges",
+    "group": "Inside Scoring",
+    "id": "LAYUPMIXMASTER",
+    "label": "上篮大师",
+    "offset": 1244,
+    "bits": 3,
+    "shift": 24
+  },
+  {
+    "section": "Badges",
+    "group": "Inside Scoring",
+    "id": "PAINTPRODIGY",
+    "label": "禁区新星",
+    "offset": 1244,
+    "bits": 3,
+    "shift": 27
+  },
+  {
+    "section": "Badges",
+    "group": "Inside Scoring",
+    "id": "PHYSICALFINISHER",
+    "label": "强硬终结者",
+    "offset": 1248,
+    "bits": 3,
+    "shift": 0
+  },
+  {
+    "section": "Badges",
+    "group": "Inside Scoring",
+    "id": "POSTPOWERHOUSE",
+    "label": "背身强攻",
+    "offset": 1248,
+    "bits": 3,
+    "shift": 3
+  },
+  {
+    "section": "Badges",
+    "group": "Inside Scoring",
+    "id": "POSTERIZER",
+    "label": "隔人扣篮",
+    "offset": 1236,
+    "bits": 3,
+    "shift": 20
+  },
+  {
+    "section": "Badges",
+    "group": "Inside Scoring",
+    "id": "POSTSPINCATALYSTBADGE",
+    "label": "背身转身",
+    "offset": 1252,
+    "bits": 3,
+    "shift": 0
+  },
+  {
+    "section": "Badges",
+    "group": "Inside Scoring",
+    "id": "RISEUP",
+    "label": "原地暴扣",
+    "offset": 1236,
+    "bits": 3,
+    "shift": 23
+  },
+  {
+    "section": "Badges",
+    "group": "Outside Scoring",
+    "id": "ARCCADENCEBADGE",
+    "label": "投篮弧线",
+    "offset": 1252,
+    "bits": 3,
+    "shift": 6
+  },
+  {
+    "section": "Badges",
+    "group": "Outside Scoring",
+    "id": "DEADEYE",
+    "label": "神射手",
+    "offset": 1240,
+    "bits": 3,
+    "shift": 3
+  },
+  {
+    "section": "Badges",
+    "group": "Outside Scoring",
+    "id": "ISARCCADENCEBADGEBOOSTABLE",
+    "label": "投篮弧线可强化",
+    "offset": 1264,
+    "bits": 1,
+    "shift": 13
+  },
+  {
+    "section": "Badges",
+    "group": "Outside Scoring",
+    "id": "ISDEADEYEBADGEBOOSTABLE",
+    "label": "神射手可强化",
+    "offset": 1260,
+    "bits": 1,
+    "shift": 14
+  },
+  {
+    "section": "Badges",
+    "group": "Outside Scoring",
+    "id": "ISLIMITLESSRANGEBADGEBOOSTABLE",
+    "label": "无限射程可强化",
+    "offset": 1260,
+    "bits": 1,
+    "shift": 15
+  },
+  {
+    "section": "Badges",
+    "group": "Outside Scoring",
+    "id": "ISMINIMARKSMANBADGEBOOSTABLE",
+    "label": "小个射手可强化",
+    "offset": 1264,
+    "bits": 1,
+    "shift": 3
+  },
+  {
+    "section": "Badges",
+    "group": "Outside Scoring",
+    "id": "ISPOSTFADEPHENOMBADGEBOOSTABLE",
+    "label": "背身后仰可强化",
+    "offset": 1260,
+    "bits": 1,
+    "shift": 13
+  },
+  {
+    "section": "Badges",
+    "group": "Outside Scoring",
+    "id": "ISQUICKTRIGGERBADGEBOOSTABLE",
+    "label": "快速出手可强化",
+    "offset": 1264,
+    "bits": 1,
+    "shift": 16
+  },
+  {
+    "section": "Badges",
+    "group": "Outside Scoring",
+    "id": "ISSETANDFIREBADGEBOOSTABLE",
+    "label": "接球即投可强化",
+    "offset": 1264,
+    "bits": 1,
+    "shift": 12
+  },
+  {
+    "section": "Badges",
+    "group": "Outside Scoring",
+    "id": "ISSLIPPERYOFFBALLBADGEBOOSTABLE",
+    "label": "无球摆脱可强化",
+    "offset": 1260,
+    "bits": 1,
+    "shift": 16
+  },
+  {
+    "section": "Badges",
+    "group": "Outside Scoring",
+    "id": "ISSMOOTHOPERATORBADGEBOOSTABLE",
+    "label": "流畅运球可强化",
+    "offset": 1264,
+    "bits": 1,
+    "shift": 15
+  },
+  {
+    "section": "Badges",
+    "group": "Outside Scoring",
+    "id": "ISSTATICMIDDYBADGEBOOSTABLE",
+    "label": "定点中投可强化",
+    "offset": 1264,
+    "bits": 1,
+    "shift": 14
+  },
+  {
+    "section": "Badges",
+    "group": "Outside Scoring",
+    "id": "LIMITLESSRANGE",
+    "label": "无限射程",
+    "offset": 1240,
+    "bits": 3,
+    "shift": 6
+  },
+  {
+    "section": "Badges",
+    "group": "Outside Scoring",
+    "id": "MINIMARKSMAN",
+    "label": "小个射手",
+    "offset": 1248,
+    "bits": 3,
+    "shift": 6
+  },
+  {
+    "section": "Badges",
+    "group": "Outside Scoring",
+    "id": "POSTFADEPHENOM",
+    "label": "背身后仰",
+    "offset": 1240,
+    "bits": 3,
+    "shift": 0
+  },
+  {
+    "section": "Badges",
+    "group": "Outside Scoring",
+    "id": "QUICKTRIGGERBADGE",
+    "label": "快速出手",
+    "offset": 1252,
+    "bits": 3,
+    "shift": 15
+  },
+  {
+    "section": "Badges",
+    "group": "Outside Scoring",
+    "id": "SETANDFIREBADGE",
+    "label": "接球即投",
+    "offset": 1252,
+    "bits": 3,
+    "shift": 3
+  },
+  {
+    "section": "Badges",
+    "group": "Outside Scoring",
+    "id": "SLIPPERYOFFBALL",
+    "label": "无球摆脱",
+    "offset": 1240,
+    "bits": 3,
+    "shift": 9
+  },
+  {
+    "section": "Badges",
+    "group": "Outside Scoring",
+    "id": "SMOOTHOPERATORBADGE",
+    "label": "流畅运球",
+    "offset": 1252,
+    "bits": 3,
+    "shift": 12
+  },
+  {
+    "section": "Badges",
+    "group": "Outside Scoring",
+    "id": "STATICMIDDYBADGE",
+    "label": "定点中投",
+    "offset": 1252,
+    "bits": 3,
+    "shift": 9
+  },
+  {
+    "section": "Badges",
+    "group": "Playmaking",
+    "id": "ANKLEASSASSINBADGE",
+    "label": "脚踝终结者",
+    "offset": 1248,
+    "bits": 3,
+    "shift": 12
+  },
+  {
+    "section": "Badges",
+    "group": "Playmaking",
+    "id": "BAILOUT",
+    "label": "空中传球",
+    "offset": 1240,
+    "bits": 3,
+    "shift": 12
+  },
+  {
+    "section": "Badges",
+    "group": "Playmaking",
+    "id": "BREAKSTARTER",
+    "label": "快攻发起者",
+    "offset": 1240,
+    "bits": 3,
+    "shift": 15
+  },
+  {
+    "section": "Badges",
+    "group": "Playmaking",
+    "id": "BREAKERBADGE",
+    "label": "突破专家",
+    "offset": 1256,
+    "bits": 3,
+    "shift": 12
+  },
+  {
+    "section": "Badges",
+    "group": "Playmaking",
+    "id": "DIMER",
+    "label": "妙传手",
+    "offset": 1240,
+    "bits": 3,
+    "shift": 18
+  },
+  {
+    "section": "Badges",
+    "group": "Playmaking",
+    "id": "HANDLESFORDAYS",
+    "label": "持久控球",
+    "offset": 1240,
+    "bits": 3,
+    "shift": 21
+  },
+  {
+    "section": "Badges",
+    "group": "Playmaking",
+    "id": "ISANKLEASSASSINBADGEBOOSTABLE",
+    "label": "脚踝终结者可强化",
+    "offset": 1264,
+    "bits": 1,
+    "shift": 5
+  },
+  {
+    "section": "Badges",
+    "group": "Playmaking",
+    "id": "ISBAILOUTBADGEBOOSTABLE",
+    "label": "空中传球可强化",
+    "offset": 1260,
+    "bits": 1,
+    "shift": 17
+  },
+  {
+    "section": "Badges",
+    "group": "Playmaking",
+    "id": "ISBREAKERBADGEBOOSTABLE",
+    "label": "突破专家可强化",
+    "offset": 1264,
+    "bits": 1,
+    "shift": 25
+  },
+  {
+    "section": "Badges",
+    "group": "Playmaking",
+    "id": "ISBREAKSTARTERBADGEBOOSTABLE",
+    "label": "快攻发起者可强化",
+    "offset": 1260,
+    "bits": 1,
+    "shift": 18
+  },
+  {
+    "section": "Badges",
+    "group": "Playmaking",
+    "id": "ISDIMERBADGEBOOSTABLE",
+    "label": "妙传手可强化",
+    "offset": 1260,
+    "bits": 1,
+    "shift": 19
+  },
+  {
+    "section": "Badges",
+    "group": "Playmaking",
+    "id": "ISHANDLESFORDAYSBADGEBOOSTABLE",
+    "label": "持久控球可强化",
+    "offset": 1260,
+    "bits": 1,
+    "shift": 20
+  },
+  {
+    "section": "Badges",
+    "group": "Playmaking",
+    "id": "ISLIGHTNINGLAUNCHBADGEBOOSTABLE",
+    "label": "闪电启动可强化",
+    "offset": 1264,
+    "bits": 1,
+    "shift": 6
+  },
+  {
+    "section": "Badges",
+    "group": "Playmaking",
+    "id": "ISSTRONGHANDLEBADGEBOOSTABLE",
+    "label": "强力控球可强化",
+    "offset": 1264,
+    "bits": 1,
+    "shift": 7
+  },
+  {
+    "section": "Badges",
+    "group": "Playmaking",
+    "id": "ISUNPLUCKABLEBADGEBOOSTABLE",
+    "label": "护球大师可强化",
+    "offset": 1260,
+    "bits": 1,
+    "shift": 21
+  },
+  {
+    "section": "Badges",
+    "group": "Playmaking",
+    "id": "ISVERSATILEVISIONARYBADGEBOOSTABLE",
+    "label": "全能视野可强化",
+    "offset": 1264,
+    "bits": 1,
+    "shift": 4
+  },
+  {
+    "section": "Badges",
+    "group": "Playmaking",
+    "id": "LIGHTNINGLAUNCH",
+    "label": "闪电启动",
+    "offset": 1248,
+    "bits": 3,
+    "shift": 15
+  },
+  {
+    "section": "Badges",
+    "group": "Playmaking",
+    "id": "STRONGHANDLE",
+    "label": "强力控球",
+    "offset": 1248,
+    "bits": 3,
+    "shift": 18
+  },
+  {
+    "section": "Badges",
+    "group": "Playmaking",
+    "id": "UNPLUCKABLE",
+    "label": "护球大师",
+    "offset": 1240,
+    "bits": 3,
+    "shift": 24
+  },
+  {
+    "section": "Badges",
+    "group": "Playmaking",
+    "id": "VERSATILEVISIONARY",
+    "label": "全能视野",
+    "offset": 1248,
+    "bits": 3,
+    "shift": 9
+  },
+  {
+    "section": "Badges",
+    "group": "Defending",
+    "id": "ANKLEBRACESBADGE",
+    "label": "脚踝防护",
+    "offset": 1252,
+    "bits": 3,
+    "shift": 27
+  },
+  {
+    "section": "Badges",
+    "group": "Defending",
+    "id": "CHALLENGER",
+    "label": "外线干扰",
+    "offset": 1244,
+    "bits": 3,
+    "shift": 0
+  },
+  {
+    "section": "Badges",
+    "group": "Defending",
+    "id": "GLOVE",
+    "label": "抢断之手",
+    "offset": 1244,
+    "bits": 3,
+    "shift": 9
+  },
+  {
+    "section": "Badges",
+    "group": "Defending",
+    "id": "HIGHFLYINGDENIER",
+    "label": "飞身盖帽",
+    "offset": 1248,
+    "bits": 3,
+    "shift": 21
+  },
+  {
+    "section": "Badges",
+    "group": "Defending",
+    "id": "INTERCEPTOR",
+    "label": "拦截者",
+    "offset": 1244,
+    "bits": 3,
+    "shift": 12
+  },
+  {
+    "section": "Badges",
+    "group": "Defending",
+    "id": "ISANKLEBRACESBADGEBOOSTABLE",
+    "label": "脚踝防护可强化",
+    "offset": 1264,
+    "bits": 1,
+    "shift": 20
+  },
+  {
+    "section": "Badges",
+    "group": "Defending",
+    "id": "ISCHALLENGERBADGEBOOSTABLE",
+    "label": "外线干扰可强化",
+    "offset": 1260,
+    "bits": 1,
+    "shift": 23
+  },
+  {
+    "section": "Badges",
+    "group": "Defending",
+    "id": "ISGLOVEBADGEBOOSTABLE",
+    "label": "抢断之手可强化",
+    "offset": 1260,
+    "bits": 1,
+    "shift": 26
+  },
+  {
+    "section": "Badges",
+    "group": "Defending",
+    "id": "ISHIGHFLYINGDENIERBADGEBOOSTABLE",
+    "label": "飞身盖帽可强化",
+    "offset": 1264,
+    "bits": 1,
+    "shift": 8
+  },
+  {
+    "section": "Badges",
+    "group": "Defending",
+    "id": "ISINTERCEPTORBADGEBOOSTABLE",
+    "label": "拦截者可强化",
+    "offset": 1260,
+    "bits": 1,
+    "shift": 27
+  },
+  {
+    "section": "Badges",
+    "group": "Defending",
+    "id": "ISOFFBALLPESTBADGEBOOSTABLE",
+    "label": "无球缠防可强化",
+    "offset": 1260,
+    "bits": 1,
+    "shift": 24
+  },
+  {
+    "section": "Badges",
+    "group": "Defending",
+    "id": "ISPAINTPATROLLERBADGEBOOSTABLE",
+    "label": "禁区巡逻可强化",
+    "offset": 1264,
+    "bits": 1,
+    "shift": 9
+  },
+  {
+    "section": "Badges",
+    "group": "Defending",
+    "id": "ISPICKDODGERBADGEBOOSTABLE",
+    "label": "绕掩护专家可强化",
+    "offset": 1260,
+    "bits": 1,
+    "shift": 25
+  },
+  {
+    "section": "Badges",
+    "group": "Defending",
+    "id": "ISPOGOSTICKBADGEBOOSTABLE",
+    "label": "连续起跳可强化",
+    "offset": 1260,
+    "bits": 1,
+    "shift": 28
+  },
+  {
+    "section": "Badges",
+    "group": "Defending",
+    "id": "ISPOSTLOCKDOWNBADGEBOOSTABLE",
+    "label": "背身锁防可强化",
+    "offset": 1260,
+    "bits": 1,
+    "shift": 22
+  },
+  {
+    "section": "Badges",
+    "group": "Defending",
+    "id": "ISSEATBELTBADGEBOOSTABLE",
+    "label": "贴身防守可强化",
+    "offset": 1264,
+    "bits": 1,
+    "shift": 19
+  },
+  {
+    "section": "Badges",
+    "group": "Defending",
+    "id": "ISSYNCSNATCHERBADGEBOOSTABLE",
+    "label": "同步抢断可强化",
+    "offset": 1264,
+    "bits": 1,
+    "shift": 23
+  },
+  {
+    "section": "Badges",
+    "group": "Defending",
+    "id": "ISWALLUPBADGEBOOSTABLE",
+    "label": "竖直防守可强化",
+    "offset": 1264,
+    "bits": 1,
+    "shift": 18
+  },
+  {
+    "section": "Badges",
+    "group": "Defending",
+    "id": "OFFBALLPEST",
+    "label": "无球缠防",
+    "offset": 1244,
+    "bits": 3,
+    "shift": 3
+  },
+  {
+    "section": "Badges",
+    "group": "Defending",
+    "id": "PAINTPATROLLER",
+    "label": "禁区巡逻",
+    "offset": 1248,
+    "bits": 3,
+    "shift": 24
+  },
+  {
+    "section": "Badges",
+    "group": "Defending",
+    "id": "PICKDODGER",
+    "label": "绕掩护专家",
+    "offset": 1244,
+    "bits": 3,
+    "shift": 6
+  },
+  {
+    "section": "Badges",
+    "group": "Defending",
+    "id": "POGOSTICK",
+    "label": "连续起跳",
+    "offset": 1244,
+    "bits": 3,
+    "shift": 15
+  },
+  {
+    "section": "Badges",
+    "group": "Defending",
+    "id": "POSTLOCKDOWN",
+    "label": "背身锁防",
+    "offset": 1240,
+    "bits": 3,
+    "shift": 27
+  },
+  {
+    "section": "Badges",
+    "group": "Defending",
+    "id": "SEATBELTBADGE",
+    "label": "贴身防守",
+    "offset": 1252,
+    "bits": 3,
+    "shift": 24
+  },
+  {
+    "section": "Badges",
+    "group": "Defending",
+    "id": "SYNCSNATCHERBADGE",
+    "label": "同步抢断",
+    "offset": 1256,
+    "bits": 3,
+    "shift": 6
+  },
+  {
+    "section": "Badges",
+    "group": "Defending",
+    "id": "WALLUPBADGE",
+    "label": "竖直防守",
+    "offset": 1252,
+    "bits": 3,
+    "shift": 21
+  },
+  {
+    "section": "Badges",
+    "group": "Athleticism",
+    "id": "BRICKWALL",
+    "label": "铜墙铁壁",
+    "offset": 1244,
+    "bits": 3,
+    "shift": 18
+  },
+  {
+    "section": "Badges",
+    "group": "Athleticism",
+    "id": "IMMOVABLEENFORCER",
+    "label": "强硬防守",
+    "offset": 1244,
+    "bits": 3,
+    "shift": 21
+  },
+  {
+    "section": "Badges",
+    "group": "Athleticism",
+    "id": "ISBRICKWALLBADGEBOOSTABLE",
+    "label": "铜墙铁壁可强化",
+    "offset": 1260,
+    "bits": 1,
+    "shift": 29
+  },
+  {
+    "section": "Badges",
+    "group": "Athleticism",
+    "id": "ISIMMOVABLEENFORCERBADGEBOOSTABLE",
+    "label": "强硬防守可强化",
+    "offset": 1260,
+    "bits": 1,
+    "shift": 30
+  },
+  {
+    "section": "Badges",
+    "group": "Athleticism",
+    "id": "ISWORKHORSEBADGEBOOSTABLE",
+    "label": "拼抢能手可强化",
+    "offset": 1264,
+    "bits": 1,
+    "shift": 27
+  },
+  {
+    "section": "Badges",
+    "group": "Athleticism",
+    "id": "WORKHORSEBADGE",
+    "label": "拼抢能手",
+    "offset": 1256,
+    "bits": 3,
+    "shift": 18
+  },
+  {
+    "section": "Badges",
+    "group": "Rebounding",
+    "id": "BOXOUTBOSSBADGE",
+    "label": "卡位高手",
+    "offset": 1256,
+    "bits": 3,
+    "shift": 9
+  },
+  {
+    "section": "Badges",
+    "group": "Rebounding",
+    "id": "CRASHERBADGE",
+    "label": "冲抢篮板",
+    "offset": 1256,
+    "bits": 3,
+    "shift": 0
+  },
+  {
+    "section": "Badges",
+    "group": "Rebounding",
+    "id": "ISBOXOUTBOSSBADGEBOOSTABLE",
+    "label": "卡位高手可强化",
+    "offset": 1264,
+    "bits": 1,
+    "shift": 24
+  },
+  {
+    "section": "Badges",
+    "group": "Rebounding",
+    "id": "ISCRASHERBADGEBOOSTABLE",
+    "label": "冲抢篮板可强化",
+    "offset": 1264,
+    "bits": 1,
+    "shift": 21
+  },
+  {
+    "section": "Badges",
+    "group": "Personality",
+    "id": "ALPHADOG",
+    "label": "球队领袖",
+    "offset": 1236,
+    "bits": 1,
+    "shift": 9
+  },
+  {
+    "section": "Badges",
+    "group": "Personality",
+    "id": "BIGEGOBADGE",
+    "label": "自尊心强",
+    "offset": 1236,
+    "bits": 1,
+    "shift": 0
+  },
+  {
+    "section": "Badges",
+    "group": "Personality",
+    "id": "BIGMARKETPLAYERBADGE",
+    "label": "偏好大球市",
+    "offset": 1236,
+    "bits": 1,
+    "shift": 6
+  },
+  {
+    "section": "Badges",
+    "group": "Personality",
+    "id": "ENFORCER",
+    "label": "强硬球风",
+    "offset": 1236,
+    "bits": 1,
+    "shift": 10
+  },
+  {
+    "section": "Badges",
+    "group": "Personality",
+    "id": "EXPRESSIVE",
+    "label": "情绪外露",
+    "offset": 1236,
+    "bits": 1,
+    "shift": 3
+  },
+  {
+    "section": "Badges",
+    "group": "Personality",
+    "id": "FAIRWEATHERPLAYERBADGE",
+    "label": "顺境型球员",
+    "offset": 1236,
+    "bits": 1,
+    "shift": 7
+  },
+  {
+    "section": "Badges",
+    "group": "Personality",
+    "id": "HIGHFRIENDLINESSBADGE",
+    "label": "友好度高",
+    "offset": 1232,
+    "bits": 1,
+    "shift": 30
+  },
+  {
+    "section": "Badges",
+    "group": "Personality",
+    "id": "ISALPHADOGBADGEBOOSTABLE",
+    "label": "球队领袖可强化",
+    "offset": 1260,
+    "bits": 1,
+    "shift": 4
+  },
+  {
+    "section": "Badges",
+    "group": "Personality",
+    "id": "ISBIGEGOBADGEBOOSTABLE",
+    "label": "自尊心强可强化",
+    "offset": 1256,
+    "bits": 1,
+    "shift": 27
+  },
+  {
+    "section": "Badges",
+    "group": "Personality",
+    "id": "ISBIGMARKETPLAYERBADGEBOOSTABLE",
+    "label": "偏好大球市可强化",
+    "offset": 1260,
+    "bits": 1,
+    "shift": 1
+  },
+  {
+    "section": "Badges",
+    "group": "Personality",
+    "id": "ISENFORCERBADGEBOOSTABLE",
+    "label": "强硬球风可强化",
+    "offset": 1260,
+    "bits": 1,
+    "shift": 5
+  },
+  {
+    "section": "Badges",
+    "group": "Personality",
+    "id": "ISEXPRESSIVEBADGEBOOSTABLE",
+    "label": "情绪外露可强化",
+    "offset": 1256,
+    "bits": 1,
+    "shift": 30
+  },
+  {
+    "section": "Badges",
+    "group": "Personality",
+    "id": "ISFAIRWEATHERPLAYERBADGEBOOSTABLE",
+    "label": "顺境型球员可强化",
+    "offset": 1260,
+    "bits": 1,
+    "shift": 2
+  },
+  {
+    "section": "Badges",
+    "group": "Personality",
+    "id": "ISHIGHFRIENDLINESSBADGEBOOSTABLE",
+    "label": "友好度高可强化",
+    "offset": 1256,
+    "bits": 1,
+    "shift": 25
+  },
+  {
+    "section": "Badges",
+    "group": "Personality",
+    "id": "ISLAIDBACKBADGEBOOSTABLE",
+    "label": "随和可强化",
+    "offset": 1260,
+    "bits": 1,
+    "shift": 0
+  },
+  {
+    "section": "Badges",
+    "group": "Personality",
+    "id": "ISLOWFRIENDLINESSBADGEBOOSTABLE",
+    "label": "友好度低可强化",
+    "offset": 1256,
+    "bits": 1,
+    "shift": 24
+  },
+  {
+    "section": "Badges",
+    "group": "Personality",
+    "id": "ISMARKETABILITYBADGEBOOSTABLE",
+    "label": "市场号召力可强化",
+    "offset": 1260,
+    "bits": 1,
+    "shift": 7
+  },
+  {
+    "section": "Badges",
+    "group": "Personality",
+    "id": "ISNEGATIVELYMOTIVATEDBADGEBOOSTABLE",
+    "label": "逆境激励可强化",
+    "offset": 1256,
+    "bits": 1,
+    "shift": 28
+  },
+  {
+    "section": "Badges",
+    "group": "Personality",
+    "id": "ISPOSITIVELYMOTIVATEDBADGEBOOSTABLE",
+    "label": "正向激励可强化",
+    "offset": 1256,
+    "bits": 1,
+    "shift": 29
+  },
+  {
+    "section": "Badges",
+    "group": "Personality",
+    "id": "ISSMALLEGOBADGEBOOSTABLE",
+    "label": "谦逊可强化",
+    "offset": 1256,
+    "bits": 1,
+    "shift": 26
+  },
+  {
+    "section": "Badges",
+    "group": "Personality",
+    "id": "ISTAXAVOIDERPLAYERBADGEBOOSTABLE",
+    "label": "避税偏好可强化",
+    "offset": 1260,
+    "bits": 1,
+    "shift": 3
+  },
+  {
+    "section": "Badges",
+    "group": "Personality",
+    "id": "ISUNPREDICTABLEBADGEBOOSTABLE",
+    "label": "难以预测可强化",
+    "offset": 1256,
+    "bits": 1,
+    "shift": 31
+  },
+  {
+    "section": "Badges",
+    "group": "Personality",
+    "id": "ISWORKETHICBADGEBOOSTABLE",
+    "label": "职业精神可强化",
+    "offset": 1260,
+    "bits": 1,
+    "shift": 6
+  },
+  {
+    "section": "Badges",
+    "group": "Personality",
+    "id": "LAIDBACK",
+    "label": "随和",
+    "offset": 1236,
+    "bits": 1,
+    "shift": 5
+  },
+  {
+    "section": "Badges",
+    "group": "Personality",
+    "id": "LOWFRIENDLINESSBADGE",
+    "label": "友好度低",
+    "offset": 1232,
+    "bits": 1,
+    "shift": 29
+  },
+  {
+    "section": "Badges",
+    "group": "Personality",
+    "id": "MARKETABILITY",
+    "label": "市场号召力",
+    "offset": 1236,
+    "bits": 3,
+    "shift": 14
+  },
+  {
+    "section": "Badges",
+    "group": "Personality",
+    "id": "NEGATIVELYMOTIVATEDBADGE",
+    "label": "逆境激励",
+    "offset": 1236,
+    "bits": 1,
+    "shift": 1
+  },
+  {
+    "section": "Badges",
+    "group": "Personality",
+    "id": "NONEBADGE",
+    "label": "无徽章",
+    "offset": 1232,
+    "bits": 1,
+    "shift": 28
+  },
+  {
+    "section": "Badges",
+    "group": "Personality",
+    "id": "POSITIVELYMOTIVATEDBADGE",
+    "label": "正向激励",
+    "offset": 1236,
+    "bits": 1,
+    "shift": 2
+  },
+  {
+    "section": "Badges",
+    "group": "Personality",
+    "id": "SMALLEGOBADGE",
+    "label": "谦逊",
+    "offset": 1232,
+    "bits": 1,
+    "shift": 31
+  },
+  {
+    "section": "Badges",
+    "group": "Personality",
+    "id": "TAXAVOIDERPLAYERBADGE",
+    "label": "避税偏好",
+    "offset": 1236,
+    "bits": 1,
+    "shift": 8
+  },
+  {
+    "section": "Badges",
+    "group": "Personality",
+    "id": "UNPREDICTABLE",
+    "label": "难以预测",
+    "offset": 1236,
+    "bits": 1,
+    "shift": 4
+  },
+  {
+    "section": "Badges",
+    "group": "Personality",
+    "id": "WORKETHIC",
+    "label": "职业精神",
+    "offset": 1236,
+    "bits": 3,
+    "shift": 11
+  },
+  {
+    "section": "Badges",
+    "group": "Flags",
+    "id": "ISBRUISERBADGEBOOSTABLE",
+    "label": "强硬对抗可强化",
+    "offset": 1264,
+    "bits": 1,
+    "shift": 28
+  },
+  {
+    "section": "Badges",
+    "group": "Flags",
+    "id": "ISFLASHBADGEBOOSTABLE",
+    "label": "闪光表现可强化",
+    "offset": 1264,
+    "bits": 1,
+    "shift": 26
+  },
+  {
+    "section": "Badges",
+    "group": "Flags",
+    "id": "ISPACEBADGEBOOSTABLE",
+    "label": "比赛节奏可强化",
+    "offset": 1264,
+    "bits": 1,
+    "shift": 17
+  },
+  {
+    "section": "Badges",
+    "group": "Flags",
+    "id": "ISPOSSESSIONCLOSERBADGEBOOSTABLE",
+    "label": "关键回合终结者可强化",
+    "offset": 1264,
+    "bits": 1,
+    "shift": 22
+  },
+  {
+    "section": "Badges",
+    "group": "Gameplay",
+    "id": "BRUISERBADGE",
+    "label": "强硬对抗",
+    "offset": 1256,
+    "bits": 3,
+    "shift": 21
+  },
+  {
+    "section": "Badges",
+    "group": "Gameplay",
+    "id": "FLASHBADGE",
+    "label": "闪光表现",
+    "offset": 1256,
+    "bits": 3,
+    "shift": 15
+  },
+  {
+    "section": "Badges",
+    "group": "Gameplay",
+    "id": "PACEBADGE",
+    "label": "比赛节奏",
+    "offset": 1252,
+    "bits": 3,
+    "shift": 18
+  },
+  {
+    "section": "Badges",
+    "group": "Gameplay",
+    "id": "POSSESSIONCLOSERBADGE",
+    "label": "关键回合终结者",
+    "offset": 1256,
+    "bits": 3,
+    "shift": 3
+  }
+]

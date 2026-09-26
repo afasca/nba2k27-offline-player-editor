@@ -1,0 +1,983 @@
+[
+  {
+    "parent": "Head Pointer",
+    "group": "Brows",
+    "id": "BROWPOSITION",
+    "offset": 12,
+    "bits": 8,
+    "shift": 8,
+    "kind": "bits"
+  },
+  {
+    "parent": "Head Pointer",
+    "group": "Brows",
+    "id": "BROWPRESET",
+    "offset": 8,
+    "bits": 8,
+    "shift": 8,
+    "kind": "bits"
+  },
+  {
+    "parent": "Head Pointer",
+    "group": "Brows",
+    "id": "BROWPROMINENCE",
+    "offset": 8,
+    "bits": 8,
+    "shift": 16,
+    "kind": "bits"
+  },
+  {
+    "parent": "Head Pointer",
+    "group": "Brows",
+    "id": "EYEBROWSDISTANCE",
+    "offset": 12,
+    "bits": 8,
+    "shift": 0,
+    "kind": "bits"
+  },
+  {
+    "parent": "Head Pointer",
+    "group": "Cheeks",
+    "id": "CHEEKPRESET",
+    "offset": 28,
+    "bits": 8,
+    "shift": 0,
+    "kind": "bits"
+  },
+  {
+    "parent": "Head Pointer",
+    "group": "Cheeks",
+    "id": "MIDDLECHEEKWIDTH",
+    "offset": 28,
+    "bits": 8,
+    "shift": 16,
+    "kind": "bits"
+  },
+  {
+    "parent": "Head Pointer",
+    "group": "Cheeks",
+    "id": "UPPERCHEEKWIDTH",
+    "offset": 28,
+    "bits": 8,
+    "shift": 8,
+    "kind": "bits"
+  },
+  {
+    "parent": "Head Pointer",
+    "group": "Chin",
+    "id": "CHINDIMPLE",
+    "offset": 36,
+    "bits": 8,
+    "shift": 24,
+    "kind": "bits"
+  },
+  {
+    "parent": "Head Pointer",
+    "group": "Chin",
+    "id": "CHINPOSITION",
+    "offset": 40,
+    "bits": 8,
+    "shift": 24,
+    "kind": "bits"
+  },
+  {
+    "parent": "Head Pointer",
+    "group": "Chin",
+    "id": "CHINPRESET",
+    "offset": 36,
+    "bits": 8,
+    "shift": 16,
+    "kind": "bits"
+  },
+  {
+    "parent": "Head Pointer",
+    "group": "Chin",
+    "id": "CHINPROMINENCE",
+    "offset": 40,
+    "bits": 8,
+    "shift": 0,
+    "kind": "bits"
+  },
+  {
+    "parent": "Head Pointer",
+    "group": "Chin",
+    "id": "FRONTCHINWIDTH",
+    "offset": 40,
+    "bits": 8,
+    "shift": 8,
+    "kind": "bits"
+  },
+  {
+    "parent": "Appearance Data",
+    "group": "Details",
+    "id": "CHESTANIM",
+    "offset": 52,
+    "bits": 5,
+    "shift": 0,
+    "kind": "bits"
+  },
+  {
+    "parent": "Appearance Data",
+    "group": "Details",
+    "id": "FACEANIM",
+    "offset": 52,
+    "bits": 4,
+    "shift": 5,
+    "kind": "bits"
+  },
+  {
+    "parent": "Appearance Data",
+    "group": "Details",
+    "id": "MOUTHGRILL",
+    "offset": 48,
+    "bits": 4,
+    "shift": 26,
+    "kind": "bits"
+  },
+  {
+    "parent": "Head Pointer",
+    "group": "Ears",
+    "id": "EARPRESET",
+    "offset": 4,
+    "bits": 8,
+    "shift": 0,
+    "kind": "bits"
+  },
+  {
+    "parent": "Head Pointer",
+    "group": "Ears",
+    "id": "EARROTATION",
+    "offset": 4,
+    "bits": 8,
+    "shift": 24,
+    "kind": "bits"
+  },
+  {
+    "parent": "Head Pointer",
+    "group": "Ears",
+    "id": "EARSCALE",
+    "offset": 8,
+    "bits": 8,
+    "shift": 0,
+    "kind": "bits"
+  },
+  {
+    "parent": "Head Pointer",
+    "group": "Ears",
+    "id": "LOWEREARANGLE",
+    "offset": 4,
+    "bits": 8,
+    "shift": 8,
+    "kind": "bits"
+  },
+  {
+    "parent": "Head Pointer",
+    "group": "Ears",
+    "id": "REARCHINWIDTH",
+    "offset": 40,
+    "bits": 8,
+    "shift": 16,
+    "kind": "bits"
+  },
+  {
+    "parent": "Head Pointer",
+    "group": "Ears",
+    "id": "UPPEREARANGLE",
+    "offset": 4,
+    "bits": 8,
+    "shift": 16,
+    "kind": "bits"
+  },
+  {
+    "parent": "Appearance Data",
+    "group": "Eyes",
+    "id": "EYEBROWCOLOR",
+    "offset": 40,
+    "bits": 5,
+    "shift": 5,
+    "kind": "bits"
+  },
+  {
+    "parent": "Appearance Data",
+    "group": "Eyes",
+    "id": "EYEBROWCUTOUT",
+    "offset": 48,
+    "bits": 3,
+    "shift": 14,
+    "kind": "bits"
+  },
+  {
+    "parent": "Appearance Data",
+    "group": "Eyes",
+    "id": "EYEBROWTYPE",
+    "offset": 40,
+    "bits": 5,
+    "shift": 0,
+    "kind": "bits"
+  },
+  {
+    "parent": "Appearance Data",
+    "group": "Eyes",
+    "id": "EYECIRCLES",
+    "offset": 48,
+    "bits": 2,
+    "shift": 12,
+    "kind": "bits"
+  },
+  {
+    "parent": "Appearance Data",
+    "group": "Eyes",
+    "id": "EYECOLOR",
+    "offset": 52,
+    "bits": 8,
+    "shift": 20,
+    "kind": "bits"
+  },
+  {
+    "parent": "Appearance Data",
+    "group": "Eyes",
+    "id": "EYELASHCOLOR",
+    "offset": 52,
+    "bits": 3,
+    "shift": 17,
+    "kind": "bits"
+  },
+  {
+    "parent": "Appearance Data",
+    "group": "Eyes",
+    "id": "EYELASHLENGTH",
+    "offset": 52,
+    "bits": 8,
+    "shift": 9,
+    "kind": "bits"
+  },
+  {
+    "parent": "Head Pointer",
+    "group": "Eyes",
+    "id": "EYESANGLE",
+    "offset": 16,
+    "bits": 8,
+    "shift": 8,
+    "kind": "bits"
+  },
+  {
+    "parent": "Head Pointer",
+    "group": "Eyes",
+    "id": "EYESDISTANCE",
+    "offset": 16,
+    "bits": 8,
+    "shift": 0,
+    "kind": "bits"
+  },
+  {
+    "parent": "Head Pointer",
+    "group": "Eyes",
+    "id": "EYESPRESET",
+    "offset": 12,
+    "bits": 8,
+    "shift": 16,
+    "kind": "bits"
+  },
+  {
+    "parent": "Head Pointer",
+    "group": "Eyes",
+    "id": "EYESSIZE",
+    "offset": 12,
+    "bits": 8,
+    "shift": 24,
+    "kind": "bits"
+  },
+  {
+    "parent": "Head Pointer",
+    "group": "Eyes",
+    "id": "LOWEREYELIDSPOSITION",
+    "offset": 20,
+    "bits": 8,
+    "shift": 0,
+    "kind": "bits"
+  },
+  {
+    "parent": "Head Pointer",
+    "group": "Eyes",
+    "id": "UPPEREYELIDSCREASEPOSITION",
+    "offset": 16,
+    "bits": 8,
+    "shift": 24,
+    "kind": "bits"
+  },
+  {
+    "parent": "Head Pointer",
+    "group": "Eyes",
+    "id": "UPPEREYELIDSPOSITION",
+    "offset": 16,
+    "bits": 8,
+    "shift": 16,
+    "kind": "bits"
+  },
+  {
+    "parent": "Appearance Data",
+    "group": "Hair",
+    "id": "BEARDTYPE",
+    "offset": 36,
+    "bits": 6,
+    "shift": 8,
+    "kind": "bits"
+  },
+  {
+    "parent": "Appearance Data",
+    "group": "Hair",
+    "id": "CHESTHAIR",
+    "offset": 48,
+    "bits": 2,
+    "shift": 21,
+    "kind": "bits"
+  },
+  {
+    "parent": "Appearance Data",
+    "group": "Hair",
+    "id": "FACIALHAIRCOLOR",
+    "offset": 44,
+    "bits": 5,
+    "shift": 0,
+    "kind": "bits"
+  },
+  {
+    "parent": "Appearance Data",
+    "group": "Hair",
+    "id": "FACIALHAIRFINCUSTOMCOLORB",
+    "offset": 88,
+    "bits": 32,
+    "shift": 0,
+    "kind": "float"
+  },
+  {
+    "parent": "Appearance Data",
+    "group": "Hair",
+    "id": "FACIALHAIRFINCUSTOMCOLORG",
+    "offset": 84,
+    "bits": 32,
+    "shift": 0,
+    "kind": "float"
+  },
+  {
+    "parent": "Appearance Data",
+    "group": "Hair",
+    "id": "FACIALHAIRFINCUSTOMCOLORR",
+    "offset": 80,
+    "bits": 32,
+    "shift": 0,
+    "kind": "float"
+  },
+  {
+    "parent": "Appearance Data",
+    "group": "Hair",
+    "id": "FACIALHAIRUNDERPAINTCUSTOMCOLORB",
+    "offset": 100,
+    "bits": 32,
+    "shift": 0,
+    "kind": "float"
+  },
+  {
+    "parent": "Appearance Data",
+    "group": "Hair",
+    "id": "FACIALHAIRUNDERPAINTCUSTOMCOLORG",
+    "offset": 96,
+    "bits": 32,
+    "shift": 0,
+    "kind": "float"
+  },
+  {
+    "parent": "Appearance Data",
+    "group": "Hair",
+    "id": "FACIALHAIRUNDERPAINTCUSTOMCOLORR",
+    "offset": 92,
+    "bits": 32,
+    "shift": 0,
+    "kind": "float"
+  },
+  {
+    "parent": "Appearance Data",
+    "group": "Hair",
+    "id": "GOATEETYPE",
+    "offset": 36,
+    "bits": 6,
+    "shift": 25,
+    "kind": "bits"
+  },
+  {
+    "parent": "Appearance Data",
+    "group": "Hair",
+    "id": "HAIRCOLOR",
+    "offset": 40,
+    "bits": 5,
+    "shift": 17,
+    "kind": "bits"
+  },
+  {
+    "parent": "Appearance Data",
+    "group": "Hair",
+    "id": "HAIRCOLOR2",
+    "offset": 40,
+    "bits": 5,
+    "shift": 22,
+    "kind": "bits"
+  },
+  {
+    "parent": "Appearance Data",
+    "group": "Hair",
+    "id": "HAIRCOLORIZATIONINDEX",
+    "offset": 40,
+    "bits": 4,
+    "shift": 10,
+    "kind": "bits"
+  },
+  {
+    "parent": "Appearance Data",
+    "group": "Hair",
+    "id": "HAIRCORNERINDEX",
+    "offset": 40,
+    "bits": 5,
+    "shift": 27,
+    "kind": "bits"
+  },
+  {
+    "parent": "Appearance Data",
+    "group": "Hair",
+    "id": "HAIRFADEINDEX",
+    "offset": 44,
+    "bits": 5,
+    "shift": 5,
+    "kind": "bits"
+  },
+  {
+    "parent": "Appearance Data",
+    "group": "Hair",
+    "id": "HAIRFINCUSTOMCOLORB",
+    "offset": 64,
+    "bits": 32,
+    "shift": 0,
+    "kind": "float"
+  },
+  {
+    "parent": "Appearance Data",
+    "group": "Hair",
+    "id": "HAIRFINCUSTOMCOLORG",
+    "offset": 60,
+    "bits": 32,
+    "shift": 0,
+    "kind": "float"
+  },
+  {
+    "parent": "Appearance Data",
+    "group": "Hair",
+    "id": "HAIRFINCUSTOMCOLORR",
+    "offset": 56,
+    "bits": 32,
+    "shift": 0,
+    "kind": "float"
+  },
+  {
+    "parent": "Appearance Data",
+    "group": "Hair",
+    "id": "HAIRLENGTHAPPEARANCE",
+    "offset": 28,
+    "bits": 32,
+    "shift": 0,
+    "kind": "uint"
+  },
+  {
+    "parent": "Appearance Data",
+    "group": "Hair",
+    "id": "HAIRPATTERN",
+    "offset": 40,
+    "bits": 3,
+    "shift": 14,
+    "kind": "bits"
+  },
+  {
+    "parent": "Appearance Data",
+    "group": "Hair",
+    "id": "HAIRPATTERNINDEX",
+    "offset": 44,
+    "bits": 6,
+    "shift": 10,
+    "kind": "bits"
+  },
+  {
+    "parent": "Appearance Data",
+    "group": "Hair",
+    "id": "HAIRSTYLE",
+    "offset": 36,
+    "bits": 8,
+    "shift": 0,
+    "kind": "bits"
+  },
+  {
+    "parent": "Appearance Data",
+    "group": "Hair",
+    "id": "HAIRUNDERPAINTCUSTOMCOLORB",
+    "offset": 76,
+    "bits": 32,
+    "shift": 0,
+    "kind": "float"
+  },
+  {
+    "parent": "Appearance Data",
+    "group": "Hair",
+    "id": "HAIRUNDERPAINTCUSTOMCOLORG",
+    "offset": 72,
+    "bits": 32,
+    "shift": 0,
+    "kind": "float"
+  },
+  {
+    "parent": "Appearance Data",
+    "group": "Hair",
+    "id": "HAIRUNDERPAINTCUSTOMCOLORR",
+    "offset": 68,
+    "bits": 32,
+    "shift": 0,
+    "kind": "float"
+  },
+  {
+    "parent": "Appearance Data",
+    "group": "Hair",
+    "id": "MOUSTACHETYPE",
+    "offset": 36,
+    "bits": 6,
+    "shift": 19,
+    "kind": "bits"
+  },
+  {
+    "parent": "Appearance Data",
+    "group": "Hair",
+    "id": "SIDEBURNTYPE",
+    "offset": 36,
+    "bits": 5,
+    "shift": 14,
+    "kind": "bits"
+  },
+  {
+    "parent": "Head Pointer",
+    "group": "Head",
+    "id": "CAPTYPE",
+    "offset": 52,
+    "bits": 3,
+    "shift": 24,
+    "kind": "bits"
+  },
+  {
+    "parent": "Head Pointer",
+    "group": "Head",
+    "id": "EXPRESSIONRIGINDEX",
+    "offset": 52,
+    "bits": 4,
+    "shift": 27,
+    "kind": "bits"
+  },
+  {
+    "parent": "Head Pointer",
+    "group": "Head",
+    "id": "HEADPRESET",
+    "offset": 0,
+    "bits": 8,
+    "shift": 0,
+    "kind": "bits"
+  },
+  {
+    "parent": "Head Pointer",
+    "group": "Head",
+    "id": "HEADWIDTH",
+    "offset": 52,
+    "bits": 8,
+    "shift": 16,
+    "kind": "bits"
+  },
+  {
+    "parent": "Head Pointer",
+    "group": "Head",
+    "id": "ISMODIFIED",
+    "offset": 56,
+    "bits": 1,
+    "shift": 0,
+    "kind": "bits"
+  },
+  {
+    "parent": "Head Pointer",
+    "group": "Head",
+    "id": "ISSCANNEDHEAD",
+    "offset": 52,
+    "bits": 1,
+    "shift": 31,
+    "kind": "bits"
+  },
+  {
+    "parent": "Head Pointer",
+    "group": "Head",
+    "id": "SKULLHEIGHT",
+    "offset": 0,
+    "bits": 8,
+    "shift": 24,
+    "kind": "bits"
+  },
+  {
+    "parent": "Head Pointer",
+    "group": "Head",
+    "id": "SKULLPRESET",
+    "offset": 0,
+    "bits": 8,
+    "shift": 8,
+    "kind": "bits"
+  },
+  {
+    "parent": "Head Pointer",
+    "group": "Head",
+    "id": "SKULLWIDTH",
+    "offset": 0,
+    "bits": 8,
+    "shift": 16,
+    "kind": "bits"
+  },
+  {
+    "parent": "Head Pointer",
+    "group": "Head",
+    "id": "TEMPLEWIDTH",
+    "offset": 8,
+    "bits": 8,
+    "shift": 24,
+    "kind": "bits"
+  },
+  {
+    "parent": "Head Pointer",
+    "group": "Lips",
+    "id": "LOWERLIPPROMINENCE",
+    "offset": 36,
+    "bits": 8,
+    "shift": 8,
+    "kind": "bits"
+  },
+  {
+    "parent": "Head Pointer",
+    "group": "Lips",
+    "id": "LOWERLIPTHICKNESS",
+    "offset": 36,
+    "bits": 8,
+    "shift": 0,
+    "kind": "bits"
+  },
+  {
+    "parent": "Head Pointer",
+    "group": "Lips",
+    "id": "UPPERLIPDENTPOSITION",
+    "offset": 32,
+    "bits": 8,
+    "shift": 24,
+    "kind": "bits"
+  },
+  {
+    "parent": "Head Pointer",
+    "group": "Lips",
+    "id": "UPPERLIPPROMINENCE",
+    "offset": 32,
+    "bits": 8,
+    "shift": 16,
+    "kind": "bits"
+  },
+  {
+    "parent": "Head Pointer",
+    "group": "Lips",
+    "id": "UPPERLIPTHICKNESS",
+    "offset": 32,
+    "bits": 8,
+    "shift": 8,
+    "kind": "bits"
+  },
+  {
+    "parent": "Head Pointer",
+    "group": "Mouth",
+    "id": "MOUTHPRESET",
+    "offset": 28,
+    "bits": 8,
+    "shift": 24,
+    "kind": "bits"
+  },
+  {
+    "parent": "Head Pointer",
+    "group": "Mouth",
+    "id": "MOUTHWIDTH",
+    "offset": 32,
+    "bits": 8,
+    "shift": 0,
+    "kind": "bits"
+  },
+  {
+    "parent": "Head Pointer",
+    "group": "Nose",
+    "id": "LOWERNOSEPROMINENCE",
+    "offset": 24,
+    "bits": 8,
+    "shift": 24,
+    "kind": "bits"
+  },
+  {
+    "parent": "Head Pointer",
+    "group": "Nose",
+    "id": "LOWERNOSEWIDTH",
+    "offset": 20,
+    "bits": 8,
+    "shift": 24,
+    "kind": "bits"
+  },
+  {
+    "parent": "Head Pointer",
+    "group": "Nose",
+    "id": "MIDDLENOSEPROMINENCE",
+    "offset": 24,
+    "bits": 8,
+    "shift": 16,
+    "kind": "bits"
+  },
+  {
+    "parent": "Head Pointer",
+    "group": "Nose",
+    "id": "NOSEPOSITION",
+    "offset": 24,
+    "bits": 8,
+    "shift": 0,
+    "kind": "bits"
+  },
+  {
+    "parent": "Head Pointer",
+    "group": "Nose",
+    "id": "NOSEPRESET",
+    "offset": 20,
+    "bits": 8,
+    "shift": 8,
+    "kind": "bits"
+  },
+  {
+    "parent": "Head Pointer",
+    "group": "Nose",
+    "id": "UPPERNOSEPROMINENCE",
+    "offset": 24,
+    "bits": 8,
+    "shift": 8,
+    "kind": "bits"
+  },
+  {
+    "parent": "Head Pointer",
+    "group": "Nose",
+    "id": "UPPERNOSEWIDTH",
+    "offset": 20,
+    "bits": 8,
+    "shift": 16,
+    "kind": "bits"
+  },
+  {
+    "parent": "Appearance Data",
+    "group": "Skin",
+    "id": "ALTSKINCOLOR",
+    "offset": 32,
+    "bits": 1,
+    "shift": 28,
+    "kind": "bits"
+  },
+  {
+    "parent": "Appearance Data",
+    "group": "Skin",
+    "id": "BLEMISHES",
+    "offset": 48,
+    "bits": 4,
+    "shift": 1,
+    "kind": "bits"
+  },
+  {
+    "parent": "Appearance Data",
+    "group": "Skin",
+    "id": "CHESTFRECKLES",
+    "offset": 48,
+    "bits": 2,
+    "shift": 19,
+    "kind": "bits"
+  },
+  {
+    "parent": "Appearance Data",
+    "group": "Skin",
+    "id": "CHESTSCARRING",
+    "offset": 48,
+    "bits": 3,
+    "shift": 23,
+    "kind": "bits"
+  },
+  {
+    "parent": "Appearance Data",
+    "group": "Skin",
+    "id": "DISCOLORATIONS",
+    "offset": 44,
+    "bits": 3,
+    "shift": 29,
+    "kind": "bits"
+  },
+  {
+    "parent": "Appearance Data",
+    "group": "Skin",
+    "id": "FACEPAINT",
+    "offset": 48,
+    "bits": 7,
+    "shift": 5,
+    "kind": "bits"
+  },
+  {
+    "parent": "Appearance Data",
+    "group": "Skin",
+    "id": "FRECKLES",
+    "offset": 44,
+    "bits": 2,
+    "shift": 16,
+    "kind": "bits"
+  },
+  {
+    "parent": "Appearance Data",
+    "group": "Skin",
+    "id": "LIPCOLOR",
+    "offset": 44,
+    "bits": 3,
+    "shift": 18,
+    "kind": "bits"
+  },
+  {
+    "parent": "Appearance Data",
+    "group": "Skin",
+    "id": "MOLES",
+    "offset": 48,
+    "bits": 2,
+    "shift": 17,
+    "kind": "bits"
+  },
+  {
+    "parent": "Appearance Data",
+    "group": "Skin",
+    "id": "POCKMARKS",
+    "offset": 48,
+    "bits": 1,
+    "shift": 0,
+    "kind": "bits"
+  },
+  {
+    "parent": "Appearance Data",
+    "group": "Skin",
+    "id": "SCARRING",
+    "offset": 44,
+    "bits": 4,
+    "shift": 21,
+    "kind": "bits"
+  },
+  {
+    "parent": "Appearance Data",
+    "group": "Skin",
+    "id": "SKINCOLOR",
+    "offset": 32,
+    "bits": 4,
+    "shift": 24,
+    "kind": "bits"
+  },
+  {
+    "parent": "Appearance Data",
+    "group": "Skin",
+    "id": "WRINKLES",
+    "offset": 44,
+    "bits": 4,
+    "shift": 25,
+    "kind": "bits"
+  },
+  {
+    "parent": "Head Pointer",
+    "group": "Teeth",
+    "id": "LOWERTEETHANGLE",
+    "offset": 44,
+    "bits": 8,
+    "shift": 8,
+    "kind": "bits"
+  },
+  {
+    "parent": "Head Pointer",
+    "group": "Teeth",
+    "id": "LOWERTEETHGAP",
+    "offset": 48,
+    "bits": 8,
+    "shift": 0,
+    "kind": "bits"
+  },
+  {
+    "parent": "Head Pointer",
+    "group": "Teeth",
+    "id": "LOWERTEETHLENGTH",
+    "offset": 44,
+    "bits": 8,
+    "shift": 16,
+    "kind": "bits"
+  },
+  {
+    "parent": "Head Pointer",
+    "group": "Teeth",
+    "id": "LOWERTEETHSCALE",
+    "offset": 44,
+    "bits": 8,
+    "shift": 24,
+    "kind": "bits"
+  },
+  {
+    "parent": "Head Pointer",
+    "group": "Teeth",
+    "id": "TEETHLOWERPRESET",
+    "offset": 44,
+    "bits": 8,
+    "shift": 0,
+    "kind": "bits"
+  },
+  {
+    "parent": "Head Pointer",
+    "group": "Teeth",
+    "id": "TEETHUPPERPRESET",
+    "offset": 48,
+    "bits": 8,
+    "shift": 8,
+    "kind": "bits"
+  },
+  {
+    "parent": "Head Pointer",
+    "group": "Teeth",
+    "id": "UPPERTEETHANGLE",
+    "offset": 48,
+    "bits": 8,
+    "shift": 16,
+    "kind": "bits"
+  },
+  {
+    "parent": "Head Pointer",
+    "group": "Teeth",
+    "id": "UPPERTEETHGAP",
+    "offset": 52,
+    "bits": 8,
+    "shift": 8,
+    "kind": "bits"
+  },
+  {
+    "parent": "Head Pointer",
+    "group": "Teeth",
+    "id": "UPPERTEETHLENGTH",
+    "offset": 52,
+    "bits": 8,
+    "shift": 0,
+    "kind": "bits"
+  },
+  {
+    "parent": "Head Pointer",
+    "group": "Teeth",
+    "id": "UPPERTEETHSCALE",
+    "offset": 48,
+    "bits": 8,
+    "shift": 24,
+    "kind": "bits"
+  }
+]

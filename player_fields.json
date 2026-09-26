@@ -1,0 +1,320 @@
+[
+  {
+    "id": "3POINT",
+    "label": "三分投篮",
+    "group": "Offense",
+    "offset": 1091
+  },
+  {
+    "id": "BALLCONTROL",
+    "label": "控球",
+    "group": "Offense",
+    "offset": 1093
+  },
+  {
+    "id": "CLOSESHOT",
+    "label": "近距离投篮",
+    "group": "Offense",
+    "offset": 1089
+  },
+  {
+    "id": "DRAWFOUL",
+    "label": "造犯规",
+    "group": "Offense",
+    "offset": 1088
+  },
+  {
+    "id": "DRIVINGDUNK",
+    "label": "突破扣篮",
+    "group": "Offense",
+    "offset": 1106
+  },
+  {
+    "id": "DRIVINGLAYUP",
+    "label": "突破上篮",
+    "group": "Offense",
+    "offset": 1084
+  },
+  {
+    "id": "FREETHROW",
+    "label": "罚球",
+    "group": "Offense",
+    "offset": 1092
+  },
+  {
+    "id": "HANDS",
+    "label": "接球能力",
+    "group": "Offense",
+    "offset": 1135
+  },
+  {
+    "id": "MIDRANGE",
+    "label": "中距离投篮",
+    "group": "Offense",
+    "offset": 1090
+  },
+  {
+    "id": "OFFENSIVEREBOUND",
+    "label": "进攻篮板",
+    "group": "Offense",
+    "offset": 1096
+  },
+  {
+    "id": "PASSACCURACY",
+    "label": "传球准确性",
+    "group": "Offense",
+    "offset": 1095
+  },
+  {
+    "id": "PASSIQ",
+    "label": "传球智商",
+    "group": "Offense",
+    "offset": 1094
+  },
+  {
+    "id": "PASSVISION",
+    "label": "传球视野",
+    "group": "Offense",
+    "offset": 1134
+  },
+  {
+    "id": "POSTFADE",
+    "label": "背身后仰",
+    "group": "Offense",
+    "offset": 1085
+  },
+  {
+    "id": "POSTHOOK",
+    "label": "背身勾手",
+    "group": "Offense",
+    "offset": 1086
+  },
+  {
+    "id": "POSTCONTROL",
+    "label": "背身控制",
+    "group": "Offense",
+    "offset": 1087
+  },
+  {
+    "id": "IQSHOT",
+    "label": "投篮智商",
+    "group": "Offense",
+    "offset": 1114
+  },
+  {
+    "id": "STANDINGDUNK",
+    "label": "原地扣篮",
+    "group": "Offense",
+    "offset": 1105
+  },
+  {
+    "id": "BLOCK",
+    "label": "盖帽",
+    "group": "Defense",
+    "offset": 1101
+  },
+  {
+    "id": "DEFENSEREBOUND",
+    "label": "防守篮板",
+    "group": "Defense",
+    "offset": 1097
+  },
+  {
+    "id": "INTERIORDEFENSE",
+    "label": "内线防守",
+    "group": "Defense",
+    "offset": 1098
+  },
+  {
+    "id": "PERIMETERDEFENSE",
+    "label": "外线防守",
+    "group": "Defense",
+    "offset": 1099
+  },
+  {
+    "id": "STEAL",
+    "label": "抢断",
+    "group": "Defense",
+    "offset": 1102
+  },
+  {
+    "id": "AGILITY",
+    "label": "敏捷",
+    "group": "Athleticism",
+    "offset": 1113
+  },
+  {
+    "id": "HUSTLE",
+    "label": "积极性",
+    "group": "Athleticism",
+    "offset": 1112
+  },
+  {
+    "id": "SPEED",
+    "label": "速度",
+    "group": "Athleticism",
+    "offset": 1107
+  },
+  {
+    "id": "SPEEDWITHBALL",
+    "label": "持球速度",
+    "group": "Athleticism",
+    "offset": 1108
+  },
+  {
+    "id": "STAMINA",
+    "label": "体力",
+    "group": "Athleticism",
+    "offset": 1111
+  },
+  {
+    "id": "STRENGTH",
+    "label": "力量",
+    "group": "Athleticism",
+    "offset": 1110
+  },
+  {
+    "id": "VERTICAL",
+    "label": "弹跳",
+    "group": "Athleticism",
+    "offset": 1109
+  },
+  {
+    "id": "BACKDURABILITY",
+    "label": "背部耐久",
+    "group": "Durability",
+    "offset": 1120
+  },
+  {
+    "id": "HEADDURABILITY",
+    "label": "头部耐久",
+    "group": "Durability",
+    "offset": 1118
+  },
+  {
+    "id": "LEFTANKLEDURABILITY",
+    "label": "左脚踝耐久",
+    "group": "Durability",
+    "offset": 1129
+  },
+  {
+    "id": "LEFTELBOWDURABILITY",
+    "label": "左肘耐久",
+    "group": "Durability",
+    "offset": 1123
+  },
+  {
+    "id": "LEFTFOOTDURABILITY",
+    "label": "左脚耐久",
+    "group": "Durability",
+    "offset": 1131
+  },
+  {
+    "id": "LEFTHIPDURABILITY",
+    "label": "左髋耐久",
+    "group": "Durability",
+    "offset": 1125
+  },
+  {
+    "id": "LEFTKNEEDURABILITY",
+    "label": "左膝耐久",
+    "group": "Durability",
+    "offset": 1127
+  },
+  {
+    "id": "LEFTSHOULDERDURABILITY",
+    "label": "左肩耐久",
+    "group": "Durability",
+    "offset": 1121
+  },
+  {
+    "id": "MISCDURABILITY",
+    "label": "其他部位耐久",
+    "group": "Durability",
+    "offset": 1133
+  },
+  {
+    "id": "NECKDURABILITY",
+    "label": "颈部耐久",
+    "group": "Durability",
+    "offset": 1119
+  },
+  {
+    "id": "RIGHTANKLEDURABILITY",
+    "label": "右脚踝耐久",
+    "group": "Durability",
+    "offset": 1130
+  },
+  {
+    "id": "RIGHTELBOWDURABILITY",
+    "label": "右肘耐久",
+    "group": "Durability",
+    "offset": 1124
+  },
+  {
+    "id": "RIGHTFOOTDURABILITY",
+    "label": "右脚耐久",
+    "group": "Durability",
+    "offset": 1132
+  },
+  {
+    "id": "RIGHTHIPDURABILITY",
+    "label": "右髋耐久",
+    "group": "Durability",
+    "offset": 1126
+  },
+  {
+    "id": "RIGHTKNEEDURABILITY",
+    "label": "右膝耐久",
+    "group": "Durability",
+    "offset": 1128
+  },
+  {
+    "id": "RIGHTSHOULDERDURABILITY",
+    "label": "右肩耐久",
+    "group": "Durability",
+    "offset": 1122
+  },
+  {
+    "id": "DEFENSECONSISTENCY",
+    "label": "防守稳定性",
+    "group": "Mental",
+    "offset": 1103
+  },
+  {
+    "id": "HELPDEFENSE",
+    "label": "协防智商",
+    "group": "Mental",
+    "offset": 1104
+  },
+  {
+    "id": "OFFENSIVECONSISTENCY",
+    "label": "进攻稳定性",
+    "group": "Mental",
+    "offset": 1115
+  },
+  {
+    "id": "PASSPERCEPTION",
+    "label": "传球预判",
+    "group": "Mental",
+    "offset": 1100
+  },
+  {
+    "id": "INTANGIBLES",
+    "label": "无形价值",
+    "group": "Misc",
+    "offset": 1116
+  },
+  {
+    "id": "POTENTIAL",
+    "label": "潜力",
+    "group": "Misc",
+    "offset": 1117
+  },
+  {
+    "id": "REACTIONTIME",
+    "label": "反应速度",
+    "group": "Misc",
+    "offset": 1136
+  }
+]
