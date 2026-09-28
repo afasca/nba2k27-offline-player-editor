@@ -47,6 +47,7 @@ SIGNATURE_OPTIONS_FILE = Path(getattr(sys, "_MEIPASS", Path(__file__).parent)) /
 PLAYBOOK_PLAYS_FILE = Path(getattr(sys, "_MEIPASS", Path(__file__).parent)) / "playbook_plays.json"
 BACKUP_DIR = Path.home() / "Documents" / "NBA2K27_PlayerEditor_Backups"
 SETTINGS_FILE = BACKUP_DIR / "editor_settings.json"
+PRESET_FILE = BACKUP_DIR / "presets.json"
 LOG_FILE = BACKUP_DIR / "editor.log"
 FREE_AGENT = "自由球员"
 # Primary/secondary RGBA colours and short name in the team record (this build).
@@ -144,6 +145,39 @@ def save_settings(data: dict):
         SETTINGS_FILE.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
     except OSError:
         pass
+
+
+PRESET_KINDS = ("signatures", "playbooks")
+
+
+def load_presets() -> dict:
+    """Saved 动作 / 战术手册 presets. A damaged file is set aside, never overwritten."""
+    data = {}
+    try:
+        data = json.loads(PRESET_FILE.read_text(encoding="utf-8"))
+    except FileNotFoundError:
+        pass
+    except ValueError as exc:
+        log_error("预设文件已损坏，已改名保留并重新开始", exc)
+        try:
+            PRESET_FILE.replace(PRESET_FILE.with_name(f"presets.damaged-{time.strftime('%Y%m%d_%H%M%S')}.json"))
+        except OSError:
+            pass
+    except OSError as exc:
+        log_error("预设文件无法读取", exc)
+    if not isinstance(data, dict):
+        data = {}
+    for kind in PRESET_KINDS:
+        if not isinstance(data.get(kind), dict):
+            data[kind] = {}
+    return data
+
+
+def save_presets(data: dict):
+    BACKUP_DIR.mkdir(parents=True, exist_ok=True)
+    temp = PRESET_FILE.with_suffix(".tmp")
+    temp.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
+    temp.replace(PRESET_FILE)
 
 
 BADGE_LEVELS = ("未装备", "铜", "银", "金", "名人堂", "传奇")
@@ -283,6 +317,14 @@ SIGNATURE_NAMES = {
     "SIGJUMPBALLSTAND": "争球站姿", "SIGPLAYERINTRO1": "入场动作一",
     "SIGPLAYERINTRO2": "入场动作二", "VOICETYPE": "声音类型",
 }
+
+
+SIGNATURE_GROUPS = {
+    "Jump Shooting": "投篮", "Jump Shooting II": "花式投篮",
+    "Layups And Dunks": "上篮扣篮", "Post Game": "背身",
+    "Ball Handling": "控球", "Misc": "其他",
+}
+ALL_SIGNATURES = "全部动作"
 
 
 def signature_label(field: dict) -> str:
@@ -479,8 +521,12 @@ class GameMemory:
     def replace_playbook_slot(self, book: dict, slot: int, crc: int) -> Path:
         return self.edit_playbook_slots(book, {slot: crc})
 
-    def edit_playbook_slots(self, book: dict, updates: dict[int, int]) -> Path:
-        """Validate and save one or more playbook slots as a single undoable edit."""
+    def edit_playbook_slots(self, book: dict, updates: dict[int, int], *, known: frozenset[int] = frozenset()) -> Path:
+        """Validate and save one or more playbook slots as a single undoable edit.
+
+        ``known`` adds plays verified in the game's play catalog but used by no
+        playbook right now (e.g. restoring a preset after they were removed).
+        """
         if not updates:
             raise ValueError("没有选择需要修改的战术槽位。")
         if any(not 0 <= slot < PLAYBOOK_EDITABLE_SLOTS for slot in updates):
@@ -495,7 +541,7 @@ class GameMemory:
         for slot, crc in updates.items():
             if current["slots"][slot] != book["slots"][slot]:
                 raise RuntimeError(f"游戏中的第 {slot + 1} 个战术槽位已变化，请重新读取后再修改。")
-            if crc and crc not in self.play_crc_pool:
+            if crc and crc not in self.play_crc_pool and crc not in known:
                 raise ValueError("该战术不在当前已载入的手册中，已停止写入。")
             if current["slots"][slot] != crc:
                 changes[current["address"] + 108 + slot * 4] = struct.pack("<I", crc)
@@ -853,7 +899,13 @@ class PlayerEditor(tk.Tk):
         self.play_position_filter = tk.StringVar(value="全部位置")
         self.play_search = tk.StringVar()
         self.playbook_status = tk.StringVar(value="打开此页后读取游戏战术手册")
+        self.presets = load_presets()
+        self.signature_preset_name = tk.StringVar()
+        self.signature_preset_scope = tk.StringVar(value=ALL_SIGNATURES)
+        self.signature_preset_info = tk.StringVar()
+        self.playbook_preset_name = tk.StringVar()
         self._make_ui()
+        self._refresh_preset_boxes()
         self._bind_shortcuts()
         self.protocol("WM_DELETE_WINDOW", self._quit)
         self.after(200, self.connect)
@@ -1196,16 +1248,27 @@ class PlayerEditor(tk.Tk):
     def _make_signature_tab(self):
         outer = ttk.Frame(self.tabs, padding=(4, 10, 4, 4))
         self.tabs.add(outer, text="动作")
+        bar = ttk.Frame(outer)
+        bar.pack(fill="x", padx=10, pady=(0, 4))
+        ttk.Label(bar, text="动作预设").pack(side="left")
+        self.signature_preset_box = ttk.Combobox(bar, textvariable=self.signature_preset_name, width=26)
+        self.signature_preset_box.pack(side="left", padx=(8, 12))
+        ttk.Label(bar, text="范围").pack(side="left")
+        ttk.Combobox(bar, textvariable=self.signature_preset_scope, state="readonly", width=9,
+                     values=(ALL_SIGNATURES, *SIGNATURE_GROUPS.values())).pack(side="left", padx=(8, 12))
+        ttk.Button(bar, text="载入预设", command=self._load_signature_preset).pack(side="left")
+        ttk.Button(bar, text="保存为预设", command=self._save_signature_preset).pack(side="left", padx=6)
+        ttk.Button(bar, text="删除", command=lambda: self._delete_preset("signatures")).pack(side="left")
+        ttk.Label(outer, textvariable=self.signature_preset_info, style="Muted.TLabel").pack(
+            anchor="w", padx=10, pady=(0, 2))
+        self.signature_preset_name.trace_add("write", lambda *_: self._show_signature_preset_info())
+        self.signature_preset_scope.trace_add("write", lambda *_: self._show_signature_preset_info())
+        self._show_signature_preset_info()
         ttk.Label(outer, text="从列表选动作名称，也可直接输入编号；未收录名称的项目保留数字输入。修改后点「保存修改」。",
                   style="Muted.TLabel").pack(anchor="w", padx=10, pady=(0, 6))
         book = ttk.Notebook(outer, style="Sub.TNotebook")
         book.pack(fill="both", expand=True)
-        groups = {
-            "Jump Shooting": "投篮", "Jump Shooting II": "花式投篮",
-            "Layups And Dunks": "上篮扣篮", "Post Game": "背身",
-            "Ball Handling": "控球", "Misc": "其他",
-        }
-        for group, title in groups.items():
+        for group, title in SIGNATURE_GROUPS.items():
             area = ScrollFrame(book, padding=(16, 12))
             book.add(area, text=title)
             fields = [field for field in self.signature_fields if field["group"] == group]
@@ -1241,6 +1304,24 @@ class PlayerEditor(tk.Tk):
         self.book_box.bind("<<ComboboxSelected>>", lambda _event: self._show_playbook())
         ttk.Button(top, text="重新读取", command=self._refresh_playbooks).pack(side="left", padx=6)
 
+        presets = ttk.Frame(page)
+        presets.pack(fill="x", pady=(8, 0))
+        ttk.Label(presets, text="手册预设").pack(side="left")
+        self.playbook_preset_box = ttk.Combobox(presets, textvariable=self.playbook_preset_name, width=28)
+        self.playbook_preset_box.pack(side="left", padx=(8, 12))
+        self.playbook_preset_box.bind("<<ComboboxSelected>>", lambda _event: self._show_playbook_preset_info())
+        ttk.Button(presets, text="保存整本", command=lambda: self._save_playbook_preset(selected_only=False)).pack(
+            side="left")
+        self.playbook_save_selected = ttk.Button(presets, text="保存所选",
+                                                 command=lambda: self._save_playbook_preset(selected_only=True))
+        self.playbook_save_selected.pack(side="left", padx=6)
+        self.playbook_save_selected.state(["disabled"])
+        ttk.Button(presets, text="替换当前手册", command=lambda: self._apply_playbook_preset("replace")).pack(
+            side="left", padx=(12, 0))
+        ttk.Button(presets, text="追加到空槽", command=lambda: self._apply_playbook_preset("append")).pack(
+            side="left", padx=6)
+        ttk.Button(presets, text="删除", command=lambda: self._delete_preset("playbooks")).pack(side="left", padx=(6, 0))
+
         note = ("左侧选择球队手册的槽位，右侧从已载入战术中挑选；按住 Ctrl/Shift 可多选并批量添加或删除。\n"
                 "打法、细分和位置读取自游戏战术数据，位置先列主攻球员；「空接」按战术名中的 ALLEY / LOB 标出。")
         ttk.Label(page, text=note, foreground=P["muted"], wraplength=1050).pack(anchor="w", pady=(7, 4))
@@ -1262,12 +1343,13 @@ class PlayerEditor(tk.Tk):
         self.play_slot_tree.column("#0", width=265, stretch=True)
         self.play_slot_tree.column("type", width=100, stretch=False)
         self.play_slot_tree.column("position", width=125, stretch=False)
+        self.play_slot_tree.bind("<<TreeviewSelect>>", lambda _event: self._update_playbook_preset_buttons())
         slot_scroll = ttk.Scrollbar(slot_frame, orient="vertical", command=self.play_slot_tree.yview)
         self.play_slot_tree.configure(yscrollcommand=slot_scroll.set)
         self.play_slot_tree.pack(side="left", fill="both", expand=True)
         slot_scroll.pack(side="right", fill="y")
         slot_actions = ttk.Frame(left)
-        slot_actions.pack(fill="x")
+        slot_actions.pack(side="bottom", fill="x", before=slot_frame)
         ttk.Button(slot_actions, text="替换所选槽位", command=lambda: self._change_playbook("replace")).pack(
             side="left", padx=(0, 4))
         ttk.Button(slot_actions, text="加入空槽", command=lambda: self._change_playbook("add")).pack(
@@ -1310,10 +1392,11 @@ class PlayerEditor(tk.Tk):
         self.play_catalog_tree.configure(yscrollcommand=catalog_scroll.set)
         self.play_catalog_tree.pack(side="left", fill="both", expand=True)
         catalog_scroll.pack(side="right", fill="y")
+        # Bottom rows are packed ahead of the lists so a short window shrinks the lists, not the buttons.
         ttk.Button(right, text="批量添加所选战术到空槽", style="Accent.TButton", command=self._batch_add_playbook).pack(
-            anchor="e", pady=(5, 0))
+            side="bottom", anchor="e", pady=(5, 0), before=catalog_frame)
         footer = ttk.Frame(page)
-        footer.pack(fill="x", pady=(6, 0))
+        footer.pack(side="bottom", fill="x", pady=(6, 0), before=panes)
         ttk.Label(footer, textvariable=self.playbook_status).pack(side="left")
         ttk.Button(footer, text="撤销上次战术修改", command=self._undo_playbook).pack(side="right")
 
@@ -2009,6 +2092,7 @@ class PlayerEditor(tk.Tk):
             tree.see(selected_id)
         used = sum(bool(value) for value in book["slots"][:PLAYBOOK_EDITABLE_SLOTS])
         self.playbook_status.set(f"{book['name']}：已用 {used}/80 槽；右侧可选 {len(self.memory.play_crc_pool)} 种战术")
+        self._update_playbook_preset_buttons()
 
     def _filter_play_catalog(self):
         if not hasattr(self, "play_catalog_tree"):
@@ -2168,6 +2252,248 @@ class PlayerEditor(tk.Tk):
             self.playbook_status.set("已撤销上次战术修改。")
         except Exception as exc:
             messagebox.showerror("撤销战术失败", str(exc), parent=self)
+
+    # Presets: named 动作 values and playbook slot lists, kept in PRESET_FILE.
+    def _refresh_preset_boxes(self):
+        for kind, box in (("signatures", self.signature_preset_box), ("playbooks", self.playbook_preset_box)):
+            newest = sorted(self.presets[kind].items(), key=lambda item: str(item[1].get("saved", "")), reverse=True)
+            box.configure(values=[name for name, _preset in newest])
+
+    def _preset_var(self, kind: str) -> tk.StringVar:
+        return self.signature_preset_name if kind == "signatures" else self.playbook_preset_name
+
+    def _preset_name(self, kind: str, default: str) -> str | None:
+        """Typed name (or the default) to save under; None when the user keeps the old preset."""
+        name = self._preset_var(kind).get().strip() or default
+        if len(name) > 40:
+            raise ValueError("预设名称最多 40 个字。")
+        if name in self.presets[kind] and not messagebox.askyesno(
+                "覆盖预设", f"预设「{name}」已存在，要用当前内容覆盖吗？", parent=self):
+            return None
+        return name
+
+    def _store_preset(self, kind: str, name: str, preset: dict | None):
+        data = load_presets()  # re-read so presets saved by another open copy survive
+        if preset is None:
+            data[kind].pop(name, None)
+        else:
+            data[kind][name] = {**preset, "saved": time.strftime("%Y-%m-%d %H:%M")}
+        save_presets(data)
+        self.presets = data
+        self._refresh_preset_boxes()
+        self._preset_var(kind).set("" if preset is None else name)
+
+    def _delete_preset(self, kind: str):
+        title = "动作预设" if kind == "signatures" else "手册预设"
+        name = self._preset_var(kind).get().strip()
+        try:
+            if name not in self.presets[kind]:
+                raise ValueError(f"请先从列表选择要删除的{title}。")
+            if not messagebox.askyesno(f"删除{title}", f"删除{title}「{name}」？游戏里的数据不受影响。", parent=self):
+                return
+            self._store_preset(kind, name, None)
+            self.status.set(f"已删除{title}「{name}」")
+        except (ValueError, OSError) as exc:
+            messagebox.showerror(f"删除{title}失败", str(exc), parent=self)
+
+    def _signature_scope_fields(self) -> tuple[str, list[dict]]:
+        scope = self.signature_preset_scope.get()
+        if scope == ALL_SIGNATURES:
+            return scope, self.signature_fields
+        group = next((key for key, title in SIGNATURE_GROUPS.items() if title == scope), None)
+        return scope, [field for field in self.signature_fields if field["group"] == group]
+
+    def _show_signature_preset_info(self):
+        name = self.signature_preset_name.get().strip()
+        preset = self.presets["signatures"].get(name)
+        if not preset:
+            self.signature_preset_info.set(
+                f"输入名称（留空则用球员名）后点「保存为预设」，保存当前球员的{self.signature_preset_scope.get()}；"
+                "载入预设只填入下方输入框，点「保存修改」才写入游戏。")
+            return
+        values = preset.get("values", {})
+        counts = Counter(SIGNATURE_GROUPS.get(field["group"], field["group"])
+                         for field in self.signature_fields if field["id"] in values)
+        content = (f"全部 {sum(counts.values())} 项" if len(counts) == len(SIGNATURE_GROUPS)
+                   else "，".join(f"{title} {count} 项" for title, count in counts.items()) or "没有可用的动作")
+        self.signature_preset_info.set(
+            f"预设「{name}」：{content} · 来源 {preset.get('source', '未知')} · {preset.get('saved', '')}")
+
+    def _save_signature_preset(self):
+        try:
+            if not self.baseline or not self.selected:
+                raise ValueError("请先选择或识别一名球员，再把该球员的动作保存为预设。")
+            scope, fields = self._signature_scope_fields()
+            values = {}
+            for field in fields:
+                value = self._signature_value(field, self.signature_inputs[field["id"]].get())
+                maximum = (1 << field["bits"]) - 1
+                if not 0 <= value <= maximum:
+                    raise ValueError(f"{signature_label(field)} 须在 0 到 {maximum} 之间")
+                values[field["id"]] = value
+            player = self.selected["name"]
+            name = self._preset_name("signatures", player if scope == ALL_SIGNATURES else f"{player} · {scope}")
+            if name is None:
+                return
+            self._store_preset("signatures", name, {"source": player, "scope": scope, "values": values})
+            self.status.set(f"已保存动作预设「{name}」：{scope} {len(values)} 项")
+        except (ValueError, OSError) as exc:
+            messagebox.showerror("保存动作预设失败", str(exc), parent=self)
+
+    def _load_signature_preset(self):
+        try:
+            if not self.baseline:
+                raise ValueError("请先选择或识别一名球员，再载入动作预设。")
+            name = self.signature_preset_name.get().strip()
+            preset = self.presets["signatures"].get(name)
+            if not preset:
+                raise ValueError("请从列表选择一个已保存的动作预设。")
+            scope, fields = self._signature_scope_fields()
+            values = preset.get("values", {})
+            loaded = changed = skipped = 0
+            for field in fields:
+                value = values.get(field["id"])
+                if value is None:
+                    continue
+                if not isinstance(value, int) or not 0 <= value < 1 << field["bits"]:
+                    skipped += 1
+                    continue
+                self.signature_inputs[field["id"]].set(self._signature_display(field, value))
+                loaded += 1
+                changed += value != self.baseline["signatures"][field["id"]]
+            if not loaded:
+                raise ValueError(f"预设「{name}」里没有「{scope}」范围的动作。")
+            self._refresh_dirty()
+            note = f"，{skipped} 项数值无效已跳过" if skipped else ""
+            self.status.set(f"已载入「{name}」{loaded} 项（{changed} 项有变化{note}），点「保存修改」写入游戏")
+        except ValueError as exc:
+            messagebox.showerror("载入动作预设失败", str(exc), parent=self)
+
+    def _selected_book(self) -> dict:
+        if not self.memory:
+            raise RuntimeError("请先连接游戏。")
+        book = self.book_option_map.get(self.book_choice.get())
+        if not book:
+            raise ValueError("请先选择一本战术手册。")
+        return book
+
+    def _selected_play_slots(self, book: dict) -> list[int]:
+        """Selected left-side slots that hold a play and may be edited."""
+        slots = []
+        for item in self.play_slot_tree.selection():
+            slot = int(item.split(":", 1)[1])
+            if slot < PLAYBOOK_EDITABLE_SLOTS and book["slots"][slot]:
+                slots.append(slot)
+        return sorted(slots)
+
+    def _update_playbook_preset_buttons(self):
+        book = self.book_option_map.get(self.book_choice.get())
+        chosen = bool(book) and bool(self._selected_play_slots(book))
+        self.playbook_save_selected.state(["!disabled"] if chosen else ["disabled"])
+
+    def _preset_play(self, crc: int) -> dict:
+        return {"crc": f"{crc:08X}", "name": self._play_meta(crc)["name"]}
+
+    def _save_playbook_preset(self, *, selected_only: bool):
+        try:
+            book = self._selected_book()
+            slots = book["slots"][:PLAYBOOK_EDITABLE_SLOTS]
+            if selected_only:
+                chosen = self._selected_play_slots(book)
+                if not chosen:
+                    raise ValueError("请先在左侧选择要保存的战术（空槽和 81–88 保留槽不会保存）。")
+                preset = {"whole": False, "plays": [self._preset_play(slots[slot]) for slot in chosen]}
+                count, default = len(chosen), f"{book['name']} · {len(chosen)} 个战术"
+            else:
+                count = sum(1 for crc in slots if crc)
+                if not count:
+                    raise ValueError("当前手册前 80 槽都是空的，没有可保存的战术。")
+                preset = {"whole": True, "slots": [self._preset_play(crc) if crc else None for crc in slots]}
+                default = book["name"]
+            name = self._preset_name("playbooks", default)
+            if name is None:
+                return
+            self._store_preset("playbooks", name, {**preset, "source": book["name"]})
+            self.playbook_status.set(f"已保存手册预设「{name}」：{'所选' if selected_only else '整本'} {count} 个战术")
+        except (ValueError, RuntimeError, OSError) as exc:
+            messagebox.showerror("保存手册预设失败", str(exc), parent=self)
+
+    def _show_playbook_preset_info(self):
+        name = self.playbook_preset_name.get().strip()
+        preset = self.presets["playbooks"].get(name)
+        if preset:
+            items = preset.get("slots") if preset.get("whole") else preset.get("plays")
+            count = sum(1 for item in items or () if item)
+            kind = "整本手册" if preset.get("whole") else "战术包"
+            self.playbook_status.set(f"预设「{name}」：{kind} · {count} 个战术 · 来源 {preset.get('source', '未知')}"
+                                     f" · {preset.get('saved', '')}")
+
+    @staticmethod
+    def _read_playbook_preset(preset: dict, known: frozenset[int]) -> tuple[list[int], int]:
+        """Slot-ordered play CRCs (0 = empty) and how many listed plays this game does not have."""
+        crcs, missing = [], 0
+        for item in (preset.get("slots") if preset.get("whole") else preset.get("plays")) or ():
+            try:
+                crc = int(item["crc"], 16) if item else 0
+            except (KeyError, TypeError, ValueError):
+                crc = -1
+            if crc and crc not in known:
+                missing += 1
+                crc = 0
+            crcs.append(crc)
+        return crcs, missing
+
+    def _apply_playbook_preset(self, mode: str):
+        try:
+            book = self._selected_book()
+            name = self.playbook_preset_name.get().strip()
+            preset = self.presets["playbooks"].get(name)
+            if not preset:
+                raise ValueError("请从列表选择一个已保存的手册预设。")
+            known = frozenset(self.play_catalog) | self.memory.play_crc_pool
+            crcs, missing = self._read_playbook_preset(preset, known)
+            current = list(book["slots"][:PLAYBOOK_EDITABLE_SLOTS])
+            skipped = [f"{missing} 个本游戏没有的战术"] if missing else []
+            if mode == "replace":
+                plays = crcs if preset.get("whole") else [crc for crc in crcs if crc]
+                target = (plays + [0] * PLAYBOOK_EDITABLE_SLOTS)[:PLAYBOOK_EDITABLE_SLOTS]
+                updates = {slot: crc for slot, crc in enumerate(target) if current[slot] != crc}
+                if not updates:
+                    self.playbook_status.set(f"「{book['name']}」已与预设「{name}」一致，无需修改。")
+                    return
+                if not messagebox.askyesno(
+                        "替换当前手册", f"用预设「{name}」替换「{book['name']}」的前 80 槽？\n\n"
+                        f"将改动 {len(updates)} 个槽位，81–88 保留槽不变；可用「撤销上次战术修改」恢复。", parent=self):
+                    return
+                verb = "替换了"
+            else:
+                present, plays, duplicates = set(current), [], 0
+                for crc in crcs:
+                    if not crc:
+                        continue
+                    if crc in present:
+                        duplicates += 1
+                        continue
+                    present.add(crc)
+                    plays.append(crc)
+                if duplicates:
+                    skipped.append(f"{duplicates} 个已在手册中的战术")
+                if not plays:
+                    raise ValueError("没有可追加的战术：" + "、".join(skipped or ["预设是空的"]) + "。")
+                empty = [slot for slot, crc in enumerate(current) if not crc]
+                if len(plays) > len(empty):
+                    raise ValueError(f"需要 {len(plays)} 个空槽，当前手册只有 {len(empty)} 个；请先清空部分槽位。")
+                updates = dict(zip(empty, plays))
+                verb = "追加了"
+            backup = self.memory.edit_playbook_slots(book, updates, known=known)
+            self.playbook_last_backup = backup
+            self._refresh_playbooks()
+            self.play_slot_tree.selection_set(*(f"slot:{slot}" for slot in updates))
+            self.play_slot_tree.see(f"slot:{min(updates)}")
+            note = f"；已跳过{'、'.join(skipped)}" if skipped else ""
+            self.playbook_status.set(f"已用预设「{name}」{verb} {len(updates)} 个槽位{note}；可一次撤销。")
+        except Exception as exc:
+            messagebox.showerror("载入手册预设失败", str(exc), parent=self)
 
     def _filter(self):
         if self._search_job is not None:
