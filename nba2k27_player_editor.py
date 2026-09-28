@@ -4,33 +4,31 @@ The program edits the loaded roster in memory. It does not patch game code.
 """
 from __future__ import annotations
 
-import asyncio
 import ctypes as ct
 from datetime import date
-from io import BytesIO
 import json
 import multiprocessing as mp
-import os
 from pathlib import Path
 import re
 import struct
 import sys
 import time
 import tkinter as tk
+import traceback
 from tkinter import messagebox, ttk
 from collections import Counter
 from decimal import Decimal, InvalidOperation, ROUND_HALF_UP
 
 import psutil
-from PIL import ImageGrab
-from winrt.windows.graphics.imaging import BitmapDecoder
-from winrt.windows.media.ocr import OcrEngine
-from winrt.windows.storage.streams import DataWriter, InMemoryRandomAccessStream
-
 from playbook_catalog import POSITION_NAMES, TYPE_ORDER, classify_play
+from team_badges import BadgeFactory, colors_from_record, fallback_colors, mix, tier_color
+import ui_theme as theme
+from ui_theme import P, ScrollFrame, SearchBox
 
 
-GAME_PATH = r"F:\game\NBA2K27\NBA2K27.exe"
+# Offsets below were verified on this game build (PE timestamp, SizeOfImage).
+# They are relative to the game module, so the install folder does not matter.
+VERIFIED_BUILD = (0x6A8DF1C6, 0x35A63000)
 ROOT_RVA = 161861320
 PLAYER_STRIDE = 1272
 PLAYBOOK_STRIDE = 536
@@ -39,6 +37,8 @@ PLAYBOOK_EDITABLE_SLOTS = 80
 BODY_RATIO = Decimal("1.4")
 BODY_MIN_CM = Decimal("50")
 BODY_MAX_CM = Decimal("327.67")
+RATING_MIN = 25
+RATING_MAX = 125
 FIELD_FILE = Path(getattr(sys, "_MEIPASS", Path(__file__).parent)) / "player_fields.json"
 EXTRA_FILE = Path(getattr(sys, "_MEIPASS", Path(__file__).parent)) / "player_extra_fields.json"
 ADVANCED_FILE = Path(getattr(sys, "_MEIPASS", Path(__file__).parent)) / "player_advanced_fields.json"
@@ -46,7 +46,12 @@ APPEARANCE_FILE = Path(getattr(sys, "_MEIPASS", Path(__file__).parent)) / "playe
 SIGNATURE_OPTIONS_FILE = Path(getattr(sys, "_MEIPASS", Path(__file__).parent)) / "player_signature_options.json"
 PLAYBOOK_PLAYS_FILE = Path(getattr(sys, "_MEIPASS", Path(__file__).parent)) / "playbook_plays.json"
 BACKUP_DIR = Path.home() / "Documents" / "NBA2K27_PlayerEditor_Backups"
-GAME_EXPECTED = os.path.normcase(os.path.normpath(GAME_PATH))
+SETTINGS_FILE = BACKUP_DIR / "editor_settings.json"
+LOG_FILE = BACKUP_DIR / "editor.log"
+FREE_AGENT = "自由球员"
+# Primary/secondary RGBA colours and short name in the team record (this build).
+TEAM_COLOR_OFFSET = 4940
+TEAM_ABBR_OFFSET = 848
 
 LEAGUE_ORDER = ("NBA", "WNBA", "G 联盟", "国家队", "其他联赛", "自由球员")
 WNBA_TEAMS = frozenset({
@@ -101,10 +106,69 @@ k32.Module32NextW.restype = ct.c_int
 k32.VirtualQueryEx.argtypes = [ct.c_void_p, ct.c_void_p, ct.c_void_p, ct.c_size_t]
 k32.VirtualQueryEx.restype = ct.c_size_t
 user32 = ct.WinDLL("user32", use_last_error=True)
-user32.FindWindowW.argtypes = [ct.c_wchar_p, ct.c_wchar_p]
-user32.FindWindowW.restype = ct.c_void_p
-user32.SetForegroundWindow.argtypes = [ct.c_void_p]
-user32.SetForegroundWindow.restype = ct.c_int
+
+
+def set_dpi_awareness():
+    """Match window coordinates to real pixels so screen crops land on the game."""
+    try:
+        user32.SetProcessDpiAwarenessContext(ct.c_void_p(-4))  # per-monitor v2
+    except (AttributeError, OSError):
+        try:
+            ct.windll.shcore.SetProcessDpiAwareness(1)
+        except (AttributeError, OSError):
+            pass
+
+
+def log_error(context: str, exc: BaseException | None = None):
+    """Windowed builds have no console; keep a small log next to the backups."""
+    try:
+        BACKUP_DIR.mkdir(parents=True, exist_ok=True)
+        detail = "".join(traceback.format_exception(exc)) if exc else ""
+        with LOG_FILE.open("a", encoding="utf-8") as handle:
+            handle.write(f"[{time.strftime('%Y-%m-%d %H:%M:%S')}] {context}\n{detail}\n")
+    except OSError:
+        pass
+
+
+def load_settings() -> dict:
+    try:
+        data = json.loads(SETTINGS_FILE.read_text(encoding="utf-8"))
+        return data if isinstance(data, dict) else {}
+    except (OSError, ValueError):
+        return {}
+
+
+def save_settings(data: dict):
+    try:
+        BACKUP_DIR.mkdir(parents=True, exist_ok=True)
+        SETTINGS_FILE.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
+    except OSError:
+        pass
+
+
+BADGE_LEVELS = ("未装备", "铜", "银", "金", "名人堂", "传奇")
+HOT_ZONE_LEVELS = ("冷区", "普通", "热区", "极热")
+
+
+def extra_choices(field: dict) -> tuple[str, ...] | None:
+    """Named values for badge tiers (0–5) and hot zones (0–3)."""
+    if field["section"] == "Badges" and field["bits"] == 3:
+        return tuple(f"{value} · {name}" for value, name in enumerate(BADGE_LEVELS))
+    if field["section"] == "Tendencies" and field["bits"] == 2:
+        return tuple(f"{value} · {name}" for value, name in enumerate(HOT_ZONE_LEVELS))
+    return None
+
+
+def extra_display(field: dict, value: int) -> str:
+    choices = extra_choices(field)
+    return choices[value] if choices and 0 <= value < len(choices) else str(value)
+
+
+def leading_int(text: str) -> int:
+    match = re.match(r"\s*(-?\d+)", text)
+    if not match:
+        raise ValueError("请输入数字")
+    return int(match.group(1))
 
 
 class MEMORY_BASIC_INFORMATION(ct.Structure):
@@ -117,15 +181,14 @@ class MEMORY_BASIC_INFORMATION(ct.Structure):
 
 
 def find_game() -> psutil.Process:
-    for proc in psutil.process_iter(["name", "exe"]):
+    """Find the running game by process name, wherever it is installed."""
+    for proc in psutil.process_iter(["name"]):
         try:
-            if proc.info.get("name", "").lower() == "nba2k27.exe":
-                path = proc.info.get("exe")
-                if path and os.path.normcase(os.path.normpath(path)) == GAME_EXPECTED:
-                    return proc
-        except (psutil.NoSuchProcess, psutil.AccessDenied, TypeError):
+            if (proc.info.get("name") or "").lower() == "nba2k27.exe":
+                return proc
+        except (psutil.NoSuchProcess, psutil.AccessDenied):
             continue
-    raise RuntimeError("没有找到 F:\\game\\NBA2K27\\NBA2K27.exe，请先启动游戏。")
+    raise RuntimeError("没有找到正在运行的 NBA 2K27（NBA2K27.exe），请先启动游戏。")
 
 
 def module_base(pid: int) -> int:
@@ -151,11 +214,11 @@ def decode_name(data: bytes) -> str:
 
 
 def raw_to_rating(raw: int) -> int:
-    return min(99, max(25, round(25 + raw * 85 / 255)))
+    return min(RATING_MAX, max(RATING_MIN, round(RATING_MIN + raw * 100 / 255)))
 
 
 def rating_to_raw(rating: int) -> int:
-    return max(0, min(255, round((rating - 25) * 255 / 85)))
+    return max(0, min(255, round((rating - RATING_MIN) * 255 / 100)))
 
 
 POSITIONS = ("控球后卫", "得分后卫", "小前锋", "大前锋", "中锋", "无")
@@ -272,28 +335,6 @@ def encode_optional_text(text: str) -> bytes:
     return raw.ljust(40, b"\x00")
 
 
-async def _recognize_png(data: bytes) -> str:
-    stream = InMemoryRandomAccessStream()
-    writer = DataWriter(stream)
-    writer.write_bytes(data)
-    await writer.store_async()
-    writer.detach_stream()
-    stream.seek(0)
-    decoder = await BitmapDecoder.create_async(stream)
-    bitmap = await decoder.get_software_bitmap_async()
-    engine = OcrEngine.try_create_from_user_profile_languages()
-    return (await engine.recognize_async(bitmap)).text if engine else ""
-
-
-def screen_player_text() -> str:
-    image = ImageGrab.grab()
-    width, height = image.size
-    image = image.crop((round(width * 0.34), 0, width, round(height * 0.45)))
-    output = BytesIO()
-    image.save(output, format="PNG")
-    return asyncio.run(_recognize_png(output.getvalue()))
-
-
 class GameMemory:
     def __init__(self):
         self.process = find_game()
@@ -302,6 +343,12 @@ class GameMemory:
         if not self.handle:
             raise OSError(ct.get_last_error(), "无法打开游戏进程")
         self.base = module_base(self.pid)
+        try:
+            header = self.base + self.u32(self.base + 0x3C)
+            self.build = (self.u32(header + 8), self.u32(header + 24 + 56))
+        except (OSError, ValueError):
+            self.build = (0, 0)
+        self.build_verified = self.build == VERIFIED_BUILD
         self.refresh_players()
 
     def refresh_players(self):
@@ -313,11 +360,18 @@ class GameMemory:
         self.stats_table = self.u64(roster + 472) if roster else 0
         if not self.table or not 100 <= self.count <= 10000:
             self.close()
-            raise RuntimeError("这版游戏的球员表位置与已验证版本不符，已停止读取。")
+            raise RuntimeError(self._layout_error("球员表位置与已验证版本不符"))
         self.players = self._load_players()
         if len(self.players) < 100:
             self.close()
-            raise RuntimeError("球员表验证失败，已停止读取。")
+            raise RuntimeError(self._layout_error("球员表验证失败"))
+
+    def _layout_error(self, what: str) -> str:
+        if self.build_verified:
+            return f"{what}，已停止读取。请先进入游戏的球员名单或编辑页面，再点「重新连接」。"
+        stamp = time.strftime("%Y-%m-%d", time.gmtime(self.build[0])) if self.build[0] else "未知"
+        return (f"{what}，已停止读取。当前游戏版本（构建日期 {stamp}）与本工具适配的版本"
+                f"（{time.strftime('%Y-%m-%d', time.gmtime(VERIFIED_BUILD[0]))}）不同，内存结构可能已变化。")
 
     def close(self):
         if getattr(self, "handle", None):
@@ -350,7 +404,10 @@ class GameMemory:
     def _load_players(self) -> list[dict]:
         data = self.read(self.table, self.count * PLAYER_STRIDE)
         stats = self.read(self.stats_table, self.stats_count * 64) if self.stats_table and 0 < self.stats_count < 100000 else b""
-        team_details: dict[int, tuple[str, str]] = {}
+        free_agent = {"team": FREE_AGENT, "league": FREE_AGENT, "nick": "", "abbr": "FA",
+                      "colors": ("#343a46", "#8b93a1")}
+        team_details: dict[int, dict] = {}
+        self.teams = {(FREE_AGENT, FREE_AGENT): free_agent}
         result = []
         for index in range(self.count):
             row = data[index * PLAYER_STRIDE:(index + 1) * PLAYER_STRIDE]
@@ -365,21 +422,34 @@ class GameMemory:
                         city = team_row[50:86].decode("utf-16-le", errors="ignore").split("\x00", 1)[0]
                         team_name = f"{city} {nickname}".strip() or "球队未知"
                         roster_type = (self.u32(team_ptr + 4668) >> 26) & 63
-                        team_details[team_ptr] = (team_name, classify_league(team_name, roster_type))
+                        abbr = decode_name(self.read(team_ptr + TEAM_ABBR_OFFSET, 14))
+                        colors = colors_from_record(self.read(team_ptr + TEAM_COLOR_OFFSET, 8))
+                        info = {"team": team_name, "league": classify_league(team_name, roster_type),
+                                "nick": nickname.strip(), "abbr": abbr.upper()[:4],
+                                "colors": colors or fallback_colors(team_name)}
                     except OSError:
-                        team_details[team_ptr] = ("球队未知", "其他联赛")
+                        info = {"team": "球队未知", "league": "其他联赛", "nick": "", "abbr": "?",
+                                "colors": fallback_colors("球队未知")}
+                    if not info["abbr"]:
+                        info["abbr"] = "".join(word[0] for word in info["team"].split()[:3]).upper() or "?"
+                    team_details[team_ptr] = info
+                    self.teams.setdefault((info["league"], info["team"]), info)
                 stat_id = struct.unpack_from("<H", row, 304)[0]
                 overall = None
                 if stats and stat_id < self.stats_count:
                     overall = (struct.unpack_from("<I", stats, stat_id * 64 + 60)[0] >> 21) & 0x7F
                     if not 25 <= overall <= 99:
                         overall = None
-                team_name, league = team_details.get(team_ptr, ("自由球员", "自由球员"))
+                info = team_details.get(team_ptr, free_agent) if team_ptr else free_agent
                 result.append({"index": index, "name": f"{first} {last}",
                                "uid": struct.unpack_from("<H", row, 296)[0],
                                "address": self.table + index * PLAYER_STRIDE,
-                               "team": team_name, "league": league, "overall": overall})
+                               "team": info["team"], "league": info["league"], "overall": overall,
+                               "team_nick": info["nick"], "team_abbr": info["abbr"]})
         return result
+
+    def team_info(self, player: dict) -> dict:
+        return self.teams.get((player["league"], player["team"])) or self.teams[(FREE_AGENT, FREE_AGENT)]
 
     def refresh_playbooks(self):
         """Read the live roster's authored playbook array and play CRC slots."""
@@ -490,37 +560,15 @@ class GameMemory:
         near = [(region, size) for region, size in regions
                 if self.table - 4 * 1024**3 <= region < self.table and size <= 4 * 1024**2]
         candidates = scan(near)
-        if not candidates and deep:
-            candidates = scan(regions)
+        if deep and not candidates:
+            near_set = set(near)
+            candidates += scan([region for region in regions if region not in near_set])
         if not candidates:
             return None
-        # Game keeps older editor panel copies in the same heap. The active
-        # panel is the latest one seen in the current inspected build.
+        # Game keeps older editor panel copies in the same heap; the latest
+        # panel allocation is the active editor without consulting the screen.
         _panel, player, record = max(candidates, key=lambda item: item[0])
         return player, record
-
-    def find_current_on_screen(self) -> dict | None:
-        text = " ".join(screen_player_text().upper().split())
-        compact = re.sub(r"\s+", "", text)
-        draft = re.search(r"选秀.{0,20}?[（(](\d{4})[）)]", compact)
-        years = re.search(r"职业年限[：:](\d{1,2})", compact)
-        matches = []
-        for player in self.players:
-            name = " ".join(player["name"].upper().split())
-            if name and name in text:
-                matches.append(player)
-        if draft:
-            target = int(draft.group(1))
-            matches = [player for player in matches
-                       if 1900 + ((self.u32(player["address"] + 440) >> 8) & 0xFF) == target]
-        if years:
-            target = int(years.group(1))
-            matches = [player for player in matches
-                       if ((self.u32(player["address"] + 992) >> 17) & 31) == target]
-        if len(matches) == 1:
-            return matches[0]
-        league_matches = [player for player in matches if player["index"] < 5000]
-        return league_matches[0] if len(league_matches) == 1 else None
 
     def player_snapshot(self, player: dict, fields: list[dict], *, record_address: int | None = None,
                         extra_fields: list[dict] | None = None,
@@ -716,24 +764,18 @@ class GameMemory:
 
 
 def detect_current_worker(sender, deep: bool):
-    """Keep OCR and the broad memory scan outside the Tk process."""
+    """Find the active editor panel from the game's memory outside Tk."""
+    set_dpi_awareness()
     memory = None
     try:
         memory = GameMemory()
-        if deep:
-            found = memory.find_current_editor(deep=True)
-        else:
-            player = memory.find_current_on_screen()
-            editor = memory.find_current_editor(deep=False)
-            found = (editor if editor and editor[0]["uid"] == player["uid"]
-                     else (player, None)) if player else editor
+        found = memory.find_current_editor(deep=deep)
+        message = {"pid": memory.pid, "method": "memory"}
         if found:
-            player, address = found
-            sender.send({"pid": memory.pid, "index": player["index"],
-                         "uid": player["uid"], "address": address})
-        else:
-            sender.send({"pid": memory.pid})
+            message.update(index=found[0]["index"], uid=found[0]["uid"], address=found[1])
+        sender.send(message)
     except Exception as exc:
+        log_error("current-player worker", exc)
         sender.send({"error": str(exc)})
     finally:
         if memory:
@@ -741,12 +783,23 @@ def detect_current_worker(sender, deep: bool):
         sender.close()
 
 
+APP_TITLE = "NBA 2K27 球员与战术修改器"
+RATING_GROUPS = {"Offense": "进攻", "Defense": "防守", "Athleticism": "运动",
+                 "Durability": "耐久", "Mental": "意识", "Misc": "其他"}
+
+
 class PlayerEditor(tk.Tk):
     def __init__(self):
         super().__init__()
-        self.title("NBA 2K27 球员与战术修改器")
-        self.geometry("1260x800")
-        self.minsize(1000, 650)
+        self.title(APP_TITLE)
+        self.style = theme.apply_theme(self)
+        theme.dark_title_bar(self)
+        self.badges = BadgeFactory(self)
+        self.settings = load_settings()
+        self.geometry(self.settings.get("geometry") or "1360x880")
+        self.minsize(1100, 700)
+        if self.settings.get("zoomed"):
+            self.state("zoomed")
         self.fields = json.loads(FIELD_FILE.read_text(encoding="utf-8"))
         self.extra_fields = json.loads(EXTRA_FILE.read_text(encoding="utf-8"))
         self.advanced_fields = json.loads(ADVANCED_FILE.read_text(encoding="utf-8"))
@@ -775,11 +828,21 @@ class PlayerEditor(tk.Tk):
         self.detect_receiver = None
         self.detect_started = 0.0
         self.detect_memory = None
+        self.detect_pending = False
+        self.tracked: list[tuple] = []
+        self._tab_titles: dict[tuple, str] = {}
+        self.dirty_count = 0
+        self._dirty_job = None
+        self._search_job = None
         self.height = tk.StringVar()
         self.wingspan = tk.StringVar()
         self.arm_scale = tk.StringVar()
         self.custom_scales = tk.BooleanVar()
-        self.status = tk.StringVar(value="连接游戏以读取球员名单")
+        self.status = tk.StringVar(value="正在连接游戏…")
+        self.dirty_text = tk.StringVar()
+        self.connection_text = tk.StringVar(value="未连接")
+        self.count_text = tk.StringVar()
+        self.busy_text = tk.StringVar()
         self.search = tk.StringVar()
         self.league_filter = tk.StringVar(value="全部联赛")
         self.team_filter = tk.StringVar(value="全部球队")
@@ -790,120 +853,300 @@ class PlayerEditor(tk.Tk):
         self.play_search = tk.StringVar()
         self.playbook_status = tk.StringVar(value="打开此页后读取游戏战术手册")
         self._make_ui()
+        self._bind_shortcuts()
         self.protocol("WM_DELETE_WINDOW", self._quit)
         self.after(200, self.connect)
+        self.after(4000, self._watchdog)
+
+    def report_callback_exception(self, exc, value, tb):
+        """Tk swallows callback errors in windowed builds; log and show them instead."""
+        log_error("界面操作出错", value)
+        if self.detect_process is not None:
+            self._finish_detect()
+        try:
+            messagebox.showerror("操作失败", f"{value}\n\n详细信息已记录到：\n{LOG_FILE}", parent=self)
+        except tk.TclError:
+            pass
+
+    def _icon(self, name: str, color: str | None = None, size: int = 16):
+        return self.badges.glyph(name, color or P["text"], size)
 
     def _make_ui(self):
-        warning = tk.Frame(self, bg="#B00020", padx=14, pady=10)
-        warning.pack(fill="x")
-        tk.Label(warning, text="⚠  必须离线运行游戏  ⚠", bg="#B00020", fg="white",
-                 font=("Microsoft YaHei UI", 21, "bold")).pack()
-        tk.Label(warning, text="仅用于本地离线游戏。启动游戏前请断开网络。",
-                 bg="#B00020", fg="white", font=("Microsoft YaHei UI", 11)).pack(pady=(3, 0))
-        top = ttk.Frame(self, padding=10)
-        top.pack(fill="x")
-        ttk.Button(top, text="重新连接", command=self.connect).pack(side="left")
-        ttk.Button(top, text="识别游戏当前球员", command=self.detect_current).pack(side="left", padx=8)
-        ttk.Button(top, text="深度识别", command=lambda: self.detect_current(deep=True)).pack(side="left")
-        ttk.Label(top, textvariable=self.status).pack(side="left", padx=12)
+        banner = tk.Frame(self, bg=P["banner"], padx=16, pady=7)
+        banner.pack(fill="x")
+        tk.Label(banner, image=self._icon("warning", "#ffffff", 18), bg=P["banner"]).pack(side="left")
+        tk.Label(banner, text="必须离线运行游戏", bg=P["banner"], fg="#ffffff",
+                 font=(theme.UI, 13, "bold")).pack(side="left", padx=(8, 14))
+        tk.Label(banner, text="仅用于本地离线游戏。启动游戏前请断开网络。", bg=P["banner"], fg="#ffd9db",
+                 font=theme.FONT).pack(side="left")
+
+        header = ttk.Frame(self, style="Bar.TFrame", padding=(16, 10))
+        header.pack(fill="x")
+        tk.Label(header, text="NBA 2K27", bg=P["panel"], fg=P["accent"], font=(theme.DISPLAY, 17)).pack(side="left")
+        tk.Label(header, text="球员与战术修改器", bg=P["panel"], fg=P["text"],
+                 font=(theme.UI, 12, "bold")).pack(side="left", padx=(8, 22))
+        self.connection_dot = tk.Label(header, text="●", bg=P["panel"], fg=P["danger"], font=(theme.UI, 11))
+        self.connection_dot.pack(side="left")
+        ttk.Label(header, textvariable=self.connection_text, style="Status.TLabel").pack(side="left", padx=(5, 0))
+        self.reconnect_button = ttk.Button(header, text="重新连接", image=self._icon("link"), compound="left",
+                                           style="Bar.TButton", command=self.connect)
+        self.reconnect_button.pack(side="right")
+        self.deep_button = ttk.Button(header, text="深度内存扫描", image=self._icon("scan"), compound="left",
+                                      style="Bar.TButton", command=lambda: self.detect_current(deep=True))
+        self.deep_button.pack(side="right", padx=8)
+        self.detect_button = ttk.Button(header, text="内存识别当前球员", image=self._icon("scan", P["accent_text"]),
+                                        compound="left", style="Accent.TButton", command=self.detect_current)
+        self.detect_button.pack(side="right")
+        self.cancel_detect_button = ttk.Button(header, text="取消", style="Bar.TButton", command=self._cancel_detect)
+        self.busy_bar = ttk.Progressbar(header, mode="indeterminate", length=110,
+                                        style="Accent.Horizontal.TProgressbar")
+        self.busy_label = ttk.Label(header, textvariable=self.busy_text, style="Busy.TLabel")
+
+        bottom = ttk.Frame(self, style="Bar.TFrame", padding=(16, 10))
+        bottom.pack(side="bottom", fill="x")
+        self.save_button = ttk.Button(bottom, text="保存修改", image=self._icon("save", P["accent_text"]),
+                                      compound="left", style="Accent.TButton", command=self.save)
+        self.save_button.pack(side="right")
+        for text, icon, command in (("撤销上次保存", "undo", self.undo), ("重新读取", "refresh", self._reload_clicked),
+                                    ("批量修改", "edit", self.batch_edit), ("复制 DNA", "copy", self.copy_dna_dialog)):
+            ttk.Button(bottom, text=text, image=self._icon(icon), compound="left", style="Bar.TButton",
+                       command=command).pack(side="right", padx=(0, 8))
+        ttk.Label(bottom, textvariable=self.dirty_text, style="Pending.TLabel").pack(side="right", padx=(0, 16))
+        ttk.Label(bottom, textvariable=self.status, style="Status.TLabel").pack(side="left", fill="x", expand=True)
+
         middle = ttk.PanedWindow(self, orient="horizontal")
-        middle.pack(fill="both", expand=True, padx=10, pady=6)
-        left = ttk.Frame(middle, padding=4)
-        middle.add(left, weight=2)
+        middle.pack(fill="both", expand=True, padx=12, pady=(10, 10))
         self.main_panes = middle
+        # Fixed-width finder; the editor side takes all resizing.
+        left = ttk.Frame(middle, style="Card.TFrame", padding=12, width=410)
+        middle.add(left, weight=0)
         self.player_panel = left
-        ttk.Label(left, text="查找球员").pack(anchor="w")
-        self.league_box = ttk.Combobox(left, textvariable=self.league_filter, state="readonly",
-                                       values=("全部联赛", *LEAGUE_ORDER))
-        self.league_box.pack(fill="x", pady=(4, 4))
-        self.league_box.bind("<<ComboboxSelected>>", lambda _event: self._filter())
-        self.team_box = ttk.Combobox(left, textvariable=self.team_filter, state="readonly", values=("全部球队",))
-        self.team_box.pack(fill="x", pady=(0, 4))
-        self.team_box.bind("<<ComboboxSelected>>", lambda _event: self._filter())
-        entry = ttk.Entry(left, textvariable=self.search)
-        entry.pack(fill="x", pady=(4, 8))
-        self.search.trace_add("write", lambda *_: self._filter())
-        player_frame = ttk.Frame(left)
-        player_frame.pack(fill="both", expand=True)
-        self.player_tree = ttk.Treeview(player_frame, columns=("overall", "index"), show="tree headings",
-                                        selectmode="browse")
-        self.player_tree.heading("#0", text="联赛 / 球队 / 球员")
-        self.player_tree.heading("overall", text="总评")
-        self.player_tree.heading("index", text="编号")
-        self.player_tree.column("#0", width=280, stretch=True)
-        self.player_tree.column("overall", width=54, stretch=False, anchor="center")
-        self.player_tree.column("index", width=56, stretch=False, anchor="center")
-        vertical = ttk.Scrollbar(player_frame, orient="vertical", command=self.player_tree.yview)
-        horizontal = ttk.Scrollbar(player_frame, orient="horizontal", command=self.player_tree.xview)
-        self.player_tree.configure(yscrollcommand=vertical.set, xscrollcommand=horizontal.set)
-        self.player_tree.grid(row=0, column=0, sticky="nsew")
-        vertical.grid(row=0, column=1, sticky="ns")
-        horizontal.grid(row=1, column=0, sticky="ew")
-        player_frame.rowconfigure(0, weight=1)
-        player_frame.columnconfigure(0, weight=1)
-        self.player_tree.bind("<<TreeviewSelect>>", self._select)
-        right = ttk.Frame(middle, padding=4)
-        middle.add(right, weight=3)
-        self.header = ttk.Label(right, text="请选择球员", font=("Microsoft YaHei UI", 14, "bold"))
-        self.header.pack(anchor="w", pady=(0, 10))
+        self._make_player_finder(left)
+        left.pack_propagate(False)
+        right = ttk.Frame(middle, padding=(12, 0, 0, 0))
+        middle.add(right, weight=5)
+        self._make_player_card(right)
         self.tabs = ttk.Notebook(right)
-        self.tabs.pack(fill="both", expand=True)
+        self.tabs.pack(fill="both", expand=True, pady=(10, 0))
         self._make_profile_tab()
-        body = ttk.Frame(self.tabs, padding=16)
-        self.tabs.add(body, text="身体")
-        for i, (label, var, hint) in enumerate([
-            ("身高（厘米）", self.height, "可超过游戏菜单上限；数据字段上限 327.67"),
-            ("臂展（厘米）", self.wingspan, "数据字段上限 327.67；模型变化尚未验证"),
-            ("手臂比例（实验）", self.arm_scale, "数值可保存；目前未观察到模型变化"),
-        ]):
-            ttk.Label(body, text=label).grid(row=i, column=0, sticky="w", pady=8)
-            ttk.Entry(body, textvariable=var, width=16).grid(row=i, column=1, sticky="w", padx=12)
-            ttk.Label(body, text=hint, foreground="#666666").grid(row=i, column=2, sticky="w")
-        ratio_actions = ttk.Frame(body)
-        ratio_actions.grid(row=3, column=0, columnspan=3, sticky="w", pady=(5, 10))
+        self._make_body_tab()
+        self._make_rating_tab()
+        self._make_extra_tabs()
+        self._make_signature_tab()
+        self._make_playbook_tab()
+        self._make_advanced_tab()
+        self.tabs.bind("<<NotebookTabChanged>>", self._tab_changed)
+        self._update_player_card()
+
+    def _make_player_finder(self, left):
+        ttk.Label(left, text="查找球员", style="CardSection.TLabel").pack(anchor="w")
+        search = SearchBox(left, self.search, "搜索姓名、编号或球队…", icons=self._icon)
+        search.pack(fill="x", pady=(6, 8))
+        self.search_entry = search.entry
+        self.search_entry.bind("<Return>", self._select_first_match)
+        self.search.trace_add("write", lambda *_: self._schedule_filter())
+        filters = ttk.Frame(left, style="Card.TFrame")
+        filters.pack(fill="x")
+        self.league_box = ttk.Combobox(filters, textvariable=self.league_filter, state="readonly", width=9,
+                                       values=("全部联赛", *LEAGUE_ORDER))
+        self.league_box.pack(side="left")
+        self.league_box.bind("<<ComboboxSelected>>", lambda _event: self._filter())
+        self.team_box = ttk.Combobox(filters, textvariable=self.team_filter, state="readonly", values=("全部球队",))
+        self.team_box.pack(side="left", fill="x", expand=True, padx=(8, 0))
+        self.team_box.bind("<<ComboboxSelected>>", lambda _event: self._filter())
+        ttk.Label(left, textvariable=self.count_text, style="CardMuted.TLabel").pack(anchor="w", pady=(8, 4))
+        player_frame = ttk.Frame(left, style="Card.TFrame")
+        player_frame.pack(fill="both", expand=True)
+        tree = ttk.Treeview(player_frame, columns=("overall", "index"), show="tree headings", selectmode="browse")
+        tree.heading("#0", text="联赛 / 球队 / 球员", anchor="w")
+        tree.heading("overall", text="总评")
+        tree.heading("index", text="编号")
+        tree.column("#0", width=200, minwidth=160, stretch=True)
+        tree.column("overall", width=50, minwidth=50, stretch=False, anchor="center")
+        tree.column("index", width=56, minwidth=56, stretch=False, anchor="center")
+        tree.tag_configure("league", font=theme.FONT_BOLD)
+        tree.tag_configure("empty", foreground=P["faint"])
+        vertical = ttk.Scrollbar(player_frame, orient="vertical", command=tree.yview)
+        tree.configure(yscrollcommand=vertical.set)
+        tree.pack(side="left", fill="both", expand=True)
+        vertical.pack(side="right", fill="y")
+        tree.bind("<<TreeviewSelect>>", self._select)
+        self.player_tree = tree
+        ttk.Label(left, text="Ctrl+F 搜索 · Enter 选第一名 · Ctrl+D 识别 · Ctrl+S 保存 · F5 重新读取",
+                  style="CardMuted.TLabel", font=theme.FONT_SMALL, wraplength=380).pack(anchor="w", pady=(8, 0))
+
+    def _make_player_card(self, parent):
+        card = ttk.Frame(parent, style="Card.TFrame", padding=(0, 0, 16, 0))
+        card.pack(fill="x")
+        self.card_stripe = tk.Frame(card, width=5, bg=P["border"])
+        self.card_stripe.pack(side="left", fill="y")
+        self.card_badge = ttk.Label(card, style="Card.TLabel")
+        self.card_badge.pack(side="left", padx=(14, 12), pady=12)
+        text = ttk.Frame(card, style="Card.TFrame")
+        text.pack(side="left", fill="x", expand=True, pady=10)
+        self.header = ttk.Label(text, style="CardName.TLabel")
+        self.header.pack(anchor="w")
+        self.card_meta = ttk.Label(text, style="CardMuted.TLabel")
+        self.card_meta.pack(anchor="w", pady=(2, 0))
+        self.card_rating = ttk.Label(card, style="CardMuted.TLabel", compound="top", font=theme.FONT_SMALL)
+        self.card_rating.pack(side="right", pady=10)
+        self.card_live = ttk.Label(card, style="CardMuted.TLabel", foreground=P["success"])
+        self.card_live.pack(side="right", padx=14)
+
+    def _update_player_card(self):
+        player = self.selected
+        if not player or not self.memory:
+            self.card_stripe.configure(bg=P["border"])
+            self.card_badge.configure(image=self.badges.disc("?", P["panel_hi"], P["border_hi"]))
+            self.header.configure(text="请选择球员", font=(theme.UI, 20, "bold"))
+            self.card_meta.configure(text="从左侧名单选择，或停在游戏的「编辑球员」页面后点「内存识别当前球员」。")
+            self.card_rating.configure(image="", text="")
+            self.card_live.configure(text="")
+            return
+        info = self.memory.team_info(player)
+        primary, secondary = info["colors"]
+        self.card_stripe.configure(bg=secondary if primary == "#000000" else primary)
+        self.card_badge.configure(image=self.badges.disc(info["abbr"], primary, secondary))
+        self.header.configure(text=player["name"], font=theme.FONT_NAME)
+        parts = [player["team"], player["league"]]
+        if self.baseline:
+            profile = self.baseline["profile"]
+            parts.append(self._profile_display("position", profile["position"]))
+            parts.append(f"{self.baseline['height_cm']:g} 厘米")
+            parts.append(f"球衣 {profile['jersey_number']} 号")
+        parts.append(f"编号 #{player['index']}")
+        self.card_meta.configure(text="   ·   ".join(parts))
+        overall = player["overall"]
+        self.card_rating.configure(image=self.badges.chip("—" if overall is None else str(overall),
+                                                          tier_color(overall)), text="总评")
+        self.card_live.configure(text="● 已关联游戏编辑器" if self.current_edit_address else "")
+
+    def _make_body_tab(self):
+        page = ttk.Frame(self.tabs, padding=20)
+        self.tabs.add(page, text="身体")
+        rows = [("身高（厘米）", self.height, "height_cm", "可超过游戏菜单上限；数据字段上限 327.67"),
+                ("臂展（厘米）", self.wingspan, "wingspan_cm", "数据字段上限 327.67；模型变化尚未验证"),
+                ("手臂比例（实验）", self.arm_scale, "arm_scale", "数值可保存；目前未观察到模型变化")]
+        for i, (label, var, key, hint) in enumerate(rows):
+            ttk.Label(page, text=label).grid(row=i, column=0, sticky="w", pady=8)
+            entry = ttk.Entry(page, textvariable=var, width=14, justify="center")
+            entry.grid(row=i, column=1, sticky="w", padx=14)
+            ttk.Label(page, text=hint, style="Muted.TLabel").grid(row=i, column=2, sticky="w")
+            self._track(var, entry, [(self.tabs, page)],
+                        lambda v=var, k=key: v.get().strip() != str(self.baseline[k]))
+        ratio_actions = ttk.Frame(page)
+        ratio_actions.grid(row=3, column=0, columnspan=3, sticky="w", pady=(8, 10))
         ttk.Button(ratio_actions, text="按身高 × 1.4 填臂展",
                    command=lambda: self._fill_body_ratio(from_height=True)).pack(side="left")
         ttk.Button(ratio_actions, text="按臂展 ÷ 1.4 填身高",
                    command=lambda: self._fill_body_ratio(from_height=False)).pack(side="left", padx=10)
-        ttk.Checkbutton(body, text="使用自定义外观比例", variable=self.custom_scales).grid(
-            row=4, column=0, columnspan=2, sticky="w", pady=10)
-        ttk.Label(body, text="1.4 按钮只填数值，不自动保存；模型效果待验证。修改手臂比例会启用自定义外观比例。",
-                  foreground="#666666", wraplength=650).grid(row=5, column=0, columnspan=3, sticky="w")
-        self._make_signature_tab()
-        self._make_playbook_tab()
-        groups = []
-        for field in self.fields:
-            if field["group"] not in groups:
-                groups.append(field["group"])
-        for group in groups:
-            page = ttk.Frame(self.tabs)
-            self.tabs.add(page, text={"Offense": "进攻", "Defense": "防守", "Athleticism": "运动", "Durability": "耐久", "Mental": "意识", "Misc": "其他"}.get(group, group))
-            canvas = tk.Canvas(page, borderwidth=0, highlightthickness=0)
-            bar = ttk.Scrollbar(page, orient="vertical", command=canvas.yview)
-            inner = ttk.Frame(canvas, padding=12)
-            inner.bind("<Configure>", lambda _e, c=canvas: c.configure(scrollregion=c.bbox("all")))
-            canvas.create_window((0, 0), window=inner, anchor="nw")
-            canvas.configure(yscrollcommand=bar.set)
-            canvas.pack(side="left", fill="both", expand=True)
-            bar.pack(side="right", fill="y")
-            for n, field in enumerate(f for f in self.fields if f["group"] == group):
-                label = ttk.Label(inner, text=field["label"], width=29)
-                label.grid(row=n, column=0, sticky="w", pady=4)
+        check = ttk.Checkbutton(page, text="使用自定义外观比例", variable=self.custom_scales)
+        check.grid(row=4, column=0, columnspan=2, sticky="w", pady=10)
+        self._track(self.custom_scales, check, [(self.tabs, page)],
+                    lambda: self.custom_scales.get() != self.baseline["custom_scales"])
+        ttk.Label(page, text="1.4 按钮只填数值，不自动保存；模型效果待验证。修改手臂比例会启用自定义外观比例。",
+                  style="Muted.TLabel", wraplength=680).grid(row=5, column=0, columnspan=3, sticky="w")
+
+    def _make_rating_tab(self):
+        area = ScrollFrame(self.tabs, padding=(20, 14))
+        self.tabs.add(area, text="能力")
+        inner, columns, row = area.inner, 3, 0
+        for group in dict.fromkeys(field["group"] for field in self.fields):
+            fields = [field for field in self.fields if field["group"] == group]
+            ttk.Label(inner, text=f"{RATING_GROUPS.get(group, group)}  ·  {len(fields)} 项",
+                      style="Section.TLabel").grid(row=row, column=0, columnspan=columns * 2, sticky="w",
+                                                   pady=(16 if row else 0, 6))
+            row += 1
+            for n, field in enumerate(fields):
+                r, c = row + n // columns, (n % columns) * 2
+                ttk.Label(inner, text=field["label"]).grid(row=r, column=c, sticky="w", pady=3, padx=(0, 8))
                 var = tk.StringVar()
                 self.rating_inputs[field["id"]] = var
-                ttk.Entry(inner, textvariable=var, width=8).grid(row=n, column=1, sticky="w", padx=10)
-            self._bind_canvas_wheel(canvas, inner, bar)
-        self._make_extra_tabs()
-        self._make_advanced_tab()
-        bottom = ttk.Frame(self, padding=10)
-        bottom.pack(fill="x")
-        ttk.Button(bottom, text="保存修改", command=self.save).pack(side="right")
-        ttk.Button(bottom, text="撤销上次保存", command=self.undo).pack(side="right", padx=8)
-        ttk.Button(bottom, text="重新读取", command=self.reload).pack(side="right", padx=8)
-        ttk.Button(bottom, text="批量修改", command=self.batch_edit).pack(side="right", padx=8)
-        ttk.Button(bottom, text="复制 DNA", command=self.copy_dna_dialog).pack(side="right", padx=8)
-        ttk.Label(bottom, text="修改会立即写入游戏内存；请在游戏里保存名单。", foreground="#666666").pack(side="left")
-        self.tabs.bind("<<NotebookTabChanged>>", self._tab_changed)
+                entry = ttk.Entry(inner, textvariable=var, width=6, justify="center")
+                entry.grid(row=r, column=c + 1, sticky="w", padx=(0, 30), pady=3)
+                self._track(var, entry, [(self.tabs, area)],
+                            lambda f=field, v=var: v.get().strip() != str(self.baseline["ratings"][f["id"]]))
+            row += (len(fields) + columns - 1) // columns
+        ttk.Label(inner, text="能力值范围 25–125；球员总评仍按游戏规则显示，最高为 99。修改后点击下方「保存修改」。",
+                  style="Muted.TLabel").grid(
+            row=row, column=0, columnspan=columns * 2, sticky="w", pady=(16, 0))
+        area.bind_wheel()
+
+    def _bind_shortcuts(self):
+        def run(action):
+            return lambda _event: (action(), "break")[1]
+        for sequence in ("<Control-s>", "<Control-S>"):
+            self.bind(sequence, run(self.save))
+        for sequence in ("<Control-d>", "<Control-D>"):
+            self.bind(sequence, run(self.detect_current))
+        for sequence in ("<Control-f>", "<Control-F>"):
+            self.bind(sequence, run(lambda: (self.search_entry.focus_set(),
+                                             self.search_entry.select_range(0, "end"))))
+        self.bind("<F5>", run(self._reload_clicked))
+
+    def _track(self, var: tk.Variable, widget: ttk.Widget, pages: list[tuple], changed):
+        """Register an input so edits are highlighted and counted before saving."""
+        for notebook, page in pages:
+            self._tab_titles.setdefault((notebook, page), notebook.tab(page, "text"))
+        self.tracked.append((widget, pages, changed))
+        var.trace_add("write", lambda *_: self._schedule_dirty())
+
+    def _schedule_dirty(self):
+        if self._dirty_job is None:
+            self._dirty_job = self.after_idle(self._refresh_dirty)
+
+    def _refresh_dirty(self) -> int:
+        if self._dirty_job is not None:
+            try:
+                self.after_cancel(self._dirty_job)
+            except tk.TclError:
+                pass
+            self._dirty_job = None
+        count, per_tab = 0, Counter()
+        for widget, pages, changed in self.tracked:
+            try:
+                is_changed = bool(self.baseline) and bool(changed())
+            except (KeyError, ValueError, TypeError, IndexError):
+                is_changed = True
+            if is_changed:
+                count += 1
+                per_tab.update(pages)
+            base = widget.winfo_class()
+            wanted = f"Changed.{base}" if is_changed else base
+            if (str(widget.cget("style")) or base) != wanted:
+                widget.configure(style=wanted)
+        for (notebook, page), title in self._tab_titles.items():
+            text = f"{title} ●" if per_tab[(notebook, page)] else title
+            if notebook.tab(page, "text") != text:
+                notebook.tab(page, text=text)
+        self.dirty_count = count
+        self.dirty_text.set(f"● 未保存 {count} 项" if count else "")
+        self.title(f"* {APP_TITLE}" if count else APP_TITLE)
+        return count
+
+    def _set_connection(self, connected: bool, text: str):
+        self.connection_dot.configure(fg=P["success"] if connected else P["danger"])
+        self.connection_text.set(text)
+
+    def _schedule_filter(self):
+        if self._search_job is not None:
+            self.after_cancel(self._search_job)
+        self._search_job = self.after(160, self._run_scheduled_filter)
+
+    def _run_scheduled_filter(self):
+        self._search_job = None
+        self._filter()
+
+    def _select_first_match(self, _event=None):
+        if self._search_job is not None:
+            self.after_cancel(self._search_job)
+            self._run_scheduled_filter()
+        first = next(iter(self.player_items), None)
+        if first:
+            self.player_tree.selection_set(first)
+            self.player_tree.see(first)
+            self.player_tree.focus(first)
+        return "break"
 
     def _fill_body_ratio(self, *, from_height: bool):
         source_var = self.height if from_height else self.wingspan
@@ -928,37 +1171,33 @@ class PlayerEditor(tk.Tk):
             messagebox.showerror("比例换算失败", str(exc), parent=self)
 
     def _make_profile_tab(self):
-        page = ttk.Frame(self.tabs)
-        self.tabs.add(page, text="个人资料")
-        canvas = tk.Canvas(page, borderwidth=0, highlightthickness=0)
-        bar = ttk.Scrollbar(page, orient="vertical", command=canvas.yview)
-        inner = ttk.Frame(canvas, padding=14)
-        inner.bind("<Configure>", lambda _e: canvas.configure(scrollregion=canvas.bbox("all")))
-        canvas.create_window((0, 0), window=inner, anchor="nw")
-        canvas.configure(yscrollcommand=bar.set)
-        canvas.pack(side="left", fill="both", expand=True)
-        bar.pack(side="right", fill="y")
+        area = ScrollFrame(self.tabs, padding=(20, 14))
+        self.tabs.add(area, text="个人资料")
+        inner = area.inner
         ttk.Label(inner, text="修改姓名后，游戏可能需要重新打开球员页面才能刷新显示。",
-                  foreground="#666666").grid(row=0, column=0, columnspan=2, sticky="w", pady=(0, 12))
-        for row, (key, label) in enumerate(PROFILE_UI, 1):
-            ttk.Label(inner, text=label, width=18).grid(row=row, column=0, sticky="w", pady=5)
+                  style="Muted.TLabel").grid(row=0, column=0, columnspan=4, sticky="w", pady=(0, 12))
+        for n, (key, label) in enumerate(PROFILE_UI):
+            row, column = 1 + n // 2, (n % 2) * 2
+            ttk.Label(inner, text=label).grid(row=row, column=column, sticky="w", pady=5, padx=(0, 12))
             var = tk.StringVar()
             self.profile_inputs[key] = var
             options = POSITIONS if key in ("position", "secondary_position") else (
                 HANDS if key == "dominant_hand" else DUNK_HANDS if key == "dunk_hand" else None)
             if options:
-                ttk.Combobox(inner, textvariable=var, values=options, state="readonly", width=26).grid(
-                    row=row, column=1, sticky="w", padx=10)
+                widget = ttk.Combobox(inner, textvariable=var, values=options, state="readonly", width=20)
             else:
-                ttk.Entry(inner, textvariable=var, width=28).grid(row=row, column=1, sticky="w", padx=10)
-        self._bind_canvas_wheel(canvas, inner, bar)
+                widget = ttk.Entry(inner, textvariable=var, width=22)
+            widget.grid(row=row, column=column + 1, sticky="w", padx=(0, 40), pady=5)
+            self._track(var, widget, [(self.tabs, area)],
+                        lambda k=key, v=var: v.get().strip() != self._profile_display(k, self.baseline["profile"][k]))
+        area.bind_wheel()
 
     def _make_signature_tab(self):
-        outer = ttk.Frame(self.tabs, padding=4)
+        outer = ttk.Frame(self.tabs, padding=(4, 10, 4, 4))
         self.tabs.add(outer, text="动作")
-        ttk.Label(outer, text="从列表选动作名称，也可输入编号；未收录名称的项目保留数字输入。修改后点“保存修改”。",
-                  foreground="#666666").pack(anchor="w", padx=8, pady=5)
-        book = ttk.Notebook(outer)
+        ttk.Label(outer, text="从列表选动作名称，也可直接输入编号；未收录名称的项目保留数字输入。修改后点「保存修改」。",
+                  style="Muted.TLabel").pack(anchor="w", padx=10, pady=(0, 6))
+        book = ttk.Notebook(outer, style="Sub.TNotebook")
         book.pack(fill="both", expand=True)
         groups = {
             "Jump Shooting": "投篮", "Jump Shooting II": "花式投篮",
@@ -966,32 +1205,26 @@ class PlayerEditor(tk.Tk):
             "Ball Handling": "控球", "Misc": "其他",
         }
         for group, title in groups.items():
-            page = ttk.Frame(book)
-            book.add(page, text=title)
-            canvas = tk.Canvas(page, borderwidth=0, highlightthickness=0)
-            bar = ttk.Scrollbar(page, orient="vertical", command=canvas.yview)
-            inner = ttk.Frame(canvas, padding=12)
-            inner.bind("<Configure>", lambda _event, c=canvas: c.configure(scrollregion=c.bbox("all")))
-            canvas.create_window((0, 0), window=inner, anchor="nw")
-            canvas.configure(yscrollcommand=bar.set)
-            canvas.pack(side="left", fill="both", expand=True)
-            bar.pack(side="right", fill="y")
+            area = ScrollFrame(book, padding=(16, 12))
+            book.add(area, text=title)
             fields = [field for field in self.signature_fields if field["group"] == group]
             for row, field in enumerate(fields):
-                ttk.Label(inner, text=signature_label(field), width=25).grid(row=row, column=0, sticky="w", pady=4)
+                ttk.Label(area.inner, text=signature_label(field)).grid(row=row, column=0, sticky="w", pady=4,
+                                                                        padx=(0, 12))
                 var = tk.StringVar()
                 self.signature_inputs[field["id"]] = var
                 options = self.signature_options.get(field["id"])
                 if options:
                     labels = [f"{index} · {signature_option_name(name)}" for index, name in enumerate(options)]
-                    ttk.Combobox(inner, textvariable=var, values=labels, width=36).grid(
-                        row=row, column=1, sticky="w", padx=10)
+                    widget = ttk.Combobox(area.inner, textvariable=var, values=labels, width=40)
                 else:
-                    ttk.Entry(inner, textvariable=var, width=16).grid(row=row, column=1, sticky="w", padx=10)
+                    widget = ttk.Entry(area.inner, textvariable=var, width=16)
+                widget.grid(row=row, column=1, sticky="w", pady=4)
                 hint = f"{len(options)} 个已收录名称" if options else f"编号 0–{(1 << field['bits']) - 1}"
-                ttk.Label(inner, text=hint, foreground="#666666").grid(
-                    row=row, column=2, sticky="w")
-            self._bind_canvas_wheel(canvas, inner, bar)
+                ttk.Label(area.inner, text=hint, style="Muted.TLabel").grid(row=row, column=2, sticky="w", padx=12)
+                self._track(var, widget, [(self.tabs, outer), (book, area)],
+                            lambda f=field, v=var: self._signature_value(f, v.get()) != self.baseline["signatures"][f["id"]])
+            area.bind_wheel()
 
     def _make_playbook_tab(self):
         page = ttk.Frame(self.tabs, padding=8)
@@ -1009,7 +1242,7 @@ class PlayerEditor(tk.Tk):
 
         note = ("左侧选择球队手册的槽位，右侧从已载入战术中挑选；按住 Ctrl/Shift 可多选并批量添加或删除。"
                 "打法部分来自游戏记录，其余按名称归类；位置为关联位置。")
-        ttk.Label(page, text=note, foreground="#666666", wraplength=1050).pack(anchor="w", pady=(7, 4))
+        ttk.Label(page, text=note, foreground=P["muted"], wraplength=1050).pack(anchor="w", pady=(7, 4))
         panes = ttk.PanedWindow(page, orient="horizontal")
         panes.pack(fill="both", expand=True)
         left = ttk.Frame(panes)
@@ -1072,7 +1305,7 @@ class PlayerEditor(tk.Tk):
         self.play_catalog_tree.configure(yscrollcommand=catalog_scroll.set)
         self.play_catalog_tree.pack(side="left", fill="both", expand=True)
         catalog_scroll.pack(side="right", fill="y")
-        ttk.Button(right, text="批量添加所选战术到空槽", command=self._batch_add_playbook).pack(
+        ttk.Button(right, text="批量添加所选战术到空槽", style="Accent.TButton", command=self._batch_add_playbook).pack(
             anchor="e", pady=(5, 0))
         footer = ttk.Frame(page)
         footer.pack(fill="x", pady=(6, 0))
@@ -1103,26 +1336,6 @@ class PlayerEditor(tk.Tk):
             return matches[0]
         raise ValueError(f"{signature_label(field)}：请输入动作编号或从列表选择名称")
 
-    @staticmethod
-    def _bind_canvas_wheel(canvas: tk.Canvas, *widgets: tk.Widget):
-        """Scroll a tab even while the pointer is over a label or input field."""
-        def on_wheel(event):
-            if event.delta:
-                units = -int(event.delta / 120)
-                if not units:
-                    units = -1 if event.delta > 0 else 1
-                canvas.yview_scroll(units * 3, "units")
-            return "break"
-
-        def bind_tree(widget):
-            widget.bind("<MouseWheel>", on_wheel, add="+")
-            for child in widget.winfo_children():
-                bind_tree(child)
-
-        bind_tree(canvas)
-        for widget in widgets:
-            bind_tree(widget)
-
     def batch_edit(self):
         if not self.memory or not self.selected or not self.baseline:
             messagebox.showinfo("批量修改", "请先选择或识别一名球员。", parent=self)
@@ -1139,9 +1352,9 @@ class PlayerEditor(tk.Tk):
                         "Athleticism": "运动", "Rebounding": "篮板", "Personality": "个性",
                         "Flags": "标记", "Gameplay": "比赛"}
         scopes: dict[str, tuple[str, list[dict], int, int]] = {}
-        scopes["能力 · 全部"] = ("ratings", self.fields, 25, 99)
+        scopes["能力 · 全部"] = ("ratings", self.fields, RATING_MIN, RATING_MAX)
         for title, group in rating_groups.items():
-            scopes[f"能力 · {title}"] = ("ratings", [f for f in self.fields if f["group"] == group], 25, 99)
+            scopes[f"能力 · {title}"] = ("ratings", [f for f in self.fields if f["group"] == group], RATING_MIN, RATING_MAX)
         categories = (("Tendencies", 7, "倾向", 0, 100), ("Tendencies", 2, "热区", 0, 3),
                       ("Badges", 3, "徽章等级", 0, 5), ("Badges", 1, "徽章开关", 0, 1))
         for section, bits, title, low, high in categories:
@@ -1158,6 +1371,8 @@ class PlayerEditor(tk.Tk):
         dialog.title("批量修改")
         dialog.resizable(False, False)
         dialog.transient(self)
+        dialog.bind("<Map>", lambda event: dialog.after_idle(lambda: theme.dark_title_bar(dialog))
+                    if event.widget is dialog else None, add="+")
         dialog.grab_set()
         frame = ttk.Frame(dialog, padding=20)
         frame.pack(fill="both", expand=True)
@@ -1165,12 +1380,12 @@ class PlayerEditor(tk.Tk):
         ttk.Label(frame, text="修改范围").grid(row=1, column=0, sticky="w", pady=6)
         scope = tk.StringVar(value="能力 · 全部")
         ttk.Combobox(frame, textvariable=scope, values=list(scopes), state="readonly", width=26).grid(row=1, column=1, sticky="w")
-        value_hint = tk.StringVar(value="目标数值（25–99）")
+        value_hint = tk.StringVar(value=f"目标数值（{RATING_MIN}–{RATING_MAX}）")
         ttk.Label(frame, textvariable=value_hint).grid(row=2, column=0, sticky="w", pady=6)
         value = tk.StringVar(value="99")
         entry = ttk.Entry(frame, textvariable=value, width=20)
         entry.grid(row=2, column=1, sticky="w")
-        ttk.Label(frame, text="会直接保存到游戏；可用主界面的“撤销上次保存”恢复。", foreground="#666666").grid(row=3, column=0, columnspan=2, sticky="w", pady=(10, 16))
+        ttk.Label(frame, text="会直接保存到游戏；可用主界面的“撤销上次保存”恢复。", foreground=P["muted"]).grid(row=3, column=0, columnspan=2, sticky="w", pady=(10, 16))
 
         def on_scope_changed(*_):
             kind, _, low, high = scopes[scope.get()]
@@ -1223,7 +1438,9 @@ class PlayerEditor(tk.Tk):
                 messagebox.showerror("批量修改失败", str(exc), parent=dialog)
 
         ttk.Button(frame, text="取消", command=dialog.destroy).grid(row=4, column=0, sticky="e", padx=8)
-        ttk.Button(frame, text="保存修改", command=apply_batch).grid(row=4, column=1, sticky="e")
+        ttk.Button(frame, text="保存修改", style="Accent.TButton", command=apply_batch).grid(row=4, column=1, sticky="e")
+        dialog.bind("<Escape>", lambda _e: dialog.destroy())
+        dialog.bind("<Return>", lambda _e: apply_batch())
         entry.focus_set()
 
     def copy_dna_dialog(self):
@@ -1236,14 +1453,20 @@ class PlayerEditor(tk.Tk):
         source = self.selected
         dialog = tk.Toplevel(self)
         dialog.title("复制球员 DNA")
-        dialog.geometry("680x660")
+        self.update_idletasks()
+        dialog_x = max(0, self.winfo_rootx() + (self.winfo_width() - 720) // 2)
+        dialog_y = max(0, self.winfo_rooty() + (self.winfo_height() - 700) // 2)
+        dialog.geometry(f"720x700+{dialog_x}+{dialog_y}")
+        dialog.minsize(680, 660)
         dialog.transient(self)
+        dialog.bind("<Map>", lambda event: dialog.after_idle(lambda: theme.dark_title_bar(dialog))
+                    if event.widget is dialog else None, add="+")
         frame = ttk.Frame(dialog, padding=16)
         frame.pack(fill="both", expand=True)
         ttk.Label(frame, text=f"来源：{source['name']} · {source['team']} · #{source['index']}",
-                  font=("Microsoft YaHei UI", 12, "bold")).pack(anchor="w", pady=(0, 10))
+                  style="Title.TLabel").pack(anchor="w", pady=(0, 10))
         ttk.Label(frame, text="数据 DNA：能力、倾向、徽章、动作；外貌 DNA：身材、面部参数、头发与穿戴。",
-                  foreground="#666666").pack(anchor="w")
+                  foreground=P["muted"]).pack(anchor="w")
         kind = tk.StringVar(value="data")
         types = ttk.Frame(frame)
         types.pack(fill="x", pady=10)
@@ -1267,13 +1490,27 @@ class PlayerEditor(tk.Tk):
         ttk.Label(frame, text="查找目标球员（单人复制时选择）").pack(anchor="w")
         query = tk.StringVar()
         ttk.Entry(frame, textvariable=query).pack(fill="x", pady=(4, 8))
-        listbox = tk.Listbox(frame, exportselection=False)
-        listbox.pack(fill="both", expand=True)
-        candidates = []
+        footer = ttk.Frame(frame)
+        footer.pack(side="bottom", fill="x")
+        target_frame = ttk.Frame(frame)
+        target_frame.pack(fill="both", expand=True)
+        target_list = ttk.Treeview(target_frame, columns=("team", "rating"),
+                                  selectmode="browse", show="tree headings", height=7)
+        target_list.heading("#0", text="目标球员")
+        target_list.heading("team", text="球队")
+        target_list.heading("rating", text="总评")
+        target_list.column("#0", width=235, minwidth=160)
+        target_list.column("team", width=230, minwidth=120)
+        target_list.column("rating", width=60, minwidth=50, stretch=False, anchor="center")
+        target_scroll = ttk.Scrollbar(target_frame, orient="vertical", command=target_list.yview)
+        target_list.configure(yscrollcommand=target_scroll.set)
+        target_scroll.pack(side="right", fill="y")
+        target_list.pack(side="left", fill="both", expand=True)
+        candidates = {}
 
         def refresh(*_args):
             candidates.clear()
-            listbox.delete(0, "end")
+            target_list.delete(*target_list.get_children())
             term = query.get().strip().casefold()
             selected_team = team.get()
             for player in self.memory.players:
@@ -1285,9 +1522,14 @@ class PlayerEditor(tk.Tk):
                     continue
                 if term and term not in player["name"].casefold() and term != str(player["index"]):
                     continue
-                candidates.append(player)
+                item_id = str(player["index"])
+                candidates[item_id] = player
+                info = self.memory.team_info(player)
                 rating = player["overall"] if player["overall"] is not None else "—"
-                listbox.insert("end", f"{player['name']} · {player['team']} · 总评 {rating} · #{player['index']}")
+                target_list.insert("", "end", iid=item_id,
+                                   text=f"  {player['name']} · #{player['index']}",
+                                   image=self.badges.pill(info["abbr"], *info["colors"]),
+                                   values=(player["team"], rating))
 
         query.trace_add("write", refresh)
         team_box.bind("<<ComboboxSelected>>", refresh)
@@ -1300,9 +1542,9 @@ class PlayerEditor(tk.Tk):
             refresh()
         league_box.bind("<<ComboboxSelected>>", change_league)
         refresh()
-        ttk.Label(frame, text="整队复制会跳过来源球员；完成后可用主窗口的“撤销上次保存”恢复。",
-                  foreground="#666666").pack(anchor="w", pady=(8, 4))
-        buttons = ttk.Frame(frame)
+        ttk.Label(footer, text="整队复制会跳过来源球员；完成后可用主窗口的“撤销上次保存”恢复。",
+                  foreground=P["muted"]).pack(anchor="w", pady=(8, 4))
+        buttons = ttk.Frame(footer)
         buttons.pack(fill="x", pady=(8, 0))
 
         def apply_copy():
@@ -1313,7 +1555,7 @@ class PlayerEditor(tk.Tk):
                     targets = [player for player in self.memory.players
                                if player["team"] == team.get() and player["index"] != source["index"]]
                 else:
-                    chosen = listbox.curselection()
+                    chosen = target_list.selection()
                     if not chosen:
                         raise ValueError("请从列表中选择一名目标球员")
                     targets = [candidates[chosen[0]]]
@@ -1332,31 +1574,24 @@ class PlayerEditor(tk.Tk):
                 messagebox.showerror("复制 DNA 失败", str(exc), parent=dialog)
 
         ttk.Button(buttons, text="取消", command=dialog.destroy).pack(side="right")
-        ttk.Button(buttons, text="复制到目标", command=apply_copy).pack(side="right", padx=8)
+        ttk.Button(buttons, text="复制到目标", style="Accent.TButton", command=apply_copy).pack(side="right", padx=8)
+        dialog.bind("<Escape>", lambda _e: dialog.destroy())
         dialog.grab_set()
 
     def _has_pending_edits(self) -> bool:
-        if any(self.profile_inputs[key].get() != self._profile_display(key, self.baseline["profile"][key])
-               for key, _label in PROFILE_UI):
+        return bool(self.baseline) and self._refresh_dirty() > 0
+
+    def _confirm_discard(self, action: str = "继续") -> bool:
+        """Ask before unsaved edits are thrown away. Returns True to go ahead."""
+        if not self._has_pending_edits():
             return True
-        if (self.height.get() != str(self.baseline["height_cm"]) or
-                self.wingspan.get() != str(self.baseline["wingspan_cm"]) or
-                self.arm_scale.get() != str(self.baseline["arm_scale"]) or
-                self.custom_scales.get() != self.baseline["custom_scales"]):
-            return True
-        if any(self.rating_inputs[f["id"]].get() != str(self.baseline["ratings"][f["id"]]) for f in self.fields):
-            return True
-        if any(self.extra_inputs[f["section"] + ":" + f["id"]].get() !=
-               str(self.baseline["extras"][f["section"] + ":" + f["id"]]) for f in self.extra_fields):
-            return True
-        for field in self.signature_fields:
-            try:
-                value = self._signature_value(field, self.signature_inputs[field["id"]].get())
-            except ValueError:
-                return True
-            if value != self.baseline["signatures"][field["id"]]:
-                return True
-        return False
+        answer = messagebox.askyesnocancel(
+            "有未保存的修改",
+            f"{self.selected['name'] if self.selected else '当前球员'} 还有 {self.dirty_count} 项修改没有保存。\n\n"
+            f"是：先保存再{action}\n否：放弃这些修改\n取消：留在当前页面", parent=self)
+        if answer is None:
+            return False
+        return self.save() if answer else True
 
     @staticmethod
     def _profile_display(key: str, value: object) -> str:
@@ -1423,48 +1658,67 @@ class PlayerEditor(tk.Tk):
                        "Outside Scoring": "外线得分", "Playmaking": "组织", "Defending": "防守",
                        "Athleticism": "运动", "Rebounding": "篮板", "Personality": "个性",
                        "Flags": "标记", "Gameplay": "比赛"}
+        notes = {"Tendencies": "倾向为 0–100；热区可选 冷区 / 普通 / 热区 / 极热。修改后点「保存修改」。",
+                 "Badges": "徽章等级可选 未装备 / 铜 / 银 / 金 / 名人堂 / 传奇；勾选项为开关。修改后点「保存修改」。"}
         for section, title in (("Tendencies", "倾向"), ("Badges", "徽章")):
-            outer = ttk.Frame(self.tabs, padding=4)
+            outer = ttk.Frame(self.tabs, padding=(4, 10, 4, 4))
             self.tabs.add(outer, text=title)
-            ttk.Label(outer, text="倾向为 0–100，热区为 0–3；徽章等级为 0–5，开关为 0/1。修改后点下方“保存修改”。",
-                      foreground="#666666").pack(anchor="w", padx=8, pady=5)
-            book = ttk.Notebook(outer)
+            ttk.Label(outer, text=notes[section], style="Muted.TLabel").pack(anchor="w", padx=10, pady=(0, 6))
+            book = ttk.Notebook(outer, style="Sub.TNotebook")
             book.pack(fill="both", expand=True)
-            groups = list(dict.fromkeys(field["group"] for field in self.extra_fields if field["section"] == section))
-            for group in groups:
-                page = ttk.Frame(book)
-                book.add(page, text=group_names.get(group, group))
-                canvas = tk.Canvas(page, borderwidth=0, highlightthickness=0)
-                bar = ttk.Scrollbar(page, orient="vertical", command=canvas.yview)
-                inner = ttk.Frame(canvas, padding=12)
-                inner.bind("<Configure>", lambda _e, c=canvas: c.configure(scrollregion=c.bbox("all")))
-                canvas.create_window((0, 0), window=inner, anchor="nw")
-                canvas.configure(yscrollcommand=bar.set)
-                canvas.pack(side="left", fill="both", expand=True)
-                bar.pack(side="right", fill="y")
+            for group in dict.fromkeys(field["group"] for field in self.extra_fields if field["section"] == section):
+                area = ScrollFrame(book, padding=(16, 12))
+                book.add(area, text=group_names.get(group, group))
+                pages = [(self.tabs, outer), (book, area)]
                 items = [field for field in self.extra_fields if field["section"] == section and field["group"] == group]
-                for n, field in enumerate(items):
+                levels = [field for field in items if field["bits"] != 1]
+                flags = [field for field in items if field["bits"] == 1]
+                columns = 2
+                for n, field in enumerate(levels):
+                    row, column = n // columns, (n % columns) * 2
                     key = section + ":" + field["id"]
-                    ttk.Label(inner, text=field["label"], width=32).grid(row=n, column=0, sticky="w", pady=4)
+                    ttk.Label(area.inner, text=field["label"]).grid(row=row, column=column, sticky="w", pady=4,
+                                                                    padx=(0, 10))
                     var = tk.StringVar()
                     self.extra_inputs[key] = var
-                    ttk.Entry(inner, textvariable=var, width=8).grid(row=n, column=1, sticky="w", padx=10)
-                self._bind_canvas_wheel(canvas, inner, bar)
+                    choices = extra_choices(field)
+                    if choices:
+                        widget = ttk.Combobox(area.inner, textvariable=var, values=choices, state="readonly", width=11)
+                    else:
+                        widget = ttk.Entry(area.inner, textvariable=var, width=7, justify="center")
+                    widget.grid(row=row, column=column + 1, sticky="w", padx=(0, 40), pady=4)
+                    self._track(var, widget, pages,
+                                lambda k=key, v=var: leading_int(v.get()) != self.baseline["extras"][k])
+                start = (len(levels) + columns - 1) // columns
+                if flags and levels:
+                    ttk.Label(area.inner, text="开关", style="Section.TLabel").grid(
+                        row=start, column=0, columnspan=columns * 2, sticky="w", pady=(14, 4))
+                    start += 1
+                for n, field in enumerate(flags):
+                    key = section + ":" + field["id"]
+                    var = tk.StringVar(value="0")
+                    self.extra_inputs[key] = var
+                    widget = ttk.Checkbutton(area.inner, text=field["label"], variable=var, onvalue="1", offvalue="0")
+                    widget.grid(row=start + n // columns, column=(n % columns) * 2, columnspan=2, sticky="w",
+                                pady=3, padx=(0, 40))
+                    self._track(var, widget, pages,
+                                lambda k=key, v=var: leading_int(v.get()) != self.baseline["extras"][k])
+                area.bind_wheel()
 
     def _make_advanced_tab(self):
-        page = ttk.Frame(self.tabs, padding=8)
+        page = ttk.Frame(self.tabs, padding=12)
         self.tabs.add(page, text="高级字段")
-        ttk.Label(page, text="搜索字段后选择一项，修改其原始数值。字段按游戏数据格式显示。",
-                  foreground="#666666").pack(anchor="w", pady=(0, 6))
+        ttk.Label(page, text="搜索字段后选择一项，修改其原始数值。字段按游戏数据格式显示；此页单独保存。",
+                  style="Muted.TLabel").pack(anchor="w", pady=(0, 8))
         self.advanced_search = tk.StringVar()
-        ttk.Entry(page, textvariable=self.advanced_search).pack(fill="x", pady=(0, 6))
+        SearchBox(page, self.advanced_search, "搜索类别、分组或字段名…", icons=self._icon).pack(fill="x", pady=(0, 8))
         self.advanced_search.trace_add("write", lambda *_: self._advanced_refresh())
         frame = ttk.Frame(page)
         frame.pack(fill="both", expand=True)
         self.advanced_tree = ttk.Treeview(frame, columns=("section", "group", "field", "value"), show="headings")
-        for key, label, width in (("section", "类别", 90), ("group", "分组", 110),
-                                  ("field", "字段", 220), ("value", "当前原始值", 110)):
-            self.advanced_tree.heading(key, text=label)
+        for key, label, width in (("section", "类别", 90), ("group", "分组", 120),
+                                  ("field", "字段", 240), ("value", "当前原始值", 120)):
+            self.advanced_tree.heading(key, text=label, anchor="w")
             self.advanced_tree.column(key, width=width, anchor="w")
         bar = ttk.Scrollbar(frame, orient="vertical", command=self.advanced_tree.yview)
         self.advanced_tree.configure(yscrollcommand=bar.set)
@@ -1472,12 +1726,13 @@ class PlayerEditor(tk.Tk):
         bar.pack(side="right", fill="y")
         self.advanced_tree.bind("<<TreeviewSelect>>", self._advanced_select)
         controls = ttk.Frame(page)
-        controls.pack(fill="x", pady=(8, 0))
+        controls.pack(fill="x", pady=(10, 0))
         self.advanced_info = tk.StringVar(value="请选择字段")
         ttk.Label(controls, textvariable=self.advanced_info).pack(side="left", padx=(0, 10))
         self.advanced_value = tk.StringVar()
-        ttk.Entry(controls, textvariable=self.advanced_value, width=16).pack(side="left")
-        ttk.Button(controls, text="保存此字段", command=self._advanced_save).pack(side="left", padx=8)
+        ttk.Entry(controls, textvariable=self.advanced_value, width=16, justify="center").pack(side="left")
+        ttk.Button(controls, text="保存此字段", style="Accent.TButton", command=self._advanced_save).pack(
+            side="left", padx=8)
 
     @staticmethod
     def _advanced_raw(row: bytes, field: dict) -> int | float:
@@ -1557,7 +1812,10 @@ class PlayerEditor(tk.Tk):
         updates = []
         for field in self.extra_fields:
             key = field["section"] + ":" + field["id"]
-            value = int(self.extra_inputs[key].get().strip())
+            try:
+                value = leading_int(self.extra_inputs[key].get())
+            except ValueError:
+                raise ValueError(f"{field['label']}：请输入数字或从列表选择") from None
             bit_limit = (1 << field["bits"]) - 1
             limit = 100 if field["section"] == "Tendencies" and field["bits"] == 7 else (
                 5 if field["section"] == "Badges" and field["bits"] == 3 else bit_limit)
@@ -1591,27 +1849,73 @@ class PlayerEditor(tk.Tk):
             masks[offset] = masks.get(offset, 0) | mask
         return {offset: struct.pack("<I", word) for offset, word in words.items()}, masks
 
-    def connect(self):
+    def connect(self, *, quiet: bool = False) -> bool:
+        if not quiet and not self._confirm_discard("重新连接"):
+            return False
+        if self.detect_pending:
+            self._finish_detect()
         try:
             if self.memory:
                 self.memory.close()
+            self.memory = None
             self.memory = GameMemory()
-            self.selected = None
-            self.current_edit_address = None
-            self.baseline = None
-            self.last_backup = None
-            self.playbook_last_backup = None
-            teams = sorted({player["team"] for player in self.memory.players})
-            self.team_box.configure(values=("全部球队", *teams))
-            if self.team_filter.get() not in teams:
-                self.team_filter.set("全部球队")
-            self._filter()
-            self.status.set(f"已连接游戏；读取到 {len(self.memory.players)} 名球员")
-            if self.tabs.select() == str(self.playbook_page):
-                self._refresh_playbooks()
         except Exception as exc:
             self.memory = None
-            self.status.set(str(exc))
+            self._reset_player()
+            self._set_connection(False, "未连接")
+            if not quiet:
+                self.status.set(str(exc))
+            return False
+        self.last_backup = None
+        self.playbook_last_backup = None
+        self._reset_player()
+        version = "" if self.memory.build_verified else " · 游戏版本未验证"
+        self._set_connection(True, f"已连接 · {len(self.memory.players)} 名球员{version}")
+        self.status.set("已连接游戏。从左侧选择球员，或停在游戏「编辑球员」页面后点「内存识别当前球员」。")
+        if self.tabs.select() == str(self.playbook_page):
+            self._refresh_playbooks()
+        return True
+
+    def _reset_player(self):
+        self.selected = None
+        self.current_edit_address = None
+        self.baseline = None
+        self._clear_inputs()
+        self._filter()
+        self._update_player_card()
+        self._refresh_dirty()
+
+    def _clear_inputs(self):
+        for var in (*self.rating_inputs.values(), *self.signature_inputs.values(),
+                    *self.profile_inputs.values(), self.height, self.wingspan, self.arm_scale):
+            var.set("")
+        flags = {field["section"] + ":" + field["id"] for field in self.extra_fields if field["bits"] == 1}
+        for key, var in self.extra_inputs.items():
+            var.set("0" if key in flags else "")
+        self.custom_scales.set(False)
+        self._advanced_refresh()
+
+    def _watchdog(self):
+        """Notice when the game closes or starts, and reconnect without a click."""
+        try:
+            if self.memory and not psutil.pid_exists(self.memory.pid):
+                self.memory.close()
+                self.memory = None
+                self._reset_player()
+                self._set_connection(False, "游戏已关闭")
+                self.status.set("游戏已关闭。重新启动游戏后会自动连接。")
+            elif not self.memory and not self.detect_pending:
+                try:
+                    find_game()
+                except RuntimeError:
+                    self._set_connection(False, "等待游戏启动…")
+                else:
+                    if not self.connect(quiet=True):
+                        self._set_connection(False, "等待游戏载入名单…")
+        except Exception as exc:
+            log_error("watchdog", exc)
+        finally:
+            self.after(4000, self._watchdog)
 
     def _tab_changed(self, _event=None):
         playbook_open = self.tabs.select() == str(self.playbook_page)
@@ -1619,7 +1923,7 @@ class PlayerEditor(tk.Tk):
         if playbook_open and player_visible:
             self.main_panes.forget(self.player_panel)
         elif not playbook_open and not player_visible:
-            self.main_panes.insert(0, self.player_panel, weight=2)
+            self.main_panes.insert(0, self.player_panel, weight=0)
         if not playbook_open:
             return
         if not self.memory:
@@ -1828,6 +2132,9 @@ class PlayerEditor(tk.Tk):
             messagebox.showerror("撤销战术失败", str(exc), parent=self)
 
     def _filter(self):
+        if self._search_job is not None:
+            self.after_cancel(self._search_job)
+            self._search_job = None
         tree = self.player_tree
         open_nodes = {}
         for league_id in tree.get_children(""):
@@ -1839,6 +2146,7 @@ class PlayerEditor(tk.Tk):
         tree.delete(*tree.get_children(""))
         self.player_items = {}
         if not self.memory:
+            self.count_text.set("未连接游戏")
             return
         term = self.search.get().strip().casefold()
         self._last_search = term
@@ -1850,14 +2158,16 @@ class PlayerEditor(tk.Tk):
             self.team_filter.set("全部球队")
         team_choice = self.team_filter.get()
         grouped: dict[str, dict[str, list[dict]]] = {}
+        total = 0
         for player in self.memory.players:
             if league_choice != "全部联赛" and player["league"] != league_choice:
                 continue
             if team_choice != "全部球队" and player["team"] != team_choice:
                 continue
-            if term and term not in player["name"].casefold() and term != str(player["index"]):
+            if term and not self._matches(player, term):
                 continue
             grouped.setdefault(player["league"], {}).setdefault(player["team"], []).append(player)
+            total += 1
 
         selected_id = None
         for league in LEAGUE_ORDER:
@@ -1867,21 +2177,30 @@ class PlayerEditor(tk.Tk):
                 continue
             count = sum(len(players) for players in team_groups.values())
             league_id = f"league:{league}"
-            tree.insert("", "end", iid=league_id, text=f"{league}（{count}）",
-                        open=term != "" or self._tree_open_state.get(league_id, league == "NBA"))
+            tree.insert("", "end", iid=league_id, text=f"  {league}", values=("", f"{count}人"),
+                        image=self.badges.league(league),
+                        open=term != "" or self._tree_open_state.get(league_id, league == "NBA"),
+                        tags=("league",) if count else ("league", "empty"))
             for team in sorted(team_groups):
                 players = team_groups[team]
+                info = self.memory.team_info(players[0])
+                primary, secondary = info["colors"]
                 team_id = f"team:{league}:{team}"
-                tree.insert(league_id, "end", iid=team_id, text=f"{team}（{len(players)}）",
-                            open=term != "" or self._tree_open_state.get(team_id, False))
+                tree.insert(league_id, "end", iid=team_id, text=f"  {team}", values=("", f"{len(players)}人"),
+                            image=self.badges.pill(info["abbr"], primary, secondary),
+                            open=term != "" or self._tree_open_state.get(team_id, False),
+                            tags=(self._team_tag(primary),))
+                dot = self.badges.dot(primary, secondary)
                 for player in sorted(players, key=lambda item: item["index"]):
                     player_id = f"player:{player['index']}"
                     rating = player["overall"] if player["overall"] is not None else "—"
-                    tree.insert(team_id, "end", iid=player_id, text=player["name"],
+                    tree.insert(team_id, "end", iid=player_id, text=f"  {player['name']}", image=dot,
                                 values=(rating, player["index"]))
                     self.player_items[player_id] = player
                     if self.selected and player["index"] == self.selected["index"] and player["uid"] == self.selected["uid"]:
                         selected_id = player_id
+        shown = f"显示 {total} 名球员" if total != len(self.memory.players) else f"共 {total} 名球员"
+        self.count_text.set(shown + (f" · 搜索“{self.search.get().strip()}”" if term else ""))
         if selected_id:
             parent = tree.parent(selected_id)
             tree.item(parent, open=True)
@@ -1890,6 +2209,24 @@ class PlayerEditor(tk.Tk):
             tree.focus(selected_id)
             tree.see(selected_id)
 
+    def _team_tag(self, primary: str) -> str:
+        """Tint team rows with the team's own colour so rosters stand apart."""
+        tag = f"team{primary}"
+        if not hasattr(self, "_team_tags"):
+            self._team_tags = set()
+        if tag not in self._team_tags:
+            self.player_tree.tag_configure(tag, background=mix(P["field"], primary, 0.24), font=theme.FONT_BOLD)
+            self._team_tags.add(tag)
+        return tag
+
+    @staticmethod
+    def _matches(player: dict, term: str) -> bool:
+        if term in player["name"].casefold() or term == str(player["index"]):
+            return True
+        if term == player["team_abbr"].casefold():
+            return True
+        return len(term) >= 3 and term in player["team"].casefold()
+
     def _select(self, _event=None):
         selected = self.player_tree.selection()
         if not selected:
@@ -1897,78 +2234,80 @@ class PlayerEditor(tk.Tk):
         player = self.player_items.get(selected[0])
         if not player:
             return
-        if self.selected != player:
-            self.selected = player
-            self.current_edit_address = None
-            self.reload()
+        current = self.selected
+        if current and player["index"] == current["index"] and player["uid"] == current["uid"]:
+            return
+        if not self._confirm_discard("切换球员"):
+            self._reveal_selected()
+            return
+        self.selected = player
+        self.current_edit_address = None
+        self.reload()
+        self._reveal_selected()
+
+    def _reveal_selected(self):
+        tree = self.player_tree
+        item = f"player:{self.selected['index']}" if self.selected else None
+        if item and tree.exists(item):
+            if tree.selection() != (item,):
+                tree.selection_set(item)
+            tree.see(item)
+        elif tree.selection():
+            tree.selection_remove(*tree.selection())
 
     def detect_current(self, *, deep: bool = False):
-        if self.detect_process is not None:
-            self.status.set("正在识别，请稍候…")
+        if self.detect_pending:
             return
         if not self.memory:
             self.connect()
         if not self.memory:
             return
+        self.detect_pending = True
         self.detect_memory = self.memory
-        self.status.set("正在识别当前球员…" if not deep else "正在全面扫描，可能需要约一分钟…")
-        if deep:
-            self._start_detect(deep)
-        else:
-            self.withdraw()
-            game_window = user32.FindWindowW(None, "NBA 2K27")
-            if game_window:
-                user32.SetForegroundWindow(game_window)
-            self.after(250, lambda: self._start_detect(deep))
+        self._set_busy(True, deep)
+        self.status.set("正在全面扫描游戏内存，约需一分钟…" if deep else "正在扫描游戏内存…")
+        self.after(80, lambda: self._start_detect(deep))
 
     def _start_detect(self, deep: bool):
+        if not self.detect_pending:
+            return
         try:
-            receiver, sender = mp.get_context("spawn").Pipe(duplex=False)
-            process = mp.get_context("spawn").Process(
-                target=detect_current_worker, args=(sender, deep), daemon=True)
+            context = mp.get_context("spawn")
+            receiver, sender = context.Pipe(duplex=False)
+            process = context.Process(target=detect_current_worker, args=(sender, deep), daemon=True)
             process.start()
             sender.close()
-            self.detect_process = process
-            self.detect_receiver = receiver
-            self.detect_started = time.monotonic()
-            self.after(100, lambda: self._poll_detect(deep))
         except Exception as exc:
-            self.deiconify()
+            log_error("start detect", exc)
+            self._finish_detect()
             self.status.set(f"无法启动识别：{exc}")
+            return
+        self.detect_process, self.detect_receiver = process, receiver
+        self.detect_started = time.monotonic()
+        self.after(100, lambda: self._poll_detect(deep))
 
     def _poll_detect(self, deep: bool):
-        process = self.detect_process
-        receiver = self.detect_receiver
+        process, receiver = self.detect_process, self.detect_receiver
         if process is None or receiver is None:
             return
         result = None
-        if receiver.poll():
-            try:
+        try:
+            if receiver.poll():
                 result = receiver.recv()
-            except EOFError:
-                result = {"error": "识别进程意外退出"}
-        elif process.exitcode is not None:
+            elif process.exitcode is not None:
+                result = {"error": f"识别进程意外退出（代码 {process.exitcode}）"}
+        except (EOFError, OSError):  # The worker died without answering.
             result = {"error": f"识别进程意外退出（代码 {process.exitcode}）"}
-        elif time.monotonic() - self.detect_started > (120 if deep else 20):
-            result = {"error": "识别超时，请从左侧名单选择球员"}
+        elapsed = time.monotonic() - self.detect_started
+        if result is None and elapsed > (180 if deep else 45):
+            result = {"error": "识别超时，请从左侧名单选择球员。"}
         if result is None:
-            self.after(100, lambda: self._poll_detect(deep))
+            self.busy_text.set(f"{'全面内存扫描' if deep else '内存扫描中'} {elapsed:.0f} 秒")
+            self.after(150, lambda: self._poll_detect(deep))
             return
-        self._stop_detect()
         memory = self.detect_memory
-        if not memory:
-            self.deiconify()
-            return
-        if "error" in result:
-            self._detected(memory, None, result["error"])
-            return
-        if result["pid"] != memory.pid:
-            self._detected(memory, None, "游戏已重启，请重新连接")
-            return
-        player = next((p for p in memory.players if p["index"] == result.get("index")
-                       and p["uid"] == result.get("uid")), None)
-        found = (player, result.get("address")) if player else None
-        self._detected(memory, found, None)
+        self._finish_detect()
+        self._handle_detect_result(memory, result)
 
     def _stop_detect(self):
         if self.detect_process is not None:
@@ -1980,9 +2319,47 @@ class PlayerEditor(tk.Tk):
             self.detect_receiver.close()
             self.detect_receiver = None
 
+    def _finish_detect(self):
+        self.detect_pending = False
+        self._stop_detect()
+        self._set_busy(False)
+
+    def _cancel_detect(self):
+        if self.detect_pending:
+            self._finish_detect()
+            self.status.set("已取消识别。")
+
+    def _set_busy(self, busy: bool, deep: bool = False):
+        for button in (self.detect_button, self.deep_button, self.reconnect_button):
+            button.state(["disabled"] if busy else ["!disabled"])
+        if busy:
+            self.busy_text.set("全面内存扫描…" if deep else "内存扫描中…")
+            self.cancel_detect_button.pack(side="right", padx=(12, 8))
+            self.busy_bar.pack(side="right", padx=(10, 0))
+            self.busy_label.pack(side="right")
+            self.busy_bar.start(12)
+        else:
+            self.busy_bar.stop()
+            for widget in (self.cancel_detect_button, self.busy_bar, self.busy_label):
+                widget.pack_forget()
+
+    def _handle_detect_result(self, memory: GameMemory | None, result: dict):
+        if memory is None or self.memory is not memory:
+            return
+        if "error" in result:
+            self.status.set(result["error"])
+            return
+        if result.get("pid") != memory.pid:
+            self.status.set("游戏已重启，请重新连接。")
+            return
+        player = next((p for p in memory.players if p["index"] == result.get("index")
+                       and p["uid"] == result.get("uid")), None)
+        if not player:
+            self.status.set("内存中没有找到正在编辑的球员。请让游戏停在「编辑球员」页面后再试，或从左侧名单选择。")
+            return
+        self._detected(memory, (player, result.get("address")), None)
+
     def _detected(self, memory: GameMemory, found: tuple[dict, int] | None, error: str | None):
-        self.deiconify()
-        self.lift()
         if self.memory is not memory:
             return
         if error:
@@ -1992,6 +2369,11 @@ class PlayerEditor(tk.Tk):
             self.status.set("没有找到正在打开的球员编辑器；可从左侧名单选择。")
             return
         player, address = found
+        current = self.selected
+        same = current and player["index"] == current["index"] and player["uid"] == current["uid"]
+        if not same and not self._confirm_discard("切换到识别到的球员"):
+            self.status.set(f"识别到 {player['name']}，已保留当前未保存的修改。")
+            return
         self.selected = player
         self.current_edit_address = address
         self.league_filter.set(player["league"])
@@ -1999,8 +2381,17 @@ class PlayerEditor(tk.Tk):
         self.search.set("")
         self._filter()
         self.reload()
-        source = "编辑器内存" if address else "屏幕姓名"
-        self.status.set(f"已从{source}识别：{player['name']}（保存前请核对姓名）")
+        self._reveal_selected()
+        source = "游戏编辑器内存"
+        self.status.set(f"已从{source}识别：{player['name']} · {player['team']}（保存前请核对姓名）")
+
+    def _reload_clicked(self):
+        if not self.selected:
+            return
+        if self._has_pending_edits() and not messagebox.askyesno(
+                "重新读取", "放弃未保存的修改，并从游戏重新读取当前球员？", parent=self):
+            return
+        self.reload()
 
     def reload(self):
         if not self.memory or not self.selected:
@@ -2010,8 +2401,6 @@ class PlayerEditor(tk.Tk):
                                                extra_fields=self.extra_fields,
                                                signature_fields=self.signature_fields)
             self.baseline = snap
-            rating = self.selected["overall"] if self.selected["overall"] is not None else "—"
-            self.header.config(text=f"{self.selected['name']}  ·  {self.selected['team']}  ·  总评 {rating}  ·  #{self.selected['index']}")
             self.height.set(str(snap["height_cm"]))
             self.wingspan.set(str(snap["wingspan_cm"]))
             self.arm_scale.set(str(snap["arm_scale"]))
@@ -2020,25 +2409,32 @@ class PlayerEditor(tk.Tk):
                 self.profile_inputs[key].set(self._profile_display(key, snap["profile"][key]))
             for field in self.fields:
                 self.rating_inputs[field["id"]].set(str(snap["ratings"][field["id"]]))
+            extra_by_key = {field["section"] + ":" + field["id"]: field for field in self.extra_fields}
             for key, value in snap["extras"].items():
-                self.extra_inputs[key].set(str(value))
+                self.extra_inputs[key].set(extra_display(extra_by_key[key], value))
+            signature_by_id = {field["id"]: field for field in self.signature_fields}
             for key, value in snap["signatures"].items():
-                field = next(field for field in self.signature_fields if field["id"] == key)
-                self.signature_inputs[key].set(self._signature_display(field, value))
+                self.signature_inputs[key].set(self._signature_display(signature_by_id[key], value))
             self._advanced_refresh()
-            self.status.set("已读取球员数据")
+            self._refresh_dirty()
+            self._update_player_card()
+            self.status.set(f"已读取 {self.selected['name']} 的数据")
         except Exception as exc:
             self.status.set(str(exc))
 
-    def save(self):
+    def save(self) -> bool:
+        """Write pending edits. Returns True when nothing is left unsaved."""
         if not self.memory or not self.selected or not self.baseline:
-            return
+            return True
         try:
             changes: dict[int, bytes] = {}
             for field in self.fields:
-                value = int(self.rating_inputs[field["id"]].get().strip())
-                if not 25 <= value <= 99:
-                    raise ValueError(f"{field['label']} 须在 25 到 99 之间")
+                try:
+                    value = int(self.rating_inputs[field["id"]].get().strip())
+                except ValueError:
+                    raise ValueError(f"{field['label']}：请输入 {RATING_MIN} 到 {RATING_MAX} 的整数") from None
+                if not RATING_MIN <= value <= RATING_MAX:
+                    raise ValueError(f"{field['label']} 须在 {RATING_MIN} 到 {RATING_MAX} 之间")
                 if value != self.baseline["ratings"][field["id"]]:
                     changes[field["offset"]] = bytes([rating_to_raw(value)])
             extra_changes, masks = self._extra_changes()
@@ -2071,9 +2467,12 @@ class PlayerEditor(tk.Tk):
                                         (signature_word & signature_masks[offset]))
                 changes[offset] = value
                 masks[offset] = masks.get(offset, 0) | signature_masks[offset]
-            height_cm = float(self.height.get().strip())
-            wingspan_cm = float(self.wingspan.get().strip())
-            arm_scale = float(self.arm_scale.get().strip())
+            try:
+                height_cm = float(self.height.get().strip())
+                wingspan_cm = float(self.wingspan.get().strip())
+                arm_scale = float(self.arm_scale.get().strip())
+            except ValueError:
+                raise ValueError("身体页的身高、臂展和手臂比例须为数字") from None
             if not 50 <= height_cm <= 327.67:
                 raise ValueError("身高须在 50 到 327.67 厘米之间")
             if not 50 <= wingspan_cm <= 327.67:
@@ -2097,17 +2496,21 @@ class PlayerEditor(tk.Tk):
                 body[48] = struct.pack("<I", (old_word & ~mask) | (mask if self.custom_scales.get() else 0))
             if not changes and not body:
                 self.status.set("没有需要保存的变化")
-                return
+                return True
             backup = self.memory.apply(self.selected, changes, body, edit_record=self.current_edit_address, masks=masks)
             self.last_backup = backup
             self._refresh_selected_record()
-            self.status.set(f"已修改 {len(changes) + len(body)} 项；备份：{backup.name}")
+            self.status.set(f"已保存 {len(changes) + len(body)} 处修改；可撤销。备份：{backup.name}")
+            return True
         except Exception as exc:
             messagebox.showerror("保存失败", str(exc), parent=self)
+            return False
 
     def undo(self):
         if not self.memory or not self.last_backup:
             self.status.set("没有可撤销的本次修改")
+            return
+        if not messagebox.askyesno("撤销上次保存", "把上次保存写入游戏的数值恢复成保存前的样子？", parent=self):
             return
         try:
             self.memory.undo(self.last_backup)
@@ -2118,7 +2521,15 @@ class PlayerEditor(tk.Tk):
             messagebox.showerror("撤销失败", str(exc), parent=self)
 
     def _quit(self):
-        self._stop_detect()
+        if not self._confirm_discard("退出"):
+            return
+        zoomed = self.state() == "zoomed"
+        self.settings["zoomed"] = zoomed
+        if not zoomed:
+            self.settings["geometry"] = self.geometry()
+        save_settings(self.settings)
+        if self.detect_pending:
+            self._finish_detect()
         if self.memory:
             self.memory.close()
         self.destroy()
@@ -2138,4 +2549,9 @@ if __name__ == "__main__":
         Path(sys.argv[2]).write_text(json.dumps(result, ensure_ascii=False), encoding="utf-8")
         receiver.close()
     else:
-        PlayerEditor().mainloop()
+        set_dpi_awareness()
+        try:
+            PlayerEditor().mainloop()
+        except Exception as exc:
+            log_error("启动失败", exc)
+            raise

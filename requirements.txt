@@ -1,6 +1,3 @@
 psutil
 Pillow
-winrt-Windows.Graphics.Imaging
-winrt-Windows.Media.Ocr
-winrt-Windows.Storage.Streams
 pyinstaller
