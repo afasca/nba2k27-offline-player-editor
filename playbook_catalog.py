@@ -5,54 +5,51 @@ import re
 
 
 POSITION_NAMES = ("控卫 PG", "分卫 SG", "小前 SF", "大前 PF", "中锋 C")
-TYPE_CODES = {
-    0x08: ("单打", "单打"),
-    0x10: ("挡拆", "挡拆持球"),
-    0x18: ("挡拆", "控卫挡拆"),
-    0x20: ("挡拆", "侧翼挡拆"),
-    0x28: ("挡拆", "挡拆顺下"),
-    0x30: ("背身", "低位背身"),
-    0x38: ("背身", "高位背身"),
-    0x40: ("背身", "后卫背身"),
-    0x48: ("空切", "空切"),
-    0x50: ("手递手", "手递手"),
-    0x58: ("投篮跑位", "中距离"),
-    0x60: ("投篮跑位", "三分"),
+# Play type the game stores in bits 19-23 of each play record's type word.
+# Types 3 and 4 are both screener-pop actions (their names use POP / OUT / FADE).
+PLAY_TYPES = {
+    1: ("单打", "单打"),
+    2: ("挡拆", "挡拆持球"),
+    3: ("挡拆", "挡拆外弹"),
+    4: ("挡拆", "挡拆外弹"),
+    5: ("挡拆", "挡拆顺下"),
+    6: ("背身", "低位背身"),
+    7: ("背身", "高位背身"),
+    8: ("背身", "后卫背身"),
+    9: ("空切", "空切"),
+    10: ("手递手", "手递手"),
+    11: ("投篮跑位", "中距离"),
+    12: ("投篮跑位", "三分"),
 }
-TYPE_ORDER = ("单打", "挡拆", "背身", "空切", "手递手", "投篮跑位", "其他")
-KEYWORD_TYPE = {
-    "ISO": "单打", "ISOLATION": "单打",
-    "FIST": "挡拆", "PNR": "挡拆", "PICK": "挡拆",
-    "PUNCH": "背身", "POST": "背身", "HIGH": "背身",
-    "CUT": "空切", "CUTTER": "空切",
-    "GIVE": "手递手", "HANDOFF": "手递手", "DHO": "手递手",
-    "QUICK": "投篮跑位", "FLOPPY": "投篮跑位", "STAGGER": "投篮跑位",
+GROUP_DETAILS = {
+    "单打": ("单打",),
+    "挡拆": ("挡拆持球", "挡拆外弹", "挡拆顺下"),
+    "背身": ("低位背身", "高位背身", "后卫背身"),
+    "空切": ("空接", "空切"),
+    "手递手": ("手递手",),
+    "投篮跑位": ("三分", "中距离"),
+    "发球战术": ("三分", "中距离", "空接", "低位背身", "其他发球"),
+    "其他": ("未识别",),
 }
-KEYWORDS = re.compile(r"\b(" + "|".join(KEYWORD_TYPE) + r")\b", re.I)
-EXPLICIT_POSITION = re.compile(r"\b(PG|SG|SF|PF|C)\b", re.I)
+TYPE_ORDER = tuple(GROUP_DETAILS)
+DETAIL_ORDER = tuple(dict.fromkeys(detail for details in GROUP_DETAILS.values() for detail in details))
+ALLEY_OOP = re.compile(r"\b(ALLEY|LOB|OOP)\b", re.I)
 
 
-def classify_play(name: str, type_code: int | None = None,
-                  meta: int | None = None) -> dict:
-    """Return game-derived labels where known and name-based labels otherwise."""
-    exact = TYPE_CODES.get(type_code)
-    keyword = KEYWORDS.search(name)
-    group = exact[0] if exact else (KEYWORD_TYPE[keyword.group().upper()] if keyword else "其他")
-    detail = exact[1] if exact else group
-    positions: set[int] = set()
-    source = "游戏记录" if exact else "名称推断"
-    if exact and meta is not None:
-        pos_code = (meta >> 8) & 0xF
-        if pos_code < 10:
-            positions.add(pos_code // 2 + 1)
-    if not positions:
-        for match in EXPLICIT_POSITION.finditer(name):
-            positions.add({"PG": 1, "SG": 2, "SF": 3, "PF": 4, "C": 5}[match.group().upper()])
-        if keyword:
-            tail = name[keyword.end():].split()[:4]
-            for token in tail:
-                if re.fullmatch(r"[1-5]{1,2}", token):
-                    positions.update(int(char) for char in token)
-                    break
-    return {"group": group, "detail": detail,
-            "positions": sorted(positions), "source": source}
+def classify_play(name: str, word: int) -> dict:
+    """Label a play from its game record; only the alley-oop mark comes from the name."""
+    kind = (word >> 16) & 0xFF
+    group, detail = PLAY_TYPES.get(kind >> 3, ("其他", "未识别"))
+    inbound = kind & 7 == 3  # sideline / baseline inbound variant
+    if ALLEY_OOP.search(name) and (group == "空切" or inbound):
+        detail = "空接"
+    if inbound:
+        group = "发球战术"
+        if detail == "未识别":
+            detail = "其他发球"
+    # Bits 9-11: focus player; bits 12-15: second player (screener / handoff partner).
+    positions: list[int] = []
+    for code in ((word >> 9) & 7, (word >> 12) & 0xF):
+        if code < 5 and code + 1 not in positions:
+            positions.append(code + 1)
+    return {"group": group, "detail": detail, "positions": positions}

@@ -20,7 +20,7 @@ from collections import Counter
 from decimal import Decimal, InvalidOperation, ROUND_HALF_UP
 
 import psutil
-from playbook_catalog import POSITION_NAMES, TYPE_ORDER, classify_play
+from playbook_catalog import DETAIL_ORDER, GROUP_DETAILS, POSITION_NAMES, TYPE_ORDER, classify_play
 from team_badges import BadgeFactory, colors_from_record, fallback_colors, mix, tier_color
 import ui_theme as theme
 from ui_theme import P, ScrollFrame, SearchBox
@@ -805,8 +805,8 @@ class PlayerEditor(tk.Tk):
         self.advanced_fields = json.loads(ADVANCED_FILE.read_text(encoding="utf-8"))
         self.appearance_fields = json.loads(APPEARANCE_FILE.read_text(encoding="utf-8"))
         self.signature_options = json.loads(SIGNATURE_OPTIONS_FILE.read_text(encoding="utf-8"))
-        self.play_catalog = {int(key, 16): value for key, value in
-                             json.loads(PLAYBOOK_PLAYS_FILE.read_text(encoding="utf-8")).items()}
+        self.play_catalog = {int(key, 16): {"name": value["name"], **classify_play(value["name"], value["word"])}
+                             for key, value in json.loads(PLAYBOOK_PLAYS_FILE.read_text(encoding="utf-8")).items()}
         self.signature_fields = [field for field in self.advanced_fields if field["section"] == "Signature"]
         self.memory: GameMemory | None = None
         self.selected: dict | None = None
@@ -849,6 +849,7 @@ class PlayerEditor(tk.Tk):
         self.book_choice = tk.StringVar()
         self.book_search = tk.StringVar()
         self.play_type_filter = tk.StringVar(value="全部打法")
+        self.play_detail_filter = tk.StringVar(value="全部细分")
         self.play_position_filter = tk.StringVar(value="全部位置")
         self.play_search = tk.StringVar()
         self.playbook_status = tk.StringVar(value="打开此页后读取游戏战术手册")
@@ -1240,8 +1241,8 @@ class PlayerEditor(tk.Tk):
         self.book_box.bind("<<ComboboxSelected>>", lambda _event: self._show_playbook())
         ttk.Button(top, text="重新读取", command=self._refresh_playbooks).pack(side="left", padx=6)
 
-        note = ("左侧选择球队手册的槽位，右侧从已载入战术中挑选；按住 Ctrl/Shift 可多选并批量添加或删除。"
-                "打法部分来自游戏记录，其余按名称归类；位置为关联位置。")
+        note = ("左侧选择球队手册的槽位，右侧从已载入战术中挑选；按住 Ctrl/Shift 可多选并批量添加或删除。\n"
+                "打法、细分和位置读取自游戏战术数据，位置先列主攻球员；「空接」按战术名中的 ALLEY / LOB 标出。")
         ttk.Label(page, text=note, foreground=P["muted"], wraplength=1050).pack(anchor="w", pady=(7, 4))
         panes = ttk.PanedWindow(page, orient="horizontal")
         panes.pack(fill="both", expand=True)
@@ -1256,11 +1257,11 @@ class PlayerEditor(tk.Tk):
         self.play_slot_tree = ttk.Treeview(slot_frame, columns=("type", "position"),
                                            show="tree headings", selectmode="extended")
         self.play_slot_tree.heading("#0", text="槽位 / 战术名称")
-        self.play_slot_tree.heading("type", text="打法")
+        self.play_slot_tree.heading("type", text="细分")
         self.play_slot_tree.heading("position", text="关联位置")
-        self.play_slot_tree.column("#0", width=285, stretch=True)
-        self.play_slot_tree.column("type", width=80, stretch=False)
-        self.play_slot_tree.column("position", width=90, stretch=False)
+        self.play_slot_tree.column("#0", width=265, stretch=True)
+        self.play_slot_tree.column("type", width=100, stretch=False)
+        self.play_slot_tree.column("position", width=125, stretch=False)
         slot_scroll = ttk.Scrollbar(slot_frame, orient="vertical", command=self.play_slot_tree.yview)
         self.play_slot_tree.configure(yscrollcommand=slot_scroll.set)
         self.play_slot_tree.pack(side="left", fill="both", expand=True)
@@ -1279,27 +1280,31 @@ class PlayerEditor(tk.Tk):
         filters = ttk.Frame(right)
         filters.pack(fill="x")
         self.play_type_box = ttk.Combobox(filters, textvariable=self.play_type_filter, state="readonly",
-                                           values=("全部打法", *TYPE_ORDER), width=11)
+                                           values=("全部打法", *TYPE_ORDER), width=9)
         self.play_type_box.pack(side="left", padx=(0, 4))
+        self.play_detail_box = ttk.Combobox(filters, textvariable=self.play_detail_filter, state="readonly",
+                                             values=("全部细分", *DETAIL_ORDER), width=9)
+        self.play_detail_box.pack(side="left", padx=4)
         self.play_position_box = ttk.Combobox(filters, textvariable=self.play_position_filter,
-                                               state="readonly", values=("全部位置", *POSITION_NAMES, "未标注"), width=12)
+                                               state="readonly", values=("全部位置", *POSITION_NAMES, "未标注"), width=9)
         self.play_position_box.pack(side="left", padx=4)
-        ttk.Entry(filters, textvariable=self.play_search, width=24).pack(side="left", fill="x", expand=True, padx=4)
-        self.play_type_box.bind("<<ComboboxSelected>>", lambda _event: self._filter_play_catalog())
+        ttk.Entry(filters, textvariable=self.play_search, width=18).pack(side="left", fill="x", expand=True, padx=4)
+        self.play_type_box.bind("<<ComboboxSelected>>", lambda _event: self._play_type_changed())
+        self.play_detail_box.bind("<<ComboboxSelected>>", lambda _event: self._filter_play_catalog())
         self.play_position_box.bind("<<ComboboxSelected>>", lambda _event: self._filter_play_catalog())
         self.play_search.trace_add("write", lambda *_: self._filter_play_catalog())
-        ttk.Label(right, text="可选战术（按打法分组，可搜索英文名或 CRC）").pack(anchor="w", pady=(7, 4))
+        ttk.Label(right, text="可选战术（打法 → 细分，如三分、空接；可搜索英文名、细分或 CRC）").pack(anchor="w", pady=(7, 4))
         catalog_frame = ttk.Frame(right)
         catalog_frame.pack(fill="both", expand=True)
         self.play_catalog_tree = ttk.Treeview(catalog_frame, columns=("detail", "position", "books"),
                                               show="tree headings", selectmode="extended")
-        self.play_catalog_tree.heading("#0", text="打法 / 战术名称")
+        self.play_catalog_tree.heading("#0", text="打法 / 细分 / 战术名称")
         self.play_catalog_tree.heading("detail", text="细分")
         self.play_catalog_tree.heading("position", text="关联位置")
         self.play_catalog_tree.heading("books", text="使用次数")
-        self.play_catalog_tree.column("#0", width=310, stretch=True)
+        self.play_catalog_tree.column("#0", width=290, stretch=True)
         self.play_catalog_tree.column("detail", width=90, stretch=False)
-        self.play_catalog_tree.column("position", width=95, stretch=False)
+        self.play_catalog_tree.column("position", width=125, stretch=False)
         self.play_catalog_tree.column("books", width=65, stretch=False, anchor="center")
         catalog_scroll = ttk.Scrollbar(catalog_frame, orient="vertical", command=self.play_catalog_tree.yview)
         self.play_catalog_tree.configure(yscrollcommand=catalog_scroll.set)
@@ -1935,12 +1940,24 @@ class PlayerEditor(tk.Tk):
         entry = self.play_catalog.get(crc)
         if entry:
             return entry
-        return {"name": f"未知战术 0x{crc:08X}", "group": "其他", "detail": "未识别",
-                "positions": [], "source": "未识别"}
+        return {"name": f"未知战术 0x{crc:08X}", "group": "其他", "detail": "未识别", "positions": []}
 
     @staticmethod
     def _play_position_label(positions: list[int]) -> str:
         return " / ".join(POSITION_NAMES[index - 1] for index in positions if 1 <= index <= 5) or "未标注"
+
+    @staticmethod
+    def _play_kind_label(entry: dict) -> str:
+        if entry["group"] == "发球战术" and entry["detail"] != "其他发球":
+            return f"发球 · {entry['detail']}"
+        return entry["detail"]
+
+    def _play_type_changed(self):
+        details = GROUP_DETAILS.get(self.play_type_filter.get(), DETAIL_ORDER)
+        self.play_detail_box.configure(values=("全部细分", *details))
+        if self.play_detail_filter.get() not in details:
+            self.play_detail_filter.set("全部细分")
+        self._filter_play_catalog()
 
     def _filter_book_options(self):
         if not hasattr(self, "book_box"):
@@ -1982,7 +1999,7 @@ class PlayerEditor(tk.Tk):
         for slot, crc in enumerate(book["slots"]):
             entry = self._play_meta(crc) if crc else None
             label = entry["name"] if entry else "（空）"
-            detail = entry["group"] if entry else ""
+            detail = self._play_kind_label(entry) if entry else ""
             position = self._play_position_label(entry["positions"]) if entry else ""
             suffix = " · 保留" if slot >= PLAYBOOK_EDITABLE_SLOTS else ""
             tree.insert("", "end", iid=f"slot:{slot}", text=f"{slot + 1:02d}  {label}{suffix}",
@@ -1998,42 +2015,66 @@ class PlayerEditor(tk.Tk):
             return
         tree = self.play_catalog_tree
         selected = tree.selection()
-        selected_id = selected[0] if selected else None
+        group_filter = self.play_type_filter.get()
+        detail_filter = self.play_detail_filter.get()
+        position_filter = self.play_position_filter.get()
+        term = self.play_search.get().strip().casefold()
+        # Keep expanded folders when only the data refreshed (e.g. after adding plays).
+        filter_key = (group_filter, detail_filter, position_filter, term)
+        same_filter = filter_key == getattr(self, "_play_filter_key", None)
+        opened = set()
+        if same_filter:
+            opened = {node for group in tree.get_children("") for node in (group, *tree.get_children(group))
+                      if tree.item(node, "open")}
+        self._play_filter_key = filter_key
         tree.delete(*tree.get_children(""))
         self.play_catalog_items = {}
         if not self.memory or not getattr(self.memory, "play_crc_pool", None):
             return
-        group_filter = self.play_type_filter.get()
-        position_filter = self.play_position_filter.get()
-        term = self.play_search.get().strip().casefold()
-        grouped: dict[str, list[tuple[int, dict]]] = {}
+        grouped: dict[str, dict[str, list[tuple[int, dict]]]] = {}
         for crc in self.memory.play_crc_pool:
             entry = self._play_meta(crc)
             if group_filter != "全部打法" and entry["group"] != group_filter:
+                continue
+            if detail_filter != "全部细分" and entry["detail"] != detail_filter:
                 continue
             positions = entry["positions"]
             if position_filter == "未标注" and positions:
                 continue
             if position_filter in POSITION_NAMES and POSITION_NAMES.index(position_filter) + 1 not in positions:
                 continue
-            if term and term not in entry["name"].casefold() and term not in f"{crc:08X}".casefold():
+            if term and term not in f"{entry['name']} {crc:08X} {entry['group']} {entry['detail']}".casefold():
                 continue
-            grouped.setdefault(entry["group"], []).append((crc, entry))
+            grouped.setdefault(entry["group"], {}).setdefault(entry["detail"], []).append((crc, entry))
+        rank = {detail: index for index, detail in enumerate(DETAIL_ORDER)}
+        narrowed = bool(term) or detail_filter != "全部细分"
         for group in TYPE_ORDER:
-            plays = grouped.get(group, [])
-            if not plays:
+            details = grouped.get(group)
+            if not details:
                 continue
             group_id = f"play-group:{group}"
-            tree.insert("", "end", iid=group_id, text=f"{group}（{len(plays)}）", open=bool(term))
-            for crc, entry in sorted(plays, key=lambda item: (item[1]["name"], item[0])):
-                item_id = f"play:{crc:08X}"
-                tree.insert(group_id, "end", iid=item_id, text=entry["name"],
-                            values=(entry["detail"], self._play_position_label(entry["positions"]),
-                                    self.play_use_count.get(crc, 0)))
-                self.play_catalog_items[item_id] = crc
-        if selected_id and tree.exists(selected_id):
-            tree.selection_set(selected_id)
-            tree.see(selected_id)
+            total = sum(len(plays) for plays in details.values())
+            tree.insert("", "end", iid=group_id, text=f"{group}（{total}）",
+                        open=group_id in opened or narrowed or group_filter == group)
+            for detail in sorted(details, key=lambda name: rank.get(name, len(rank))):
+                plays = details[detail]
+                parent = group_id
+                if len(GROUP_DETAILS[group]) > 1:
+                    parent = f"play-detail:{group}:{detail}"
+                    tree.insert(group_id, "end", iid=parent, text=f"{detail}（{len(plays)}）",
+                                open=parent in opened or narrowed)
+                for crc, entry in sorted(plays, key=lambda item: (item[1]["name"], item[0])):
+                    item_id = f"play:{crc:08X}"
+                    tree.insert(parent, "end", iid=item_id, text=entry["name"],
+                                values=(self._play_kind_label(entry), self._play_position_label(entry["positions"]),
+                                        self.play_use_count.get(crc, 0)))
+                    self.play_catalog_items[item_id] = crc
+        kept = [item for item in selected if tree.exists(item)]
+        if kept:
+            tree.selection_set(*kept)
+            tree.see(kept[0])
+        elif not same_filter:
+            tree.yview_moveto(0)
 
     def _change_playbook(self, action: str):
         try:
@@ -2075,10 +2116,7 @@ class PlayerEditor(tk.Tk):
             if not book:
                 raise ValueError("请先选择一本战术手册。")
             selected = set(self.play_catalog_tree.selection())
-            crcs = [self.play_catalog_items[item]
-                    for group in self.play_catalog_tree.get_children("")
-                    for item in self.play_catalog_tree.get_children(group)
-                    if item in selected and item in self.play_catalog_items]
+            crcs = [crc for item, crc in self.play_catalog_items.items() if item in selected]
             if not crcs:
                 raise ValueError("请按住 Ctrl/Shift 在右侧多选要加入的战术。")
             empty = [slot for slot, crc in enumerate(book["slots"][:PLAYBOOK_EDITABLE_SLOTS]) if not crc]
