@@ -1497,11 +1497,13 @@ class PlayerEditor(tk.Tk):
         section_names = {"Vitals": "资料", "Gear": "装备", "Stats": "数据", "Advanced": "高级",
                          "Signature": "动作", "Attributes": "属性", "Contract": "合同", "Appearance": "外观"}
         for index, field in enumerate(self.advanced_fields):
-            haystack = f"{field['section']} {field['group']} {field['id']} {field['label']}".casefold()
+            group_label = field.get("group_label", field["group"])
+            section_label = section_names.get(field["section"], field["section"])
+            haystack = f"{section_label} {group_label} {field['section']} {field['group']} {field['id']} {field['label']}".casefold()
             if term and term not in haystack:
                 continue
             self.advanced_tree.insert("", "end", iid=str(index), values=(
-                section_names.get(field["section"], field["section"]), field["group"], field["label"],
+                section_label, group_label, field["label"],
                 self._advanced_raw(row, field)))
 
     def _advanced_select(self, _event=None):
@@ -1512,7 +1514,7 @@ class PlayerEditor(tk.Tk):
         value = self._advanced_raw(self.memory.read(self.selected["address"], PLAYER_STRIDE), field)
         self.advanced_value.set(str(value))
         range_text = "浮点数" if field["kind"] == "float" else f"0–{(1 << field['bits']) - 1}"
-        self.advanced_info.set(f"{field['id']}  {range_text}")
+        self.advanced_info.set(f"{field['label']}  可填范围：{range_text}")
 
     def _advanced_save(self):
         selected = self.advanced_tree.selection()

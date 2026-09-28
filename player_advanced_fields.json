@@ -3,5880 +3,6468 @@
     "section": "Vitals",
     "group": "ID",
     "id": "CHINAFIRSTNAME",
-    "label": "ChinaFirstName",
+    "label": "中文名",
     "offset": 536,
     "bits": 32,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "姓名与标识"
   },
   {
     "section": "Vitals",
     "group": "ID",
     "id": "CHINALASTNAME",
-    "label": "ChinaLastName",
+    "label": "中文姓",
     "offset": 540,
     "bits": 32,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "姓名与标识"
   },
   {
     "section": "Vitals",
     "group": "ID",
     "id": "FIRSTNAMEVETTED",
-    "label": "FirstNameVetted",
+    "label": "名字已审核",
     "offset": 272,
     "bits": 1,
     "shift": 31,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "姓名与标识"
   },
   {
     "section": "Vitals",
     "group": "ID",
     "id": "LASTNAMEVETTED",
-    "label": "LastNameVetted",
+    "label": "姓氏已审核",
     "offset": 276,
     "bits": 1,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "姓名与标识"
   },
   {
     "section": "Vitals",
     "group": "Body",
     "id": "FACETYPE",
-    "label": "FaceType",
+    "label": "脸型",
     "offset": 284,
     "bits": 2,
     "shift": 3,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "身体"
   },
   {
     "section": "Vitals",
     "group": "Body",
     "id": "HAIRLENGTH",
-    "label": "HairLength",
+    "label": "头发长度",
     "offset": 280,
     "bits": 8,
     "shift": 10,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "身体"
   },
   {
     "section": "Vitals",
     "group": "Body",
     "id": "SKINTYPE",
-    "label": "SkinType",
+    "label": "肤色类型",
     "offset": 476,
     "bits": 3,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "身体"
   },
   {
     "section": "Vitals",
     "group": "Body",
     "id": "WEIGHT",
-    "label": "Weight",
+    "label": "体重",
     "offset": 264,
     "bits": 32,
     "shift": 0,
-    "kind": "float"
+    "kind": "float",
+    "group_label": "身体"
   },
   {
     "section": "Vitals",
     "group": "Vitals",
     "id": "BIRTHDAY",
-    "label": "Birth Day",
+    "label": "出生日期",
     "offset": 276,
     "bits": 5,
     "shift": 1,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "基本资料"
   },
   {
     "section": "Vitals",
     "group": "Vitals",
     "id": "BIRTHMONTH",
-    "label": "Birth Month",
+    "label": "出生月份",
     "offset": 874,
     "bits": 4,
     "shift": 12,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "基本资料"
   },
   {
     "section": "Vitals",
     "group": "Vitals",
     "id": "BIRTHPLACE",
-    "label": "BirthPlace",
+    "label": "出生地",
     "offset": 256,
     "bits": 16,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "基本资料"
   },
   {
     "section": "Vitals",
     "group": "Vitals",
     "id": "BIRTHYEAR",
-    "label": "BirthYear",
+    "label": "出生年份",
     "offset": 272,
     "bits": 12,
     "shift": 16,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "基本资料"
   },
   {
     "section": "Vitals",
     "group": "Vitals",
     "id": "BORINGPERCENT",
-    "label": "BoringPercent",
+    "label": "沉闷程度",
     "offset": 856,
     "bits": 7,
     "shift": 20,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "基本资料"
   },
   {
     "section": "Vitals",
     "group": "Vitals",
     "id": "CREATEDPLAYERNICKNAME",
-    "label": "Created Player Nickname",
+    "label": "自建球员昵称",
     "offset": 1072,
     "bits": 7,
     "shift": 18,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "基本资料"
   },
   {
     "section": "Vitals",
     "group": "Vitals",
     "id": "CROWDEXCITEMENTMULTIPLIER",
-    "label": "CrowdExcitementMultiplier",
+    "label": "观众兴奋度倍率",
     "offset": 384,
     "bits": 32,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "基本资料"
   },
   {
     "section": "Vitals",
     "group": "Vitals",
     "id": "DAYSINGLEAGUE",
-    "label": "DaysInGLeague",
+    "label": "在发展联盟天数",
     "offset": 976,
     "bits": 3,
     "shift": 18,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "基本资料"
   },
   {
     "section": "Vitals",
     "group": "Vitals",
     "id": "DOMINANTDUNKHAND",
-    "label": "Dominant Dunk Hand",
+    "label": "惯用扣篮手",
     "offset": 300,
     "bits": 2,
     "shift": 23,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "基本资料"
   },
   {
     "section": "Vitals",
     "group": "Vitals",
     "id": "DOMINANTHAND",
-    "label": "Dominant Hand",
+    "label": "惯用手",
     "offset": 300,
     "bits": 1,
     "shift": 22,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "基本资料"
   },
   {
     "section": "Vitals",
     "group": "Vitals",
     "id": "DRAFTPICKNUMBER",
-    "label": "Draft Pick Number",
+    "label": "选秀顺位",
     "offset": 874,
     "bits": 6,
     "shift": 6,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "基本资料"
   },
   {
     "section": "Vitals",
     "group": "Vitals",
     "id": "DRAFTEDFANTASYPICK",
-    "label": "DraftedFantasyPick",
+    "label": "梦幻选秀顺位",
     "offset": 1076,
     "bits": 6,
     "shift": 23,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "基本资料"
   },
   {
     "section": "Vitals",
     "group": "Vitals",
     "id": "DRAFTEDFANTASYROUND",
-    "label": "DraftedFantasyRound",
+    "label": "梦幻选秀轮次",
     "offset": 460,
     "bits": 4,
     "shift": 11,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "基本资料"
   },
   {
     "section": "Vitals",
     "group": "Vitals",
     "id": "DRAFTPROSPECTINDEX",
-    "label": "DraftProspectIndex",
+    "label": "新秀索引",
     "offset": 280,
     "bits": 8,
     "shift": 18,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "基本资料"
   },
   {
     "section": "Vitals",
     "group": "Vitals",
     "id": "EUROSTASHREDRAFT",
-    "label": "EurostashRedraft",
+    "label": "欧洲留洋重新选秀",
     "offset": 1024,
     "bits": 1,
     "shift": 31,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "基本资料"
   },
   {
     "section": "Vitals",
     "group": "Vitals",
     "id": "EUROSTASHYEARSLEFT",
-    "label": "EuroStashYearsLeft",
+    "label": "欧洲留洋剩余年数",
     "offset": 836,
     "bits": 3,
     "shift": 26,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "基本资料"
   },
   {
     "section": "Vitals",
     "group": "Vitals",
     "id": "EVOLUTIONLEVEL",
-    "label": "EvolutionLevel",
+    "label": "进化等级",
     "offset": 836,
     "bits": 3,
     "shift": 29,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "基本资料"
   },
   {
     "section": "Vitals",
     "group": "Vitals",
     "id": "FINANCIALSECURITY",
-    "label": "Financial Security",
+    "label": "经济保障",
     "offset": 736,
     "bits": 7,
     "shift": 19,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "基本资料"
   },
   {
     "section": "Vitals",
     "group": "Vitals",
     "id": "FLIPFIRSTLASTNAMES",
-    "label": "FlipFirstLastNames",
+    "label": "调换姓名顺序",
     "offset": 440,
     "bits": 1,
     "shift": 7,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "基本资料"
   },
   {
     "section": "Vitals",
     "group": "Vitals",
     "id": "FORCENONSTARTER",
-    "label": "Force Non Starter",
+    "label": "强制替补",
     "offset": 852,
     "bits": 2,
     "shift": 26,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "基本资料"
   },
   {
     "section": "Vitals",
     "group": "Vitals",
     "id": "HIGHSCHOOL",
-    "label": "HighSchool",
+    "label": "高中",
     "offset": 256,
     "bits": 16,
     "shift": 16,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "基本资料"
   },
   {
     "section": "Vitals",
     "group": "Vitals",
     "id": "ISGLEAGUESENDDOWN",
-    "label": "Is G-League Send Down",
+    "label": "下放发展联盟",
     "offset": 276,
     "bits": 1,
     "shift": 9,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "基本资料"
   },
   {
     "section": "Vitals",
     "group": "Vitals",
     "id": "ISFOUROUT",
-    "label": "IsFourOut",
+    "label": "四外站位",
     "offset": 424,
     "bits": 1,
     "shift": 16,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "基本资料"
   },
   {
     "section": "Vitals",
     "group": "Vitals",
     "id": "ISSOCIALMEDIAFOLLOWER",
-    "label": "IsSocialMediaFollower",
+    "label": "社交媒体关注者",
     "offset": 852,
     "bits": 1,
     "shift": 28,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "基本资料"
   },
   {
     "section": "Vitals",
     "group": "Vitals",
     "id": "ISSUMMERLEAGUEATTENDEE",
-    "label": "IsSummerLeagueAttendee",
+    "label": "参加夏季联赛",
     "offset": 460,
     "bits": 1,
     "shift": 23,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "基本资料"
   },
   {
     "section": "Vitals",
     "group": "Vitals",
     "id": "NUMBER",
-    "label": "Jersey Number",
+    "label": "球衣号码",
     "offset": 276,
     "bits": 7,
     "shift": 11,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "基本资料"
   },
   {
     "section": "Vitals",
     "group": "Vitals",
     "id": "JERSEYNAMETYPE",
-    "label": "JerseyNameType",
+    "label": "球衣姓名样式",
     "offset": 836,
     "bits": 2,
     "shift": 22,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "基本资料"
   },
   {
     "section": "Vitals",
     "group": "Vitals",
     "id": "LOYALTY",
-    "label": "Loyalty",
+    "label": "忠诚度",
     "offset": 736,
     "bits": 7,
     "shift": 5,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "基本资料"
   },
   {
     "section": "Vitals",
     "group": "Vitals",
     "id": "MINEVOLEVELFORSECONDARYPOSITION",
-    "label": "MinEvoLevelForSecondaryPosition",
+    "label": "副位置最低进化等级",
     "offset": 460,
     "bits": 3,
     "shift": 19,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "基本资料"
   },
   {
     "section": "Vitals",
     "group": "Vitals",
     "id": "ORIGINALPOTENTIAL",
-    "label": "OriginalPotential",
+    "label": "原始潜力",
     "offset": 873,
     "bits": 8,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "基本资料"
   },
   {
     "section": "Vitals",
     "group": "Vitals",
     "id": "PEAKENDAGE",
-    "label": "Peak End Age",
+    "label": "巅峰结束年龄",
     "offset": 276,
     "bits": 6,
     "shift": 24,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "基本资料"
   },
   {
     "section": "Vitals",
     "group": "Vitals",
     "id": "PEAKAGE",
-    "label": "PeakAge",
+    "label": "巅峰年龄",
     "offset": 276,
     "bits": 6,
     "shift": 18,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "基本资料"
   },
   {
     "section": "Vitals",
     "group": "Vitals",
     "id": "PLAYFORWINNER",
-    "label": "Play For Winner",
+    "label": "追求胜利",
     "offset": 736,
     "bits": 7,
     "shift": 12,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "基本资料"
   },
   {
     "section": "Vitals",
     "group": "Vitals",
     "id": "PLAYINITIATOR",
-    "label": "Play Initiator",
+    "label": "进攻发起者",
     "offset": 726,
     "bits": 1,
     "shift": 5,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "基本资料"
   },
   {
     "section": "Vitals",
     "group": "Vitals",
     "id": "PLAYTYPE1",
-    "label": "Play Type 1",
+    "label": "战术类型1",
     "offset": 424,
     "bits": 4,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "基本资料"
   },
   {
     "section": "Vitals",
     "group": "Vitals",
     "id": "PLAYTYPE2",
-    "label": "Play Type 2",
+    "label": "战术类型2",
     "offset": 424,
     "bits": 4,
     "shift": 4,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "基本资料"
   },
   {
     "section": "Vitals",
     "group": "Vitals",
     "id": "PLAYTYPE3",
-    "label": "Play Type 3",
+    "label": "战术类型3",
     "offset": 424,
     "bits": 4,
     "shift": 8,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "基本资料"
   },
   {
     "section": "Vitals",
     "group": "Vitals",
     "id": "PLAYTYPE4",
-    "label": "Play Type 4",
+    "label": "战术类型4",
     "offset": 424,
     "bits": 4,
     "shift": 12,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "基本资料"
   },
   {
     "section": "Vitals",
     "group": "Vitals",
     "id": "PLAYINGTIME",
-    "label": "PlayingTime",
+    "label": "上场时间",
     "offset": 300,
     "bits": 7,
     "shift": 15,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "基本资料"
   },
   {
     "section": "Vitals",
     "group": "Vitals",
     "id": "POSITION",
-    "label": "Position",
+    "label": "主要位置",
     "offset": 300,
     "bits": 3,
     "shift": 8,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "基本资料"
   },
   {
     "section": "Vitals",
     "group": "Vitals",
     "id": "POSITIONEDITED",
-    "label": "PositionEdited",
+    "label": "位置已编辑",
     "offset": 440,
     "bits": 1,
     "shift": 16,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "基本资料"
   },
   {
     "section": "Vitals",
     "group": "Vitals",
     "id": "PROGRESSIONMINUTESPLAYED",
-    "label": "ProgressionMinutesPlayed",
+    "label": "成长累计上场分钟",
     "offset": 980,
     "bits": 12,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "基本资料"
   },
   {
     "section": "Vitals",
     "group": "Vitals",
     "id": "PROGRESSIONTEAMGAMESPLAYED",
-    "label": "ProgressionTeamGamesPlayed",
+    "label": "成长统计球队场次",
     "offset": 980,
     "bits": 7,
     "shift": 25,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "基本资料"
   },
   {
     "section": "Vitals",
     "group": "Vitals",
     "id": "PROGRESSIONTOTALTEAMREGULATIONGAMELENGTH",
-    "label": "ProgressionTotalTeamRegulationGameLength",
+    "label": "成长统计球队常规比赛总时长",
     "offset": 980,
     "bits": 13,
     "shift": 12,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "基本资料"
   },
   {
     "section": "Vitals",
     "group": "Vitals",
     "id": "PROYEARCOUNTED",
-    "label": "ProYearCounted",
+    "label": "计入职业年限",
     "offset": 876,
     "bits": 1,
     "shift": 24,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "基本资料"
   },
   {
     "section": "Vitals",
     "group": "Vitals",
     "id": "RECENTDRAFTSIGNING",
-    "label": "RecentDraftSigning",
+    "label": "近期选秀签约",
     "offset": 492,
     "bits": 1,
     "shift": 31,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "基本资料"
   },
   {
     "section": "Vitals",
     "group": "Vitals",
     "id": "RETIREDJERSEYNUMBER",
-    "label": "RetiredJerseyNumber",
+    "label": "退役球衣号码",
     "offset": 880,
     "bits": 1,
     "shift": 23,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "基本资料"
   },
   {
     "section": "Vitals",
     "group": "Vitals",
     "id": "ROUNDDRAFTED",
-    "label": "Round Drafted",
+    "label": "选秀轮次",
     "offset": 856,
     "bits": 4,
     "shift": 27,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "基本资料"
   },
   {
     "section": "Vitals",
     "group": "Vitals",
     "id": "SECONDARYPOSITION",
-    "label": "Secondary Position",
+    "label": "副位置",
     "offset": 300,
     "bits": 3,
     "shift": 11,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "基本资料"
   },
   {
     "section": "Vitals",
     "group": "Vitals",
     "id": "SHUFFLEDDRAFTYEAR",
-    "label": "ShuffledDraftYear",
+    "label": "重排后的选秀年份",
     "offset": 888,
     "bits": 7,
     "shift": 9,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "基本资料"
   },
   {
     "section": "Vitals",
     "group": "Vitals",
     "id": "SPECIALCASENAME",
-    "label": "Special Case Name",
+    "label": "特殊姓名",
     "offset": 300,
     "bits": 2,
     "shift": 25,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "基本资料"
   },
   {
     "section": "Vitals",
     "group": "Vitals",
     "id": "UNFAZEDHIDDENTRAIT",
-    "label": "UnfazedHiddenTrait",
+    "label": "不受干扰隐藏特质",
     "offset": 726,
     "bits": 3,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "基本资料"
   },
   {
     "section": "Vitals",
     "group": "Health",
     "id": "DAYSSINCELASTAGGRAVATION",
-    "label": "DaysSinceLastAggravation",
+    "label": "距上次伤势加重天数",
     "offset": 300,
     "bits": 4,
     "shift": 27,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "伤病健康"
   },
   {
     "section": "Vitals",
     "group": "Health",
     "id": "DISABLECAREERENDINGINJURY",
-    "label": "DisableCareerEndingInjury",
+    "label": "禁用终结生涯的伤病",
     "offset": 884,
     "bits": 1,
     "shift": 31,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "伤病健康"
   },
   {
     "section": "Vitals",
     "group": "Health",
     "id": "DISALLOWEDINJURYFLAGS",
-    "label": "DisallowedInjuryFlags",
+    "label": "禁用的伤病标记",
     "offset": 888,
     "bits": 12,
     "shift": 20,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "伤病健康"
   },
   {
     "section": "Vitals",
     "group": "Health",
     "id": "HADCAREERENDEDBYINJURY",
-    "label": "HadCareerEndedByInjury",
+    "label": "曾因伤结束生涯",
     "offset": 300,
     "bits": 1,
     "shift": 31,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "伤病健康"
   },
   {
     "section": "Vitals",
     "group": "Health",
     "id": "HADIMPORTANTINJURY",
-    "label": "HadImportantInjury",
+    "label": "曾有重大伤病",
     "offset": 1076,
     "bits": 1,
     "shift": 22,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "伤病健康"
   },
   {
     "section": "Vitals",
     "group": "Health",
     "id": "IMPORTANTINJURYRECOVERY",
-    "label": "ImportantInjuryRecovery",
+    "label": "重大伤病恢复度",
     "offset": 1032,
     "bits": 1,
     "shift": 30,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "伤病健康"
   },
   {
     "section": "Vitals",
     "group": "Health",
     "id": "INJURY1DURATION",
-    "label": "Injury 1 Duration",
+    "label": "伤病1持续时间",
     "offset": 852,
     "bits": 20,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "伤病健康"
   },
   {
     "section": "Vitals",
     "group": "Health",
     "id": "INJURY1STATUS",
-    "label": "Injury 1 Status",
+    "label": "伤病1状态",
     "offset": 852,
     "bits": 3,
     "shift": 20,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "伤病健康"
   },
   {
     "section": "Vitals",
     "group": "Health",
     "id": "INJURY1TYPE",
-    "label": "Injury 1 Type",
+    "label": "伤病1类型",
     "offset": 300,
     "bits": 8,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "伤病健康"
   },
   {
     "section": "Vitals",
     "group": "Health",
     "id": "INJURY2DURATION",
-    "label": "Injury 2 Duration",
+    "label": "伤病2持续时间",
     "offset": 856,
     "bits": 20,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "伤病健康"
   },
   {
     "section": "Vitals",
     "group": "Health",
     "id": "INJURY2STATUS",
-    "label": "Injury 2 Status",
+    "label": "伤病2状态",
     "offset": 852,
     "bits": 3,
     "shift": 23,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "伤病健康"
   },
   {
     "section": "Vitals",
     "group": "Health",
     "id": "INJURY2TYPE",
-    "label": "Injury 2 Type",
+    "label": "伤病2类型",
     "offset": 860,
     "bits": 8,
     "shift": 13,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "伤病健康"
   },
   {
     "section": "Vitals",
     "group": "Health",
     "id": "INJURYHEALEDPERCENTAGE1",
-    "label": "InjuryHealedPercentage1",
+    "label": "伤病恢复百分比1",
     "offset": 1012,
     "bits": 7,
     "shift": 25,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "伤病健康"
   },
   {
     "section": "Vitals",
     "group": "Health",
     "id": "INJURYHEALEDPERCENTAGE2",
-    "label": "InjuryHealedPercentage2",
+    "label": "伤病恢复百分比2",
     "offset": 748,
     "bits": 7,
     "shift": 4,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "伤病健康"
   },
   {
     "section": "Vitals",
     "group": "Health",
     "id": "INJURYSTARTDATE1",
-    "label": "InjuryStartDate1",
+    "label": "伤病开始日期1",
     "offset": 812,
     "bits": 32,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "伤病健康"
   },
   {
     "section": "Vitals",
     "group": "Health",
     "id": "INJURYSTARTDATE2",
-    "label": "InjuryStartDate2",
+    "label": "伤病开始日期2",
     "offset": 816,
     "bits": 32,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "伤病健康"
   },
   {
     "section": "Vitals",
     "group": "Health",
     "id": "ISINJURY1TYPELEFTBODY",
-    "label": "Is Injury 1 Type Left Body",
+    "label": "伤病1是否位于左侧身体",
     "offset": 852,
     "bits": 1,
     "shift": 30,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "伤病健康"
   },
   {
     "section": "Vitals",
     "group": "Health",
     "id": "ISINJURY2TYPELEFTBODY",
-    "label": "Is Injury 2 Type Left Body",
+    "label": "伤病2是否位于左侧身体",
     "offset": 856,
     "bits": 1,
     "shift": 31,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "伤病健康"
   },
   {
     "section": "Vitals",
     "group": "Health",
     "id": "LATESTINJURYHEALEDDATE",
-    "label": "LatestInjuryHealedDate",
+    "label": "最近伤病痊愈日期",
     "offset": 824,
     "bits": 32,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "伤病健康"
   },
   {
     "section": "Vitals",
     "group": "Health",
     "id": "LATESTINJURYHEALEDORIGINALTYPE",
-    "label": "LatestInjuryHealedOriginalType",
+    "label": "最近痊愈伤病原类型",
     "offset": 976,
     "bits": 8,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "伤病健康"
   },
   {
     "section": "Vitals",
     "group": "Health",
     "id": "LATESTINJURYHEALEDSTARTDATE",
-    "label": "LatestInjuryHealedStartDate",
+    "label": "最近痊愈伤病起始日期",
     "offset": 820,
     "bits": 32,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "伤病健康"
   },
   {
     "section": "Vitals",
     "group": "Health",
     "id": "LATESTINJURYSLOT",
-    "label": "LatestInjurySlot",
+    "label": "最近伤病槽位",
     "offset": 852,
     "bits": 1,
     "shift": 31,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "伤病健康"
   },
   {
     "section": "Vitals",
     "group": "Health",
     "id": "NUMGAMESMISSEDDUETOINJURY",
-    "label": "NumGamesMissedDueToInjury",
+    "label": "因伤缺赛场次",
     "offset": 1012,
     "bits": 7,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "伤病健康"
   },
   {
     "section": "Vitals",
     "group": "Health",
     "id": "ORIGINALINJURYTYPE1",
-    "label": "OriginalInjuryType1",
+    "label": "原始伤病类型1",
     "offset": 476,
     "bits": 8,
     "shift": 5,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "伤病健康"
   },
   {
     "section": "Vitals",
     "group": "Health",
     "id": "ORIGINALINJURYTYPE2",
-    "label": "OriginalInjuryType2",
+    "label": "原始伤病类型2",
     "offset": 860,
     "bits": 8,
     "shift": 21,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "伤病健康"
   },
   {
     "section": "Vitals",
     "group": "Health",
     "id": "PREINJURYACCESSORY1",
-    "label": "PreInjuryAccessory1",
+    "label": "伤前配饰1",
     "offset": 444,
     "bits": 5,
     "shift": 7,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "伤病健康"
   },
   {
     "section": "Vitals",
     "group": "Health",
     "id": "PREINJURYACCESSORY2",
-    "label": "PreInjuryAccessory2",
+    "label": "伤前配饰2",
     "offset": 444,
     "bits": 5,
     "shift": 12,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "伤病健康"
   },
   {
     "section": "Vitals",
     "group": "Health",
     "id": "PREINJURYACCESSORYAWAYCOLOR1",
-    "label": "PreInjuryAccessoryAwayColor1",
+    "label": "伤前客场配饰颜色1",
     "offset": 988,
     "bits": 5,
     "shift": 27,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "伤病健康"
   },
   {
     "section": "Vitals",
     "group": "Health",
     "id": "PREINJURYACCESSORYAWAYCOLOR2",
-    "label": "PreInjuryAccessoryAwayColor2",
+    "label": "伤前客场配饰颜色2",
     "offset": 280,
     "bits": 5,
     "shift": 26,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "伤病健康"
   },
   {
     "section": "Vitals",
     "group": "Health",
     "id": "PREINJURYACCESSORYBODYPART1",
-    "label": "PreInjuryAccessoryBodyPart1",
+    "label": "伤前配饰部位1",
     "offset": 1076,
     "bits": 4,
     "shift": 18,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "伤病健康"
   },
   {
     "section": "Vitals",
     "group": "Health",
     "id": "PREINJURYACCESSORYBODYPART2",
-    "label": "PreInjuryAccessoryBodyPart2",
+    "label": "伤前配饰部位2",
     "offset": 860,
     "bits": 4,
     "shift": 9,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "伤病健康"
   },
   {
     "section": "Vitals",
     "group": "Health",
     "id": "PREINJURYACCESSORYHOMECOLOR1",
-    "label": "PreInjuryAccessoryHomeColor1",
+    "label": "伤前主场配饰颜色1",
     "offset": 876,
     "bits": 5,
     "shift": 25,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "伤病健康"
   },
   {
     "section": "Vitals",
     "group": "Health",
     "id": "PREINJURYACCESSORYHOMECOLOR2",
-    "label": "PreInjuryAccessoryHomeColor2",
+    "label": "伤前主场配饰颜色2",
     "offset": 992,
     "bits": 5,
     "shift": 5,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "伤病健康"
   },
   {
     "section": "Vitals",
     "group": "Team",
     "id": "FIBATEAMID",
-    "label": "FIBATeamId",
+    "label": "国际篮联球队标识",
     "offset": 1056,
     "bits": 16,
     "shift": 16,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "球队"
   },
   {
     "section": "Vitals",
     "group": "Team",
     "id": "TEAM",
-    "label": "Team",
+    "label": "所属球队",
     "offset": 372,
     "bits": 2,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "球队"
   },
   {
     "section": "Vitals",
     "group": "Team",
     "id": "TEAMHISTORY0DATE",
-    "label": "TeamHistory0Date",
+    "label": "效力球队记录1日期",
     "offset": 800,
     "bits": 32,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "球队"
   },
   {
     "section": "Vitals",
     "group": "Team",
     "id": "TEAMHISTORY0TEAMID",
-    "label": "TeamHistory0TeamId",
+    "label": "效力球队记录1球队标识",
     "offset": 752,
     "bits": 16,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "球队"
   },
   {
     "section": "Vitals",
     "group": "Team",
     "id": "TEAMHISTORY1DATE",
-    "label": "TeamHistory1Date",
+    "label": "效力球队记录2日期",
     "offset": 804,
     "bits": 32,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "球队"
   },
   {
     "section": "Vitals",
     "group": "Team",
     "id": "TEAMHISTORY1TEAMID",
-    "label": "TeamHistory1TeamId",
+    "label": "效力球队记录2球队标识",
     "offset": 754,
     "bits": 16,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "球队"
   },
   {
     "section": "Vitals",
     "group": "Team",
     "id": "TEAMHISTORY2DATE",
-    "label": "TeamHistory2Date",
+    "label": "效力球队记录3日期",
     "offset": 808,
     "bits": 32,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "球队"
   },
   {
     "section": "Vitals",
     "group": "Team",
     "id": "TEAMHISTORY2TEAMID",
-    "label": "TeamHistory2TeamId",
+    "label": "效力球队记录3球队标识",
     "offset": 756,
     "bits": 16,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "球队"
   },
   {
     "section": "Vitals",
     "group": "Team",
     "id": "YEARSWITHTEAM",
-    "label": "YearsWithTeam",
+    "label": "效力球队年数",
     "offset": 880,
     "bits": 5,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "球队"
   },
   {
     "section": "Vitals",
     "group": "Type",
     "id": "DEADCAPTEMPORARYPLAYERTYPE",
-    "label": "DeadCapTemporaryPlayerType",
+    "label": "死薪空间临时球员类型",
     "offset": 460,
     "bits": 2,
     "shift": 30,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "球员类型"
   },
   {
     "section": "Vitals",
     "group": "Type",
     "id": "ISGENERATED",
-    "label": "Is Generated",
+    "label": "是否生成球员",
     "offset": 276,
     "bits": 1,
     "shift": 8,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "球员类型"
   },
   {
     "section": "Vitals",
     "group": "Type",
     "id": "ISHIDDEN",
-    "label": "Is Hidden",
+    "label": "是否隐藏",
     "offset": 276,
     "bits": 1,
     "shift": 7,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "球员类型"
   },
   {
     "section": "Vitals",
     "group": "Type",
     "id": "ISHISTORIC",
-    "label": "Is Historic",
+    "label": "是否历史球员",
     "offset": 484,
     "bits": 1,
     "shift": 31,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "球员类型"
   },
   {
     "section": "Vitals",
     "group": "Type",
     "id": "ISACTIVEPRIVATE",
-    "label": "IsActive_Private",
+    "label": "是否私有且激活",
     "offset": 276,
     "bits": 1,
     "shift": 6,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "球员类型"
   },
   {
     "section": "Vitals",
     "group": "Type",
     "id": "ISCELEBRITY",
-    "label": "IsCelebrity",
+    "label": "是否名人球员",
     "offset": 372,
     "bits": 1,
     "shift": 21,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "球员类型"
   },
   {
     "section": "Vitals",
     "group": "Type",
     "id": "ISDRAFTEDINTEAMEXPANSION",
-    "label": "IsDraftedInTeamExpansion",
+    "label": "是否扩军选秀选中",
     "offset": 372,
     "bits": 1,
     "shift": 26,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "球员类型"
   },
   {
     "section": "Vitals",
     "group": "Type",
     "id": "ISELIGIBLEFORFANTASYDRAFT",
-    "label": "IsEligibleForFantasyDraft",
+    "label": "是否符合梦幻选秀资格",
     "offset": 424,
     "bits": 1,
     "shift": 26,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "球员类型"
   },
   {
     "section": "Vitals",
     "group": "Type",
     "id": "ISGENERATIONALPLAYER",
-    "label": "IsGenerationalPlayer",
+    "label": "是否划时代球员",
     "offset": 748,
     "bits": 1,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "球员类型"
   },
   {
     "section": "Vitals",
     "group": "Type",
     "id": "ISGLEAGUE",
-    "label": "IsGLeague",
+    "label": "是否发展联盟球员",
     "offset": 488,
     "bits": 1,
     "shift": 31,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "球员类型"
   },
   {
     "section": "Vitals",
     "group": "Type",
     "id": "ISPLAYABLE",
-    "label": "IsPlayable",
+    "label": "是否可用",
     "offset": 1032,
     "bits": 1,
     "shift": 31,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "球员类型"
   },
   {
     "section": "Vitals",
     "group": "Type",
     "id": "ISPROTECTEDINDRAFT",
-    "label": "IsProtectedInDraft",
+    "label": "是否选秀保护",
     "offset": 880,
     "bits": 1,
     "shift": 31,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "球员类型"
   },
   {
     "section": "Vitals",
     "group": "Type",
     "id": "LEAGUE",
-    "label": "League",
+    "label": "所属联赛",
     "offset": 280,
     "bits": 1,
     "shift": 3,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "球员类型"
   },
   {
     "section": "Vitals",
     "group": "Type",
     "id": "MUSTRETIRENEXTYEAR",
-    "label": "MustRetireNextYear",
+    "label": "下赛季必须退役",
     "offset": 1012,
     "bits": 1,
     "shift": 18,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "球员类型"
   },
   {
     "section": "Vitals",
     "group": "Type",
     "id": "OFFENSIVEPLAYERTYPE",
-    "label": "OffensivePlayerType",
+    "label": "进攻球员类型",
     "offset": 748,
     "bits": 5,
     "shift": 11,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "球员类型"
   },
   {
     "section": "Vitals",
     "group": "Type",
     "id": "ORGROLE",
-    "label": "OrgRole",
+    "label": "球队角色",
     "offset": 280,
     "bits": 3,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "球员类型"
   },
   {
     "section": "Vitals",
     "group": "Type",
     "id": "PLAYERTYPE",
-    "label": "Player Type",
+    "label": "球员类型",
     "offset": 424,
     "bits": 5,
     "shift": 21,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "球员类型"
   },
   {
     "section": "Vitals",
     "group": "Type",
     "id": "SEASONRETIRED",
-    "label": "SeasonRetired",
+    "label": "退役赛季",
     "offset": 884,
     "bits": 7,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "球员类型"
   },
   {
     "section": "Vitals",
     "group": "Type",
     "id": "TWOWAYWASCALLEDUPTODAY",
-    "label": "TwoWayWasCalledUpToday",
+    "label": "双向合同今日被召回",
     "offset": 480,
     "bits": 1,
     "shift": 31,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "球员类型"
   },
   {
     "section": "Vitals",
     "group": "Type",
     "id": "WASDRAFTED",
-    "label": "Was Drafted",
+    "label": "是否被选秀选中",
     "offset": 276,
     "bits": 1,
     "shift": 10,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "球员类型"
   },
   {
     "section": "Vitals",
     "group": "Type",
     "id": "WNBAARCHETYPE",
-    "label": "WNBAArchetype",
+    "label": "女子联盟球员模板",
     "offset": 748,
     "bits": 4,
     "shift": 28,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "球员类型"
   },
   {
     "section": "Vitals",
     "group": "Awards",
     "id": "HALLOFFAMERATING",
-    "label": "HallOfFameRating",
+    "label": "名人堂评分",
     "offset": 380,
     "bits": 32,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "奖项"
   },
   {
     "section": "Vitals",
     "group": "Awards",
     "id": "MVPAWARDSHARES",
-    "label": "MVPAwardShares",
+    "label": "最有价值球员奖份额",
     "offset": 376,
     "bits": 32,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "奖项"
   },
   {
     "section": "Vitals",
     "group": "Awards",
     "id": "PLAYEROFMONTH",
-    "label": "PlayerOfMonth",
+    "label": "月最佳球员",
     "offset": 1028,
     "bits": 7,
     "shift": 24,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "奖项"
   },
   {
     "section": "Vitals",
     "group": "Awards",
     "id": "PLAYEROFWEEK",
-    "label": "PlayerOfWeek",
+    "label": "周最佳球员",
     "offset": 1052,
     "bits": 9,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "奖项"
   },
   {
     "section": "Vitals",
     "group": "Awards",
     "id": "ROOKIEOFMONTH",
-    "label": "RookieOfMonth",
+    "label": "月最佳新秀",
     "offset": 460,
     "bits": 3,
     "shift": 15,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "奖项"
   },
   {
     "section": "Vitals",
     "group": "Awards",
     "id": "ROOKIEOFWEEK",
-    "label": "RookieOfWeek",
+    "label": "周最佳新秀",
     "offset": 736,
     "bits": 5,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "奖项"
   },
   {
     "section": "Vitals",
     "group": "Personality",
     "id": "GUMCHEWER",
-    "label": "GumChewer",
+    "label": "嚼口香糖",
     "offset": 268,
     "bits": 1,
     "shift": 30,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "个性"
   },
   {
     "section": "Vitals",
     "group": "Roster",
     "id": "MYTEAMAUCTIONABLE",
-    "label": "MyTeamAuctionable",
+    "label": "梦幻球队可拍卖",
     "offset": 448,
     "bits": 1,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "名单"
   },
   {
     "section": "Vitals",
     "group": "Roster",
     "id": "MYTEAMCOLOR",
-    "label": "MyTeamColor",
+    "label": "梦幻球队颜色",
     "offset": 1012,
     "bits": 5,
     "shift": 13,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "名单"
   },
   {
     "section": "Vitals",
     "group": "Roster",
     "id": "MYTEAMINCLUDE",
-    "label": "MyTeamInclude",
+    "label": "加入梦幻球队",
     "offset": 852,
     "bits": 1,
     "shift": 29,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "名单"
   },
   {
     "section": "Vitals",
     "group": "Roster",
     "id": "MYTEAMMOMENTDATE",
-    "label": "MyTeamMomentDate",
+    "label": "梦幻球队时刻日期",
     "offset": 832,
     "bits": 32,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "名单"
   },
   {
     "section": "Vitals",
     "group": "Roster",
     "id": "MYTEAMOFFLINEONLY",
-    "label": "MyTeamOfflineOnly",
+    "label": "梦幻球队仅离线",
     "offset": 444,
     "bits": 1,
     "shift": 31,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "名单"
   },
   {
     "section": "Vitals",
     "group": "Roster",
     "id": "MYTEAMREVEALUNIFORMID",
-    "label": "MyTeamRevealUniformId",
+    "label": "梦幻球队揭示球衣标识",
     "offset": 1040,
     "bits": 16,
     "shift": 16,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "名单"
   },
   {
     "section": "Vitals",
     "group": "Roster",
     "id": "MYTEAMSTADIUMREVEALANIM",
-    "label": "MyTeamStadiumRevealAnim",
+    "label": "梦幻球队球馆揭示动画",
     "offset": 472,
     "bits": 32,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "名单"
   },
   {
     "section": "Vitals",
     "group": "Roster",
     "id": "MYTEAMTHEME",
-    "label": "MyTeamTheme",
+    "label": "梦幻球队主题",
     "offset": 468,
     "bits": 32,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "名单"
   },
   {
     "section": "Vitals",
     "group": "Roster",
     "id": "ROSTERTYPE",
-    "label": "RosterType",
+    "label": "名单类型",
     "offset": 1024,
     "bits": 3,
     "shift": 22,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "名单"
   },
   {
     "section": "Vitals",
     "group": "Roster",
     "id": "ROSTERYEAR",
-    "label": "RosterYear",
+    "label": "名单年份",
     "offset": 896,
     "bits": 11,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "名单"
   },
   {
     "section": "Gear",
     "group": "Shoes/Gear",
     "id": "BENCHOUTFIT",
-    "label": "BenchOutfit",
+    "label": "替补席服装",
     "offset": 1008,
     "bits": 32,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "球鞋与装备"
   },
   {
     "section": "Gear",
     "group": "Shoes/Gear",
     "id": "INGAMEHOODIE",
-    "label": "IngameHoodie",
+    "label": "比赛连帽衫",
     "offset": 976,
     "bits": 1,
     "shift": 31,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "球鞋与装备"
   },
   {
     "section": "Gear",
     "group": "Shoes/Gear",
     "id": "PREFERREDSHORTSTYPE",
-    "label": "PreferredShortsType",
+    "label": "偏好球裤类型",
     "offset": 976,
     "bits": 3,
     "shift": 8,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "球鞋与装备"
   },
   {
     "section": "Gear",
     "group": "Shoes/Gear",
     "id": "PREGAMEOUTFIT",
-    "label": "PregameOutfit",
+    "label": "赛前服装",
     "offset": 1012,
     "bits": 2,
     "shift": 7,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "球鞋与装备"
   },
   {
     "section": "Gear",
     "group": "Shoes/Gear",
     "id": "SHIRTSITEMFREQUENCY",
-    "label": "ShirtsItemFrequency",
+    "label": "上衣配饰使用频率",
     "offset": 984,
     "bits": 3,
     "shift": 3,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "球鞋与装备"
   },
   {
     "section": "Gear",
     "group": "Shoes/Gear",
     "id": "SHIRTSITEMS",
-    "label": "ShirtsItems",
+    "label": "上衣配饰",
     "offset": 876,
     "bits": 2,
     "shift": 30,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "球鞋与装备"
   },
   {
     "section": "Gear",
     "group": "Shoes/Gear",
     "id": "SHIRTSITEMSAWAYCOLOR",
-    "label": "ShirtsItemsAwayColor",
+    "label": "上衣配饰客场配色",
     "offset": 880,
     "bits": 3,
     "shift": 11,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "球鞋与装备"
   },
   {
     "section": "Gear",
     "group": "Shoes/Gear",
     "id": "SHIRTSITEMSHOMECOLOR",
-    "label": "ShirtsItemsHomeColor",
+    "label": "上衣配饰主场配色",
     "offset": 976,
     "bits": 3,
     "shift": 24,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "球鞋与装备"
   },
   {
     "section": "Gear",
     "group": "Shoes/Gear",
     "id": "SHOEAWAYCOLORWAY",
-    "label": "Shoe Away Colorway",
+    "label": "客场球鞋配色",
     "offset": 396,
     "bits": 32,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "球鞋与装备"
   },
   {
     "section": "Gear",
     "group": "Shoes/Gear",
     "id": "SHOEHOMECOLORWAY",
-    "label": "Shoe Home Colorway",
+    "label": "主场球鞋配色",
     "offset": 392,
     "bits": 32,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "球鞋与装备"
   },
   {
     "section": "Gear",
     "group": "Shoes/Gear",
     "id": "SHOELOCKEDVENDOR",
-    "label": "Shoe Locked Vendor",
+    "label": "球鞋锁定品牌",
     "offset": 388,
     "bits": 6,
     "shift": 26,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "球鞋与装备"
   },
   {
     "section": "Gear",
     "group": "Shoes/Gear",
     "id": "SHOEAWAYSTYLE",
-    "label": "ShoeAwayStyle",
+    "label": "客场球鞋款式",
     "offset": 388,
     "bits": 13,
     "shift": 13,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "球鞋与装备"
   },
   {
     "section": "Gear",
     "group": "Shoes/Gear",
     "id": "SHOEHOMESTYLE",
-    "label": "ShoeHomeStyle",
+    "label": "主场球鞋款式",
     "offset": 388,
     "bits": 13,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "球鞋与装备"
   },
   {
     "section": "Gear",
     "group": "Shoes/Gear",
     "id": "SHORTSLENGTH",
-    "label": "Shorts Length",
+    "label": "球裤长度",
     "offset": 1012,
     "bits": 4,
     "shift": 9,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "球鞋与装备"
   },
   {
     "section": "Gear",
     "group": "Shoes/Gear",
     "id": "SOCKITEMSAWAY",
-    "label": "SockItemsAway",
+    "label": "袜子配饰客场款",
     "offset": 372,
     "bits": 4,
     "shift": 8,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "球鞋与装备"
   },
   {
     "section": "Gear",
     "group": "Shoes/Gear",
     "id": "SOCKITEMSAWAYCOLOR",
-    "label": "SockItemsAwayColor",
+    "label": "袜子配饰客场配色",
     "offset": 372,
     "bits": 3,
     "shift": 15,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "球鞋与装备"
   },
   {
     "section": "Gear",
     "group": "Shoes/Gear",
     "id": "SOCKITEMSHOME",
-    "label": "SockItemsHome",
+    "label": "袜子配饰主场款",
     "offset": 372,
     "bits": 4,
     "shift": 4,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "球鞋与装备"
   },
   {
     "section": "Gear",
     "group": "Shoes/Gear",
     "id": "SOCKITEMSHOMECOLOR",
-    "label": "SockItemsHomeColor",
+    "label": "袜子配饰主场配色",
     "offset": 372,
     "bits": 3,
     "shift": 12,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "球鞋与装备"
   },
   {
     "section": "Gear",
     "group": "Shoes/Gear",
     "id": "WARMUPOUTFITCONFIGURATION",
-    "label": "WarmupOutfitConfiguration",
+    "label": "热身服装配置",
     "offset": 996,
     "bits": 32,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "球鞋与装备"
   },
   {
     "section": "Gear",
     "group": "Upper Body Accessories",
     "id": "ACCESSORIESWITHHEADBAND",
-    "label": "AccessoriesWithHeadband",
+    "label": "佩戴头带时的配饰",
     "offset": 1000,
     "bits": 32,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "上半身配饰"
   },
   {
     "section": "Gear",
     "group": "Upper Body Accessories",
     "id": "ACCESSORIESWITHOUTHEADBAND",
-    "label": "AccessoriesWithoutHeadband",
+    "label": "不戴头带时的配饰",
     "offset": 1004,
     "bits": 32,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "上半身配饰"
   },
   {
     "section": "Gear",
     "group": "Upper Body Accessories",
     "id": "FACEMASKTYPE",
-    "label": "FaceMaskType",
+    "label": "面罩类型",
     "offset": 284,
     "bits": 2,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "上半身配饰"
   },
   {
     "section": "Gear",
     "group": "Upper Body Accessories",
     "id": "GOGGLESITEMSCOLOR",
-    "label": "GogglesItemsColor",
+    "label": "护目镜颜色",
     "offset": 464,
     "bits": 3,
     "shift": 18,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "上半身配饰"
   },
   {
     "section": "Gear",
     "group": "Upper Body Accessories",
     "id": "GOGGLESTYPE",
-    "label": "GogglesType",
+    "label": "护目镜类型",
     "offset": 464,
     "bits": 4,
     "shift": 24,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "上半身配饰"
   },
   {
     "section": "Gear",
     "group": "Upper Body Accessories",
     "id": "HEADBAND",
-    "label": "Headband",
+    "label": "头带",
     "offset": 456,
     "bits": 4,
     "shift": 22,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "上半身配饰"
   },
   {
     "section": "Gear",
     "group": "Upper Body Accessories",
     "id": "HEADBANDFREQUENCY",
-    "label": "Headband Frequency",
+    "label": "头带佩戴频率",
     "offset": 984,
     "bits": 3,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "上半身配饰"
   },
   {
     "section": "Gear",
     "group": "Upper Body Accessories",
     "id": "HEADBANDABILITY",
-    "label": "HeadbandAbility",
+    "label": "头带能力",
     "offset": 1016,
     "bits": 1,
     "shift": 31,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "上半身配饰"
   },
   {
     "section": "Gear",
     "group": "Upper Body Accessories",
     "id": "HEADBANDCUSTOMCOLOR",
-    "label": "HeadbandCustomColor",
+    "label": "头带自定义颜色",
     "offset": 400,
     "bits": 32,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "上半身配饰"
   },
   {
     "section": "Gear",
     "group": "Upper Body Accessories",
     "id": "HEADBANDLOGOPOSITION",
-    "label": "HeadbandLogoPosition",
+    "label": "头带标志位置",
     "offset": 1032,
     "bits": 3,
     "shift": 27,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "上半身配饰"
   },
   {
     "section": "Gear",
     "group": "Upper Body Accessories",
     "id": "ISARMFREQUENCYPAIRED",
-    "label": "Is Arm Frequency Paired",
+    "label": "双臂配饰频率同步",
     "offset": 532,
     "bits": 1,
     "shift": 31,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "上半身配饰"
   },
   {
     "section": "Gear",
     "group": "Upper Body Accessories",
     "id": "LEFTARM",
-    "label": "Left Arm",
+    "label": "左臂",
     "offset": 404,
     "bits": 5,
     "shift": 6,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "上半身配饰"
   },
   {
     "section": "Gear",
     "group": "Upper Body Accessories",
     "id": "LEFTARMFREQUENCY",
-    "label": "Left Arm Frequency",
+    "label": "左臂使用频率",
     "offset": 984,
     "bits": 3,
     "shift": 21,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "上半身配饰"
   },
   {
     "section": "Gear",
     "group": "Upper Body Accessories",
     "id": "LEFTARMITEMAWAYCOLOR",
-    "label": "Left Arm Item Away Color",
+    "label": "左臂客场配色",
     "offset": 404,
     "bits": 3,
     "shift": 14,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "上半身配饰"
   },
   {
     "section": "Gear",
     "group": "Upper Body Accessories",
     "id": "LEFTARMITEMHOMECOLOR",
-    "label": "Left Arm Item Home Color",
+    "label": "左臂主场配色",
     "offset": 404,
     "bits": 3,
     "shift": 11,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "上半身配饰"
   },
   {
     "section": "Gear",
     "group": "Upper Body Accessories",
     "id": "LEFTELBOW",
-    "label": "Left Elbow",
+    "label": "左肘",
     "offset": 404,
     "bits": 4,
     "shift": 28,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "上半身配饰"
   },
   {
     "section": "Gear",
     "group": "Upper Body Accessories",
     "id": "LEFTELBOWFREQUENCY",
-    "label": "Left Elbow Frequency",
+    "label": "左肘使用频率",
     "offset": 984,
     "bits": 3,
     "shift": 15,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "上半身配饰"
   },
   {
     "section": "Gear",
     "group": "Upper Body Accessories",
     "id": "LEFTELBOWITEMAWAYCOLOR",
-    "label": "Left Elbow Item Away Color",
+    "label": "左肘客场配色",
     "offset": 408,
     "bits": 3,
     "shift": 3,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "上半身配饰"
   },
   {
     "section": "Gear",
     "group": "Upper Body Accessories",
     "id": "LEFTELBOWITEMHOMECOLOR",
-    "label": "Left Elbow Item Home Color",
+    "label": "左肘主场配色",
     "offset": 408,
     "bits": 3,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "上半身配饰"
   },
   {
     "section": "Gear",
     "group": "Upper Body Accessories",
     "id": "LEFTFINGERS",
-    "label": "Left Fingers",
+    "label": "左手指",
     "offset": 988,
     "bits": 4,
     "shift": 23,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "上半身配饰"
   },
   {
     "section": "Gear",
     "group": "Upper Body Accessories",
     "id": "LEFTFINGERSFREQUENCY",
-    "label": "Left Fingers Frequency",
+    "label": "左手指使用频率",
     "offset": 988,
     "bits": 3,
     "shift": 20,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "上半身配饰"
   },
   {
     "section": "Gear",
     "group": "Upper Body Accessories",
     "id": "LEFTFINGERSITEMAWAYCOLOR",
-    "label": "Left Fingers Item Away Color",
+    "label": "左手指客场配色",
     "offset": 416,
     "bits": 3,
     "shift": 3,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "上半身配饰"
   },
   {
     "section": "Gear",
     "group": "Upper Body Accessories",
     "id": "LEFTFINGERSITEMHOMECOLOR",
-    "label": "Left Fingers Item Home Color",
+    "label": "左手指主场配色",
     "offset": 416,
     "bits": 3,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "上半身配饰"
   },
   {
     "section": "Gear",
     "group": "Upper Body Accessories",
     "id": "LEFTWRIST",
-    "label": "Left Wrist",
+    "label": "左手腕",
     "offset": 408,
     "bits": 4,
     "shift": 13,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "上半身配饰"
   },
   {
     "section": "Gear",
     "group": "Upper Body Accessories",
     "id": "LEFTWRISTFREQUENCY",
-    "label": "Left Wrist Frequency",
+    "label": "左手腕使用频率",
     "offset": 984,
     "bits": 3,
     "shift": 9,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "上半身配饰"
   },
   {
     "section": "Gear",
     "group": "Upper Body Accessories",
     "id": "LEFTWRISTITEMAWAYCOLOR",
-    "label": "Left Wrist Item Away Color",
+    "label": "左手腕客场配色",
     "offset": 408,
     "bits": 5,
     "shift": 22,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "上半身配饰"
   },
   {
     "section": "Gear",
     "group": "Upper Body Accessories",
     "id": "LEFTWRISTITEMHOMECOLOR",
-    "label": "Left Wrist Item Home Color",
+    "label": "左手腕主场配色",
     "offset": 408,
     "bits": 5,
     "shift": 17,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "上半身配饰"
   },
   {
     "section": "Gear",
     "group": "Upper Body Accessories",
     "id": "LEFTARMTAPEITEM",
-    "label": "LeftArmtapeItem",
+    "label": "左臂绷带",
     "offset": 412,
     "bits": 3,
     "shift": 8,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "上半身配饰"
   },
   {
     "section": "Gear",
     "group": "Upper Body Accessories",
     "id": "LEFTARMTAPEITEMAWAYCOLOR",
-    "label": "LeftArmtapeItemAwayColor",
+    "label": "左臂绷带客场配色",
     "offset": 412,
     "bits": 3,
     "shift": 14,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "上半身配饰"
   },
   {
     "section": "Gear",
     "group": "Upper Body Accessories",
     "id": "LEFTARMTAPEITEMFREQUENCY",
-    "label": "LeftArmtapeItemFrequency",
+    "label": "左臂绷带使用频率",
     "offset": 864,
     "bits": 3,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "上半身配饰"
   },
   {
     "section": "Gear",
     "group": "Upper Body Accessories",
     "id": "LEFTARMTAPEITEMHOMECOLOR",
-    "label": "LeftArmtapeItemHomeColor",
+    "label": "左臂绷带主场配色",
     "offset": 412,
     "bits": 3,
     "shift": 11,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "上半身配饰"
   },
   {
     "section": "Gear",
     "group": "Upper Body Accessories",
     "id": "RIGHTARM",
-    "label": "Right Arm",
+    "label": "右臂",
     "offset": 404,
     "bits": 5,
     "shift": 17,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "上半身配饰"
   },
   {
     "section": "Gear",
     "group": "Upper Body Accessories",
     "id": "RIGHTARMFREQUENCY",
-    "label": "Right Arm Frequency",
+    "label": "右臂使用频率",
     "offset": 984,
     "bits": 3,
     "shift": 24,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "上半身配饰"
   },
   {
     "section": "Gear",
     "group": "Upper Body Accessories",
     "id": "RIGHTARMITEMAWAYCOLOR",
-    "label": "Right Arm Item Away Color",
+    "label": "右臂客场配色",
     "offset": 404,
     "bits": 3,
     "shift": 25,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "上半身配饰"
   },
   {
     "section": "Gear",
     "group": "Upper Body Accessories",
     "id": "RIGHTARMITEMHOMECOLOR",
-    "label": "Right Arm Item Home Color",
+    "label": "右臂主场配色",
     "offset": 404,
     "bits": 3,
     "shift": 22,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "上半身配饰"
   },
   {
     "section": "Gear",
     "group": "Upper Body Accessories",
     "id": "RIGHTELBOW",
-    "label": "Right Elbow",
+    "label": "右肘",
     "offset": 408,
     "bits": 4,
     "shift": 6,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "上半身配饰"
   },
   {
     "section": "Gear",
     "group": "Upper Body Accessories",
     "id": "RIGHTELBOWFREQUENCY",
-    "label": "Right Elbow Frequency",
+    "label": "右肘使用频率",
     "offset": 984,
     "bits": 3,
     "shift": 18,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "上半身配饰"
   },
   {
     "section": "Gear",
     "group": "Upper Body Accessories",
     "id": "RIGHTELBOWITEMAWAYCOLOR",
-    "label": "Right Elbow Item Away Color",
+    "label": "右肘客场配色",
     "offset": 412,
     "bits": 3,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "上半身配饰"
   },
   {
     "section": "Gear",
     "group": "Upper Body Accessories",
     "id": "RIGHTELBOWITEMHOMECOLOR",
-    "label": "Right Elbow Item Home Color",
+    "label": "右肘主场配色",
     "offset": 408,
     "bits": 3,
     "shift": 10,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "上半身配饰"
   },
   {
     "section": "Gear",
     "group": "Upper Body Accessories",
     "id": "RIGHTFINGERS",
-    "label": "Right Fingers",
+    "label": "右手指",
     "offset": 992,
     "bits": 4,
     "shift": 13,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "上半身配饰"
   },
   {
     "section": "Gear",
     "group": "Upper Body Accessories",
     "id": "RIGHTFINGERSFREQUENCY",
-    "label": "Right Fingers Frequency",
+    "label": "右手指使用频率",
     "offset": 992,
     "bits": 3,
     "shift": 10,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "上半身配饰"
   },
   {
     "section": "Gear",
     "group": "Upper Body Accessories",
     "id": "RIGHTFINGERSITEMAWAYCOLOR",
-    "label": "Right Fingers Item Away Color",
+    "label": "右手指客场配色",
     "offset": 416,
     "bits": 3,
     "shift": 9,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "上半身配饰"
   },
   {
     "section": "Gear",
     "group": "Upper Body Accessories",
     "id": "RIGHTFINGERSITEMHOMECOLOR",
-    "label": "Right Fingers Item Home Color",
+    "label": "右手指主场配色",
     "offset": 416,
     "bits": 3,
     "shift": 6,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "上半身配饰"
   },
   {
     "section": "Gear",
     "group": "Upper Body Accessories",
     "id": "RIGHTWRIST",
-    "label": "Right Wrist",
+    "label": "右手腕",
     "offset": 748,
     "bits": 4,
     "shift": 16,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "上半身配饰"
   },
   {
     "section": "Gear",
     "group": "Upper Body Accessories",
     "id": "RIGHTWRISTFREQUENCY",
-    "label": "Right Wrist Frequency",
+    "label": "右手腕使用频率",
     "offset": 984,
     "bits": 3,
     "shift": 12,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "上半身配饰"
   },
   {
     "section": "Gear",
     "group": "Upper Body Accessories",
     "id": "RIGHTWRISTITEMAWAYCOLOR",
-    "label": "Right Wrist Item Away Color",
+    "label": "右手腕客场配色",
     "offset": 412,
     "bits": 5,
     "shift": 3,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "上半身配饰"
   },
   {
     "section": "Gear",
     "group": "Upper Body Accessories",
     "id": "RIGHTWRISTITEMHOMECOLOR",
-    "label": "Right Wrist Item Home Color",
+    "label": "右手腕主场配色",
     "offset": 408,
     "bits": 5,
     "shift": 27,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "上半身配饰"
   },
   {
     "section": "Gear",
     "group": "Upper Body Accessories",
     "id": "RIGHTARMTAPEITEM",
-    "label": "RightArmtapeItem",
+    "label": "右臂绷带",
     "offset": 412,
     "bits": 3,
     "shift": 17,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "上半身配饰"
   },
   {
     "section": "Gear",
     "group": "Upper Body Accessories",
     "id": "RIGHTARMTAPEITEMAWAYCOLOR",
-    "label": "RightArmtapeItemAwayColor",
+    "label": "右臂绷带客场配色",
     "offset": 412,
     "bits": 3,
     "shift": 23,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "上半身配饰"
   },
   {
     "section": "Gear",
     "group": "Upper Body Accessories",
     "id": "RIGHTARMTAPEITEMFREQUENCY",
-    "label": "RightArmtapeItemFrequency",
+    "label": "右臂绷带使用频率",
     "offset": 976,
     "bits": 3,
     "shift": 21,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "上半身配饰"
   },
   {
     "section": "Gear",
     "group": "Upper Body Accessories",
     "id": "RIGHTARMTAPEITEMHOMECOLOR",
-    "label": "RightArmtapeItemHomeColor",
+    "label": "右臂绷带主场配色",
     "offset": 412,
     "bits": 3,
     "shift": 20,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "上半身配饰"
   },
   {
     "section": "Gear",
     "group": "Upper Body Accessories",
     "id": "USESMOUTHPIECE",
-    "label": "UsesMouthpiece",
+    "label": "佩戴护齿",
     "offset": 860,
     "bits": 1,
     "shift": 31,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "上半身配饰"
   },
   {
     "section": "Gear",
     "group": "Lower Body Accessories",
     "id": "ISKNEEFREQUENCYPAIRED",
-    "label": "Is Knee Frequency Paired",
+    "label": "双膝配饰频率同步",
     "offset": 496,
     "bits": 1,
     "shift": 31,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "下半身配饰"
   },
   {
     "section": "Gear",
     "group": "Lower Body Accessories",
     "id": "ISLEGFREQUENCYPAIRED",
-    "label": "Is Leg Frequency Paired",
+    "label": "双腿配饰频率同步",
     "offset": 460,
     "bits": 1,
     "shift": 18,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "下半身配饰"
   },
   {
     "section": "Gear",
     "group": "Lower Body Accessories",
     "id": "LEFTANKLE",
-    "label": "Left Ankle",
+    "label": "左脚踝",
     "offset": 420,
     "bits": 3,
     "shift": 12,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "下半身配饰"
   },
   {
     "section": "Gear",
     "group": "Lower Body Accessories",
     "id": "LEFTANKLEFREQUENCY",
-    "label": "Left Ankle Frequency",
+    "label": "左脚踝使用频率",
     "offset": 988,
     "bits": 3,
     "shift": 14,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "下半身配饰"
   },
   {
     "section": "Gear",
     "group": "Lower Body Accessories",
     "id": "LEFTANKLEITEMAWAYCOLOR",
-    "label": "Left Ankle Item Away Color",
+    "label": "左脚踝客场配色",
     "offset": 420,
     "bits": 3,
     "shift": 18,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "下半身配饰"
   },
   {
     "section": "Gear",
     "group": "Lower Body Accessories",
     "id": "LEFTANKLEITEMHOMECOLOR",
-    "label": "Left Ankle Item Home Color",
+    "label": "左脚踝主场配色",
     "offset": 420,
     "bits": 3,
     "shift": 15,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "下半身配饰"
   },
   {
     "section": "Gear",
     "group": "Lower Body Accessories",
     "id": "LEFTKNEE",
-    "label": "Left Knee",
+    "label": "左膝",
     "offset": 880,
     "bits": 4,
     "shift": 7,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "下半身配饰"
   },
   {
     "section": "Gear",
     "group": "Lower Body Accessories",
     "id": "LEFTKNEEFREQUENCY",
-    "label": "Left Knee Frequency",
+    "label": "左膝使用频率",
     "offset": 372,
     "bits": 3,
     "shift": 18,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "下半身配饰"
   },
   {
     "section": "Gear",
     "group": "Lower Body Accessories",
     "id": "LEFTKNEEITEMAWAYCOLOR",
-    "label": "Left Knee Item Away Color",
+    "label": "左膝客场配色",
     "offset": 420,
     "bits": 3,
     "shift": 3,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "下半身配饰"
   },
   {
     "section": "Gear",
     "group": "Lower Body Accessories",
     "id": "LEFTKNEEITEMHOMECOLOR",
-    "label": "Left Knee Item Home Color",
+    "label": "左膝主场配色",
     "offset": 420,
     "bits": 3,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "下半身配饰"
   },
   {
     "section": "Gear",
     "group": "Lower Body Accessories",
     "id": "LEFTLEG",
-    "label": "Left Leg",
+    "label": "左腿",
     "offset": 416,
     "bits": 4,
     "shift": 12,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "下半身配饰"
   },
   {
     "section": "Gear",
     "group": "Lower Body Accessories",
     "id": "LEFTLEGFREQUENCY",
-    "label": "Left Leg Frequency",
+    "label": "左腿使用频率",
     "offset": 984,
     "bits": 3,
     "shift": 27,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "下半身配饰"
   },
   {
     "section": "Gear",
     "group": "Lower Body Accessories",
     "id": "LEFTLEGITEMAWAYCOLOR",
-    "label": "Left Leg Item Away Color",
+    "label": "左腿客场配色",
     "offset": 416,
     "bits": 3,
     "shift": 19,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "下半身配饰"
   },
   {
     "section": "Gear",
     "group": "Lower Body Accessories",
     "id": "LEFTLEGITEMHOMECOLOR",
-    "label": "Left Leg Item Home Color",
+    "label": "左腿主场配色",
     "offset": 416,
     "bits": 3,
     "shift": 16,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "下半身配饰"
   },
   {
     "section": "Gear",
     "group": "Lower Body Accessories",
     "id": "RIGHTANKLE",
-    "label": "Right Ankle",
+    "label": "右脚踝",
     "offset": 420,
     "bits": 3,
     "shift": 21,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "下半身配饰"
   },
   {
     "section": "Gear",
     "group": "Lower Body Accessories",
     "id": "RIGHTANKLEFREQUENCY",
-    "label": "Right Ankle Frequency",
+    "label": "右脚踝使用频率",
     "offset": 988,
     "bits": 3,
     "shift": 17,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "下半身配饰"
   },
   {
     "section": "Gear",
     "group": "Lower Body Accessories",
     "id": "RIGHTANKLEITEMAWAYCOLOR",
-    "label": "Right Ankle Item Away Color",
+    "label": "右脚踝客场配色",
     "offset": 420,
     "bits": 3,
     "shift": 27,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "下半身配饰"
   },
   {
     "section": "Gear",
     "group": "Lower Body Accessories",
     "id": "RIGHTANKLEITEMHOMECOLOR",
-    "label": "Right Ankle Item Home Color",
+    "label": "右脚踝主场配色",
     "offset": 420,
     "bits": 3,
     "shift": 24,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "下半身配饰"
   },
   {
     "section": "Gear",
     "group": "Lower Body Accessories",
     "id": "RIGHTKNEE",
-    "label": "Right Knee",
+    "label": "右膝",
     "offset": 1080,
     "bits": 4,
     "shift": 3,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "下半身配饰"
   },
   {
     "section": "Gear",
     "group": "Lower Body Accessories",
     "id": "RIGHTKNEEFREQUENCY",
-    "label": "Right Knee Frequency",
+    "label": "右膝使用频率",
     "offset": 988,
     "bits": 3,
     "shift": 11,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "下半身配饰"
   },
   {
     "section": "Gear",
     "group": "Lower Body Accessories",
     "id": "RIGHTKNEEITEMAWAYCOLOR",
-    "label": "Right Knee Item Away Color",
+    "label": "右膝客场配色",
     "offset": 420,
     "bits": 3,
     "shift": 9,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "下半身配饰"
   },
   {
     "section": "Gear",
     "group": "Lower Body Accessories",
     "id": "RIGHTKNEEITEMHOMECOLOR",
-    "label": "Right Knee Item Home Color",
+    "label": "右膝主场配色",
     "offset": 420,
     "bits": 3,
     "shift": 6,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "下半身配饰"
   },
   {
     "section": "Gear",
     "group": "Lower Body Accessories",
     "id": "RIGHTLEG",
-    "label": "Right Leg",
+    "label": "右腿",
     "offset": 416,
     "bits": 4,
     "shift": 22,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "下半身配饰"
   },
   {
     "section": "Gear",
     "group": "Lower Body Accessories",
     "id": "RIGHTLEGFREQUENCY",
-    "label": "Right Leg Frequency",
+    "label": "右腿使用频率",
     "offset": 988,
     "bits": 3,
     "shift": 8,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "下半身配饰"
   },
   {
     "section": "Gear",
     "group": "Lower Body Accessories",
     "id": "RIGHTLEGITEMAWAYCOLOR",
-    "label": "Right Leg Item Away Color",
+    "label": "右腿客场配色",
     "offset": 416,
     "bits": 3,
     "shift": 29,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "下半身配饰"
   },
   {
     "section": "Gear",
     "group": "Lower Body Accessories",
     "id": "RIGHTLEGITEMHOMECOLOR",
-    "label": "Right Leg Item Home Color",
+    "label": "右腿主场配色",
     "offset": 416,
     "bits": 3,
     "shift": 26,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "下半身配饰"
   },
   {
     "section": "Gear",
     "group": "Lower Body Accessories",
     "id": "SHORTSITEMFREQUENCY",
-    "label": "ShortsItemFrequency",
+    "label": "球裤配饰使用频率",
     "offset": 984,
     "bits": 3,
     "shift": 6,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "下半身配饰"
   },
   {
     "section": "Gear",
     "group": "Lower Body Accessories",
     "id": "SHORTSITEMS",
-    "label": "ShortsItems",
+    "label": "球裤配饰",
     "offset": 420,
     "bits": 2,
     "shift": 30,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "下半身配饰"
   },
   {
     "section": "Gear",
     "group": "Lower Body Accessories",
     "id": "SHORTSITEMSAWAYCOLOR",
-    "label": "ShortsItemsAwayColor",
+    "label": "球裤配饰客场配色",
     "offset": 404,
     "bits": 3,
     "shift": 3,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "下半身配饰"
   },
   {
     "section": "Gear",
     "group": "Lower Body Accessories",
     "id": "SHORTSITEMSHOMECOLOR",
-    "label": "ShortsItemsHomeColor",
+    "label": "球裤配饰主场配色",
     "offset": 404,
     "bits": 3,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "下半身配饰"
   },
   {
     "section": "Attributes",
     "group": "Offense",
     "id": "3POINT",
-    "label": "3pt Shot",
+    "label": "三分投篮",
     "offset": 1088,
     "bits": 8,
     "shift": 24,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "进攻"
   },
   {
     "section": "Attributes",
     "group": "Offense",
     "id": "BALLCONTROL",
-    "label": "Ball Control",
+    "label": "控球",
     "offset": 1092,
     "bits": 8,
     "shift": 8,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "进攻"
   },
   {
     "section": "Attributes",
     "group": "Offense",
     "id": "CLOSESHOT",
-    "label": "Close Shot",
+    "label": "近距离投篮",
     "offset": 1088,
     "bits": 8,
     "shift": 8,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "进攻"
   },
   {
     "section": "Attributes",
     "group": "Offense",
     "id": "DRAWFOUL",
-    "label": "Draw Foul",
+    "label": "造犯规",
     "offset": 1088,
     "bits": 8,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "进攻"
   },
   {
     "section": "Attributes",
     "group": "Offense",
     "id": "DRIVINGDUNK",
-    "label": "Driving Dunk",
+    "label": "突破扣篮",
     "offset": 1104,
     "bits": 8,
     "shift": 16,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "进攻"
   },
   {
     "section": "Attributes",
     "group": "Offense",
     "id": "DRIVINGLAYUP",
-    "label": "Driving Layup",
+    "label": "突破上篮",
     "offset": 1084,
     "bits": 8,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "进攻"
   },
   {
     "section": "Attributes",
     "group": "Offense",
     "id": "FREETHROW",
-    "label": "Free Throws",
+    "label": "罚球",
     "offset": 1092,
     "bits": 8,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "进攻"
   },
   {
     "section": "Attributes",
     "group": "Offense",
     "id": "HANDS",
-    "label": "Hands",
+    "label": "接球能力",
     "offset": 1132,
     "bits": 8,
     "shift": 24,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "进攻"
   },
   {
     "section": "Attributes",
     "group": "Offense",
     "id": "MIDRANGE",
-    "label": "Midrange Shot",
+    "label": "中距离投篮",
     "offset": 1088,
     "bits": 8,
     "shift": 16,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "进攻"
   },
   {
     "section": "Attributes",
     "group": "Offense",
     "id": "OFFENSIVEREBOUND",
-    "label": "Offensive Rebound",
+    "label": "进攻篮板",
     "offset": 1096,
     "bits": 8,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "进攻"
   },
   {
     "section": "Attributes",
     "group": "Offense",
     "id": "PASSACCURACY",
-    "label": "Pass Accuracy",
+    "label": "传球准确性",
     "offset": 1092,
     "bits": 8,
     "shift": 24,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "进攻"
   },
   {
     "section": "Attributes",
     "group": "Offense",
     "id": "PASSIQ",
-    "label": "Passing IQ",
+    "label": "传球智商",
     "offset": 1092,
     "bits": 8,
     "shift": 16,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "进攻"
   },
   {
     "section": "Attributes",
     "group": "Offense",
     "id": "PASSVISION",
-    "label": "Passing Vision",
+    "label": "传球视野",
     "offset": 1132,
     "bits": 8,
     "shift": 16,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "进攻"
   },
   {
     "section": "Attributes",
     "group": "Offense",
     "id": "POSTFADE",
-    "label": "Post Fade",
+    "label": "背身后仰",
     "offset": 1084,
     "bits": 8,
     "shift": 8,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "进攻"
   },
   {
     "section": "Attributes",
     "group": "Offense",
     "id": "POSTHOOK",
-    "label": "Post Hook",
+    "label": "背身勾手",
     "offset": 1084,
     "bits": 8,
     "shift": 16,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "进攻"
   },
   {
     "section": "Attributes",
     "group": "Offense",
     "id": "POSTCONTROL",
-    "label": "Post Moves",
+    "label": "背身控制",
     "offset": 1084,
     "bits": 8,
     "shift": 24,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "进攻"
   },
   {
     "section": "Attributes",
     "group": "Offense",
     "id": "IQSHOT",
-    "label": "Shot IQ",
+    "label": "投篮智商",
     "offset": 1112,
     "bits": 8,
     "shift": 16,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "进攻"
   },
   {
     "section": "Attributes",
     "group": "Offense",
     "id": "STANDINGDUNK",
-    "label": "Standing Dunk",
+    "label": "原地扣篮",
     "offset": 1104,
     "bits": 8,
     "shift": 8,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "进攻"
   },
   {
     "section": "Attributes",
     "group": "Defense",
     "id": "BLOCK",
-    "label": "Block",
+    "label": "盖帽",
     "offset": 1100,
     "bits": 8,
     "shift": 8,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "防守"
   },
   {
     "section": "Attributes",
     "group": "Defense",
     "id": "DEFENSEREBOUND",
-    "label": "Defensive Rebound",
+    "label": "防守篮板",
     "offset": 1096,
     "bits": 8,
     "shift": 8,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "防守"
   },
   {
     "section": "Attributes",
     "group": "Defense",
     "id": "INTERIORDEFENSE",
-    "label": "Interior Defense",
+    "label": "内线防守",
     "offset": 1096,
     "bits": 8,
     "shift": 16,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "防守"
   },
   {
     "section": "Attributes",
     "group": "Defense",
     "id": "PERIMETERDEFENSE",
-    "label": "Perimeter Defense",
+    "label": "外线防守",
     "offset": 1096,
     "bits": 8,
     "shift": 24,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "防守"
   },
   {
     "section": "Attributes",
     "group": "Defense",
     "id": "STEAL",
-    "label": "Steal",
+    "label": "抢断",
     "offset": 1100,
     "bits": 8,
     "shift": 16,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "防守"
   },
   {
     "section": "Attributes",
     "group": "Athleticism",
     "id": "AGILITY",
-    "label": "Agility",
+    "label": "敏捷",
     "offset": 1112,
     "bits": 8,
     "shift": 8,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "运动能力"
   },
   {
     "section": "Attributes",
     "group": "Athleticism",
     "id": "HUSTLE",
-    "label": "Hustle",
+    "label": "积极性",
     "offset": 1112,
     "bits": 8,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "运动能力"
   },
   {
     "section": "Attributes",
     "group": "Athleticism",
     "id": "SPEED",
-    "label": "Speed",
+    "label": "速度",
     "offset": 1104,
     "bits": 8,
     "shift": 24,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "运动能力"
   },
   {
     "section": "Attributes",
     "group": "Athleticism",
     "id": "SPEEDWITHBALL",
-    "label": "Speed with Ball",
+    "label": "持球速度",
     "offset": 1108,
     "bits": 8,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "运动能力"
   },
   {
     "section": "Attributes",
     "group": "Athleticism",
     "id": "STAMINA",
-    "label": "Stamina",
+    "label": "体力",
     "offset": 1108,
     "bits": 8,
     "shift": 24,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "运动能力"
   },
   {
     "section": "Attributes",
     "group": "Athleticism",
     "id": "STRENGTH",
-    "label": "Strength",
+    "label": "力量",
     "offset": 1108,
     "bits": 8,
     "shift": 16,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "运动能力"
   },
   {
     "section": "Attributes",
     "group": "Athleticism",
     "id": "VERTICAL",
-    "label": "Vertical",
+    "label": "弹跳",
     "offset": 1108,
     "bits": 8,
     "shift": 8,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "运动能力"
   },
   {
     "section": "Attributes",
     "group": "Durability",
     "id": "BACKDURABILITY",
-    "label": "Back Durability",
+    "label": "背部耐久",
     "offset": 1120,
     "bits": 8,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "身体耐久"
   },
   {
     "section": "Attributes",
     "group": "Durability",
     "id": "HEADDURABILITY",
-    "label": "Head Durability",
+    "label": "头部耐久",
     "offset": 1116,
     "bits": 8,
     "shift": 16,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "身体耐久"
   },
   {
     "section": "Attributes",
     "group": "Durability",
     "id": "LEFTANKLEDURABILITY",
-    "label": "Left Ankle Durability",
+    "label": "左脚踝耐久",
     "offset": 1128,
     "bits": 8,
     "shift": 8,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "身体耐久"
   },
   {
     "section": "Attributes",
     "group": "Durability",
     "id": "LEFTELBOWDURABILITY",
-    "label": "Left Elbow Durability",
+    "label": "左肘耐久",
     "offset": 1120,
     "bits": 8,
     "shift": 24,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "身体耐久"
   },
   {
     "section": "Attributes",
     "group": "Durability",
     "id": "LEFTFOOTDURABILITY",
-    "label": "Left Foot Durability",
+    "label": "左脚耐久",
     "offset": 1128,
     "bits": 8,
     "shift": 24,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "身体耐久"
   },
   {
     "section": "Attributes",
     "group": "Durability",
     "id": "LEFTHIPDURABILITY",
-    "label": "Left Hip Durability",
+    "label": "左髋耐久",
     "offset": 1124,
     "bits": 8,
     "shift": 8,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "身体耐久"
   },
   {
     "section": "Attributes",
     "group": "Durability",
     "id": "LEFTKNEEDURABILITY",
-    "label": "Left Knee Durability",
+    "label": "左膝耐久",
     "offset": 1124,
     "bits": 8,
     "shift": 24,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "身体耐久"
   },
   {
     "section": "Attributes",
     "group": "Durability",
     "id": "LEFTSHOULDERDURABILITY",
-    "label": "Left Shoulder Durability",
+    "label": "左肩耐久",
     "offset": 1120,
     "bits": 8,
     "shift": 8,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "身体耐久"
   },
   {
     "section": "Attributes",
     "group": "Durability",
     "id": "MISCDURABILITY",
-    "label": "Miscanellous Durability",
+    "label": "其他部位耐久",
     "offset": 1132,
     "bits": 8,
     "shift": 8,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "身体耐久"
   },
   {
     "section": "Attributes",
     "group": "Durability",
     "id": "NECKDURABILITY",
-    "label": "Neck Durability",
+    "label": "颈部耐久",
     "offset": 1116,
     "bits": 8,
     "shift": 24,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "身体耐久"
   },
   {
     "section": "Attributes",
     "group": "Durability",
     "id": "RIGHTANKLEDURABILITY",
-    "label": "Right Ankle Durability",
+    "label": "右脚踝耐久",
     "offset": 1128,
     "bits": 8,
     "shift": 16,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "身体耐久"
   },
   {
     "section": "Attributes",
     "group": "Durability",
     "id": "RIGHTELBOWDURABILITY",
-    "label": "Right Elbow Durability",
+    "label": "右肘耐久",
     "offset": 1124,
     "bits": 8,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "身体耐久"
   },
   {
     "section": "Attributes",
     "group": "Durability",
     "id": "RIGHTFOOTDURABILITY",
-    "label": "Right Foot Durability",
+    "label": "右脚耐久",
     "offset": 1132,
     "bits": 8,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "身体耐久"
   },
   {
     "section": "Attributes",
     "group": "Durability",
     "id": "RIGHTHIPDURABILITY",
-    "label": "Right Hip Durability",
+    "label": "右髋耐久",
     "offset": 1124,
     "bits": 8,
     "shift": 16,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "身体耐久"
   },
   {
     "section": "Attributes",
     "group": "Durability",
     "id": "RIGHTKNEEDURABILITY",
-    "label": "Right Knee Durability",
+    "label": "右膝耐久",
     "offset": 1128,
     "bits": 8,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "身体耐久"
   },
   {
     "section": "Attributes",
     "group": "Durability",
     "id": "RIGHTSHOULDERDURABILITY",
-    "label": "Right Shoulder Durability",
+    "label": "右肩耐久",
     "offset": 1120,
     "bits": 8,
     "shift": 16,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "身体耐久"
   },
   {
     "section": "Attributes",
     "group": "Mental",
     "id": "DEFENSECONSISTENCY",
-    "label": "Defensive Consistency",
+    "label": "防守稳定性",
     "offset": 1100,
     "bits": 8,
     "shift": 24,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "精神属性"
   },
   {
     "section": "Attributes",
     "group": "Mental",
     "id": "HELPDEFENSE",
-    "label": "Help Defense IQ",
+    "label": "协防意识",
     "offset": 1104,
     "bits": 8,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "精神属性"
   },
   {
     "section": "Attributes",
     "group": "Mental",
     "id": "OFFENSIVECONSISTENCY",
-    "label": "Offensive Consistency",
+    "label": "进攻稳定性",
     "offset": 1112,
     "bits": 8,
     "shift": 24,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "精神属性"
   },
   {
     "section": "Attributes",
     "group": "Mental",
     "id": "PASSPERCEPTION",
-    "label": "Pass Perception",
+    "label": "传球预判",
     "offset": 1100,
     "bits": 8,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "精神属性"
   },
   {
     "section": "Attributes",
     "group": "Misc",
     "id": "CACHEDDEFENSERATINGNEVERCALL",
-    "label": "CachedDefenseRating_NeverCall",
+    "label": "防守评分缓存（内部）",
     "offset": 436,
     "bits": 32,
     "shift": 0,
-    "kind": "float"
+    "kind": "float",
+    "group_label": "其他"
   },
   {
     "section": "Attributes",
     "group": "Misc",
     "id": "CACHEDOFFENSERATINGNEVERCALL",
-    "label": "CachedOffenseRating_NeverCall",
+    "label": "进攻评分缓存（内部）",
     "offset": 432,
     "bits": 32,
     "shift": 0,
-    "kind": "float"
+    "kind": "float",
+    "group_label": "其他"
   },
   {
     "section": "Attributes",
     "group": "Misc",
     "id": "CACHEDOVERALLRATINGNEVERCALL",
-    "label": "CachedOverallRating_NeverCall",
+    "label": "总评缓存（内部）",
     "offset": 428,
     "bits": 32,
     "shift": 0,
-    "kind": "float"
+    "kind": "float",
+    "group_label": "其他"
   },
   {
     "section": "Attributes",
     "group": "Misc",
     "id": "INTANGIBLES",
-    "label": "Intangibles",
+    "label": "无形资产",
     "offset": 1116,
     "bits": 8,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "其他"
   },
   {
     "section": "Attributes",
     "group": "Misc",
     "id": "POTENTIAL",
-    "label": "Potential",
+    "label": "潜力",
     "offset": 1116,
     "bits": 8,
     "shift": 8,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "其他"
   },
   {
     "section": "Attributes",
     "group": "Misc",
     "id": "REACTIONTIME",
-    "label": "ReactionTime",
+    "label": "反应时间",
     "offset": 1136,
     "bits": 8,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "其他"
   },
   {
     "section": "Attributes",
     "group": "Progression",
     "id": "BOOMPERCENTAGE",
-    "label": "Boom Percentage",
+    "label": "突破上限概率",
     "offset": 1020,
     "bits": 7,
     "shift": 14,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "成长"
   },
   {
     "section": "Attributes",
     "group": "Progression",
     "id": "BUSTPERCENTAGE",
-    "label": "Bust Percentage",
+    "label": "发展落空概率",
     "offset": 1020,
     "bits": 7,
     "shift": 21,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "成长"
   },
   {
     "section": "Attributes",
     "group": "Progression",
     "id": "DECLINECURVE",
-    "label": "DeclineCurve",
+    "label": "衰退曲线",
     "offset": 1020,
     "bits": 2,
     "shift": 30,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "成长"
   },
   {
     "section": "Attributes",
     "group": "Progression",
     "id": "GROWTHCURVE",
-    "label": "GrowthCurve",
+    "label": "成长曲线",
     "offset": 1020,
     "bits": 2,
     "shift": 28,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "成长"
   },
   {
     "section": "Attributes",
     "group": "Progression",
     "id": "MAXIMUMPOTENTIAL",
-    "label": "Maximum Potential",
+    "label": "潜力上限",
     "offset": 1020,
     "bits": 7,
     "shift": 7,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "成长"
   },
   {
     "section": "Attributes",
     "group": "Progression",
     "id": "MINIMUMPOTENTIAL",
-    "label": "Minimum Potential",
+    "label": "潜力下限",
     "offset": 1020,
     "bits": 7,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "成长"
   },
   {
     "section": "Attributes",
     "group": "Progression",
     "id": "PROGRESSIONPLAYERTYPE",
-    "label": "ProgressionPlayerType",
+    "label": "球员成长类型",
     "offset": 884,
     "bits": 5,
     "shift": 26,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "成长"
   },
   {
     "section": "Attributes",
     "group": "Progression",
     "id": "YEARSPRO",
-    "label": "YearsPro",
+    "label": "职业年数",
     "offset": 992,
     "bits": 5,
     "shift": 17,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "成长"
   },
   {
     "section": "Signature",
     "group": "Jump Shooting",
     "id": "ANIMATIONBLENDING",
-    "label": "Animation Blending",
+    "label": "投篮动作混合比例",
     "offset": 976,
     "bits": 7,
     "shift": 11,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "跳投动作"
   },
   {
     "section": "Signature",
     "group": "Jump Shooting",
     "id": "RELEASETIMING",
-    "label": "Release Timing",
+    "label": "出手时机",
     "offset": 896,
     "bits": 3,
     "shift": 21,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "跳投动作"
   },
   {
     "section": "Signature",
     "group": "Jump Shooting",
     "id": "SHOTJUMPER",
-    "label": "ShotJumper",
+    "label": "跳投基础动作",
     "offset": 1032,
     "bits": 10,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "跳投动作"
   },
   {
     "section": "Signature",
     "group": "Jump Shooting",
     "id": "SHOTTIMINGIMPACTMODIFIER",
-    "label": "ShotTimingImpactModifier",
+    "label": "投篮时机影响修正",
     "offset": 464,
     "bits": 2,
     "shift": 28,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "跳投动作"
   },
   {
     "section": "Signature",
     "group": "Jump Shooting",
     "id": "UPPERRELEASE1",
-    "label": "Upper Release 1",
+    "label": "上半身出手动作一",
     "offset": 1036,
     "bits": 10,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "跳投动作"
   },
   {
     "section": "Signature",
     "group": "Jump Shooting",
     "id": "UPPERRELEASE2",
-    "label": "Upper Release 2",
+    "label": "上半身出手动作二",
     "offset": 1036,
     "bits": 10,
     "shift": 10,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "跳投动作"
   },
   {
     "section": "Signature",
     "group": "Jump Shooting II",
     "id": "DRIBBLEPULLUP",
-    "label": "Dribble Pull-Up",
+    "label": "运球急停跳投",
     "offset": 896,
     "bits": 8,
     "shift": 24,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "其他投篮动作"
   },
   {
     "section": "Signature",
     "group": "Jump Shooting II",
     "id": "FREETHROW",
-    "label": "Free Throw",
+    "label": "罚球",
     "offset": 1052,
     "bits": 9,
     "shift": 9,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "其他投篮动作"
   },
   {
     "section": "Signature",
     "group": "Jump Shooting II",
     "id": "GOTOSHOT",
-    "label": "Go-To Shot",
+    "label": "招牌投篮",
     "offset": 1032,
     "bits": 7,
     "shift": 20,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "其他投篮动作"
   },
   {
     "section": "Signature",
     "group": "Jump Shooting II",
     "id": "SHOTSIDEHOP",
-    "label": "ShotSideHop",
+    "label": "侧跳投篮",
     "offset": 884,
     "bits": 7,
     "shift": 7,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "其他投篮动作"
   },
   {
     "section": "Signature",
     "group": "Jump Shooting II",
     "id": "SHOTSPIN",
-    "label": "ShotSpin",
+    "label": "转身投篮",
     "offset": 476,
     "bits": 6,
     "shift": 20,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "其他投篮动作"
   },
   {
     "section": "Signature",
     "group": "Jump Shooting II",
     "id": "SHOTSTEPTHRU",
-    "label": "ShotStepThru",
+    "label": "跨步投篮",
     "offset": 1076,
     "bits": 3,
     "shift": 15,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "其他投篮动作"
   },
   {
     "section": "Signature",
     "group": "Layups And Dunks",
     "id": "DUNKPACKAGE2",
-    "label": "Dunk Package 2",
+    "label": "扣篮动作包2",
     "offset": 876,
     "bits": 8,
     "shift": 8,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "上篮与扣篮"
   },
   {
     "section": "Signature",
     "group": "Layups And Dunks",
     "id": "DUNKPACKAGE3",
-    "label": "Dunk Package 3",
+    "label": "扣篮动作包3",
     "offset": 876,
     "bits": 8,
     "shift": 16,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "上篮与扣篮"
   },
   {
     "section": "Signature",
     "group": "Layups And Dunks",
     "id": "DUNKPACKAGE4",
-    "label": "Dunk Package 4",
+    "label": "扣篮动作包4",
     "offset": 1028,
     "bits": 8,
     "shift": 16,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "上篮与扣篮"
   },
   {
     "section": "Signature",
     "group": "Layups And Dunks",
     "id": "DUNKPACKAGE5",
-    "label": "Dunk Package 5",
+    "label": "扣篮动作包5",
     "offset": 840,
     "bits": 8,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "上篮与扣篮"
   },
   {
     "section": "Signature",
     "group": "Layups And Dunks",
     "id": "DUNKPACKAGE6",
-    "label": "Dunk Package 6",
+    "label": "扣篮动作包6",
     "offset": 840,
     "bits": 8,
     "shift": 8,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "上篮与扣篮"
   },
   {
     "section": "Signature",
     "group": "Layups And Dunks",
     "id": "DUNKPACKAGE7",
-    "label": "Dunk Package 7",
+    "label": "扣篮动作包7",
     "offset": 840,
     "bits": 8,
     "shift": 16,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "上篮与扣篮"
   },
   {
     "section": "Signature",
     "group": "Layups And Dunks",
     "id": "DUNKPACKAGE8",
-    "label": "Dunk Package 8",
+    "label": "扣篮动作包8",
     "offset": 840,
     "bits": 8,
     "shift": 24,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "上篮与扣篮"
   },
   {
     "section": "Signature",
     "group": "Layups And Dunks",
     "id": "DUNKPACKAGE9",
-    "label": "Dunk Package 9",
+    "label": "扣篮动作包9",
     "offset": 844,
     "bits": 8,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "上篮与扣篮"
   },
   {
     "section": "Signature",
     "group": "Layups And Dunks",
     "id": "DUNKPACKAGE10",
-    "label": "Dunk Package 10",
+    "label": "扣篮动作包10",
     "offset": 844,
     "bits": 8,
     "shift": 8,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "上篮与扣篮"
   },
   {
     "section": "Signature",
     "group": "Layups And Dunks",
     "id": "DUNKPACKAGE11",
-    "label": "Dunk Package 11",
+    "label": "扣篮动作包11",
     "offset": 844,
     "bits": 8,
     "shift": 16,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "上篮与扣篮"
   },
   {
     "section": "Signature",
     "group": "Layups And Dunks",
     "id": "DUNKPACKAGE12",
-    "label": "Dunk Package 12",
+    "label": "扣篮动作包12",
     "offset": 844,
     "bits": 8,
     "shift": 24,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "上篮与扣篮"
   },
   {
     "section": "Signature",
     "group": "Layups And Dunks",
     "id": "DUNKPACKAGE13",
-    "label": "Dunk Package 13",
+    "label": "扣篮动作包13",
     "offset": 864,
     "bits": 8,
     "shift": 8,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "上篮与扣篮"
   },
   {
     "section": "Signature",
     "group": "Layups And Dunks",
     "id": "DUNKPACKAGE14",
-    "label": "Dunk Package 14",
+    "label": "扣篮动作包14",
     "offset": 864,
     "bits": 8,
     "shift": 16,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "上篮与扣篮"
   },
   {
     "section": "Signature",
     "group": "Layups And Dunks",
     "id": "DUNKPACKAGE15",
-    "label": "Dunk Package 15",
+    "label": "扣篮动作包15",
     "offset": 864,
     "bits": 8,
     "shift": 24,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "上篮与扣篮"
   },
   {
     "section": "Signature",
     "group": "Layups And Dunks",
     "id": "DUNKPACKAGE1",
-    "label": "DunkPackage1",
+    "label": "扣篮动作包1",
     "offset": 876,
     "bits": 8,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "上篮与扣篮"
   },
   {
     "section": "Signature",
     "group": "Layups And Dunks",
     "id": "LAYUPPACKAGE",
-    "label": "Layup Package",
+    "label": "上篮动作包",
     "offset": 1068,
     "bits": 7,
     "shift": 25,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "上篮与扣篮"
   },
   {
     "section": "Signature",
     "group": "Post Game",
     "id": "POSTFADE",
-    "label": "Post Fade",
+    "label": "背身后仰",
     "offset": 476,
     "bits": 7,
     "shift": 13,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "背身动作"
   },
   {
     "section": "Signature",
     "group": "Post Game",
     "id": "GOPOSTTOSHOT",
-    "label": "Post Go-To Shot",
+    "label": "背身转投篮",
     "offset": 464,
     "bits": 6,
     "shift": 12,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "背身动作"
   },
   {
     "section": "Signature",
     "group": "Post Game",
     "id": "POSTHOOK",
-    "label": "Post Hook",
+    "label": "背身勾手",
     "offset": 464,
     "bits": 6,
     "shift": 6,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "背身动作"
   },
   {
     "section": "Signature",
     "group": "Post Game",
     "id": "POSTONESTEPPULLUP",
-    "label": "PostOneStepPullup",
+    "label": "背身一步急停跳投",
     "offset": 992,
     "bits": 5,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "背身动作"
   },
   {
     "section": "Signature",
     "group": "Ball Handling",
     "id": "DRIBBLESTYLE",
-    "label": "Dribble Style",
+    "label": "运球风格",
     "offset": 1012,
     "bits": 6,
     "shift": 19,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "运球动作"
   },
   {
     "section": "Signature",
     "group": "Ball Handling",
     "id": "ISOBEHINDBACK",
-    "label": "IsoBehindBack",
+    "label": "背后运球",
     "offset": 1044,
     "bits": 7,
     "shift": 7,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "运球动作"
   },
   {
     "section": "Signature",
     "group": "Ball Handling",
     "id": "ISOBEHINDBACKLAUNCH",
-    "label": "IsoBehindBackLaunch",
+    "label": "背后运球启动",
     "offset": 1064,
     "bits": 7,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "运球动作"
   },
   {
     "section": "Signature",
     "group": "Ball Handling",
     "id": "ISOBREAKDOWN",
-    "label": "IsoBreakdown",
+    "label": "花式运球",
     "offset": 1044,
     "bits": 7,
     "shift": 25,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "运球动作"
   },
   {
     "section": "Signature",
     "group": "Ball Handling",
     "id": "ISOBREAKDOWNMOVE",
-    "label": "IsoBreakdownMove",
+    "label": "花式运球动作",
     "offset": 1076,
     "bits": 7,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "运球动作"
   },
   {
     "section": "Signature",
     "group": "Ball Handling",
     "id": "ISOCOMBODOUBLECROSS",
-    "label": "IsoComboDoublecross",
+    "label": "双变向组合",
     "offset": 1068,
     "bits": 6,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "运球动作"
   },
   {
     "section": "Signature",
     "group": "Ball Handling",
     "id": "ISOCOMBOHESICROSS",
-    "label": "IsoComboHesicross",
+    "label": "迟疑变向组合",
     "offset": 1064,
     "bits": 7,
     "shift": 20,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "运球动作"
   },
   {
     "section": "Signature",
     "group": "Ball Handling",
     "id": "ISOCROSSCOMBO",
-    "label": "IsoCrossCombo",
+    "label": "变向组合",
     "offset": 456,
     "bits": 6,
     "shift": 26,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "运球动作"
   },
   {
     "section": "Signature",
     "group": "Ball Handling",
     "id": "ISOCROSSOVER",
-    "label": "IsoCrossover",
+    "label": "交叉变向",
     "offset": 1048,
     "bits": 7,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "运球动作"
   },
   {
     "section": "Signature",
     "group": "Ball Handling",
     "id": "ISOCROSSSPIN",
-    "label": "IsoCrossSpin",
+    "label": "变向转身",
     "offset": 1060,
     "bits": 6,
     "shift": 7,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "运球动作"
   },
   {
     "section": "Signature",
     "group": "Ball Handling",
     "id": "ISOESCAPEBEHINDBACK",
-    "label": "IsoEscapeBehindback",
+    "label": "背后撤离运球",
     "offset": 1072,
     "bits": 6,
     "shift": 12,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "运球动作"
   },
   {
     "section": "Signature",
     "group": "Ball Handling",
     "id": "ISOESCAPECROSS",
-    "label": "IsoEscapeCross",
+    "label": "变向撤离运球",
     "offset": 1072,
     "bits": 6,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "运球动作"
   },
   {
     "section": "Signature",
     "group": "Ball Handling",
     "id": "ISOESCAPEHES",
-    "label": "IsoEscapeHes",
+    "label": "迟疑撤离运球",
     "offset": 1016,
     "bits": 6,
     "shift": 7,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "运球动作"
   },
   {
     "section": "Signature",
     "group": "Ball Handling",
     "id": "ISOESCAPETWEEN",
-    "label": "IsoEscapeTween",
+    "label": "胯下撤离运球",
     "offset": 1072,
     "bits": 6,
     "shift": 6,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "运球动作"
   },
   {
     "section": "Signature",
     "group": "Ball Handling",
     "id": "ISOHESITATION",
-    "label": "IsoHesitation",
+    "label": "迟疑运球",
     "offset": 1076,
     "bits": 7,
     "shift": 7,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "运球动作"
   },
   {
     "section": "Signature",
     "group": "Ball Handling",
     "id": "ISOHESITATIONLATERAL",
-    "label": "IsoHesitationLateral",
+    "label": "横向迟疑运球",
     "offset": 1060,
     "bits": 7,
     "shift": 20,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "运球动作"
   },
   {
     "section": "Signature",
     "group": "Ball Handling",
     "id": "ISOINANDOUT",
-    "label": "IsoInandOut",
+    "label": "内外运球",
     "offset": 1060,
     "bits": 7,
     "shift": 13,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "运球动作"
   },
   {
     "section": "Signature",
     "group": "Ball Handling",
     "id": "ISOMISDIRECTBEHINDBACK",
-    "label": "IsoMisdirectBehindback",
+    "label": "反向背后运球",
     "offset": 1068,
     "bits": 7,
     "shift": 13,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "运球动作"
   },
   {
     "section": "Signature",
     "group": "Ball Handling",
     "id": "ISOMISDIRECTCROSS",
-    "label": "IsoMisdirectCross",
+    "label": "反向变向",
     "offset": 1068,
     "bits": 7,
     "shift": 6,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "运球动作"
   },
   {
     "section": "Signature",
     "group": "Ball Handling",
     "id": "ISOMISDIRECTHES",
-    "label": "IsoMisdirectHes",
+    "label": "反向迟疑运球",
     "offset": 1072,
     "bits": 7,
     "shift": 25,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "运球动作"
   },
   {
     "section": "Signature",
     "group": "Ball Handling",
     "id": "ISOSIZEUPSIG",
-    "label": "IsoSizeupSig",
+    "label": "招牌试探运球",
     "offset": 1016,
     "bits": 7,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "运球动作"
   },
   {
     "section": "Signature",
     "group": "Ball Handling",
     "id": "ISOSPIN",
-    "label": "IsoSpin",
+    "label": "转身运球",
     "offset": 464,
     "bits": 6,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "运球动作"
   },
   {
     "section": "Signature",
     "group": "Ball Handling",
     "id": "ISOSTEPBACK",
-    "label": "IsoStepback",
+    "label": "后撤步",
     "offset": 1024,
     "bits": 6,
     "shift": 25,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "运球动作"
   },
   {
     "section": "Signature",
     "group": "Ball Handling",
     "id": "ISOSTEPBACKCROSS",
-    "label": "IsoStepbackCross",
+    "label": "变向后撤步",
     "offset": 1064,
     "bits": 6,
     "shift": 7,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "运球动作"
   },
   {
     "section": "Signature",
     "group": "Ball Handling",
     "id": "ISOSTEPBACKLATERAL",
-    "label": "IsoStepbackLateral",
+    "label": "横向后撤步",
     "offset": 1064,
     "bits": 7,
     "shift": 13,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "运球动作"
   },
   {
     "section": "Signature",
     "group": "Ball Handling",
     "id": "ISOTWEENLEGS",
-    "label": "IsoTweenlegs",
+    "label": "胯下运球",
     "offset": 1060,
     "bits": 7,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "运球动作"
   },
   {
     "section": "Signature",
     "group": "Ball Handling",
     "id": "PASSSTYLE",
-    "label": "Pass Style",
+    "label": "传球风格",
     "offset": 736,
     "bits": 6,
     "shift": 26,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "运球动作"
   },
   {
     "section": "Signature",
     "group": "Ball Handling",
     "id": "TRIPLETHREATSTYLE",
-    "label": "Triple Threat Style",
+    "label": "三威胁姿态",
     "offset": 864,
     "bits": 5,
     "shift": 3,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "运球动作"
   },
   {
     "section": "Signature",
     "group": "Ball Handling",
     "id": "TRIPLETHREATBREAKDOWN",
-    "label": "TripleThreatBreakdown",
+    "label": "三威胁运球",
     "offset": 1060,
     "bits": 5,
     "shift": 27,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "运球动作"
   },
   {
     "section": "Signature",
     "group": "Ball Handling",
     "id": "TRIPLETHREATJAB",
-    "label": "TripleThreatJab",
+    "label": "三威胁试探步",
     "offset": 1064,
     "bits": 5,
     "shift": 27,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "运球动作"
   },
   {
     "section": "Signature",
     "group": "Ball Handling",
     "id": "TRIPLETHREATSTEPOVER",
-    "label": "TripleThreatStepover",
+    "label": "三威胁跨步",
     "offset": 1068,
     "bits": 5,
     "shift": 20,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "运球动作"
   },
   {
     "section": "Signature",
     "group": "Misc",
     "id": "AMBIENTPACKAGE1",
-    "label": "AmbientPackage1",
+    "label": "场景动作包1",
     "offset": 892,
     "bits": 8,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "其他"
   },
   {
     "section": "Signature",
     "group": "Misc",
     "id": "AMBIENTPACKAGE1WEIGHT",
-    "label": "AmbientPackage1Weight",
+    "label": "场景动作包1权重",
     "offset": 892,
     "bits": 7,
     "shift": 16,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "其他"
   },
   {
     "section": "Signature",
     "group": "Misc",
     "id": "AMBIENTPACKAGE2",
-    "label": "AmbientPackage2",
+    "label": "场景动作包2",
     "offset": 892,
     "bits": 8,
     "shift": 8,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "其他"
   },
   {
     "section": "Signature",
     "group": "Misc",
     "id": "AMBIENTPACKAGE2WEIGHT",
-    "label": "AmbientPackage2Weight",
+    "label": "场景动作包2权重",
     "offset": 880,
     "bits": 7,
     "shift": 24,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "其他"
   },
   {
     "section": "Signature",
     "group": "Misc",
     "id": "AMBIENTPACKAGE3",
-    "label": "AmbientPackage3",
+    "label": "场景动作包3",
     "offset": 988,
     "bits": 8,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "其他"
   },
   {
     "section": "Signature",
     "group": "Misc",
     "id": "AMBIENTPACKAGE3WEIGHT",
-    "label": "AmbientPackage3Weight",
+    "label": "场景动作包3权重",
     "offset": 896,
     "bits": 7,
     "shift": 11,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "其他"
   },
   {
     "section": "Signature",
     "group": "Misc",
     "id": "EMOTEDRB",
-    "label": "EmoteDRB",
+    "label": "运球表情动作",
     "offset": 1052,
     "bits": 7,
     "shift": 18,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "其他"
   },
   {
     "section": "Signature",
     "group": "Misc",
     "id": "EMOTETT",
-    "label": "EmoteTT",
+    "label": "三威胁表情动作",
     "offset": 1052,
     "bits": 7,
     "shift": 25,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "其他"
   },
   {
     "section": "Signature",
     "group": "Misc",
     "id": "FREEFALLSTYLE",
-    "label": "FreefallStyle",
+    "label": "倒地动作风格",
     "offset": 1044,
     "bits": 7,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "其他"
   },
   {
     "section": "Signature",
     "group": "Misc",
     "id": "MOTIONSTYLE",
-    "label": "Motion Style",
+    "label": "移动风格",
     "offset": 860,
     "bits": 9,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "其他"
   },
   {
     "section": "Signature",
     "group": "Misc",
     "id": "SIGJUMPBALLSTAND",
-    "label": "SigJumpballStand",
+    "label": "跳球站姿",
     "offset": 880,
     "bits": 5,
     "shift": 14,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "其他"
   },
   {
     "section": "Signature",
     "group": "Misc",
     "id": "SIGPLAYERINTRO1",
-    "label": "SigPlayerIntro1",
+    "label": "球员入场动作一",
     "offset": 748,
     "bits": 8,
     "shift": 20,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "其他"
   },
   {
     "section": "Signature",
     "group": "Misc",
     "id": "SIGPLAYERINTRO2",
-    "label": "SigPlayerIntro2",
+    "label": "球员入场动作二",
     "offset": 836,
     "bits": 8,
     "shift": 14,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "其他"
   },
   {
     "section": "Signature",
     "group": "Misc",
     "id": "VOICETYPE",
-    "label": "VoiceType",
+    "label": "声音类型",
     "offset": 984,
     "bits": 2,
     "shift": 30,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "其他"
   },
   {
     "section": "Contract",
     "group": "Contract Terms",
     "id": "BIRDYEARS",
-    "label": "Bird Years",
+    "label": "伯德条款年数",
     "offset": 992,
     "bits": 5,
     "shift": 22,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "合同条款"
   },
   {
     "section": "Contract",
     "group": "Contract Terms",
     "id": "CONTRACTLENGTH",
-    "label": "Contract Length",
+    "label": "合同年限",
     "offset": 1076,
     "bits": 3,
     "shift": 29,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "合同条款"
   },
   {
     "section": "Contract",
     "group": "Contract Terms",
     "id": "CONTRACTINCENTIVE1",
-    "label": "ContractIncentive1",
+    "label": "合同激励1数值",
     "offset": 512,
     "bits": 28,
     "shift": 4,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "合同条款"
   },
   {
     "section": "Contract",
     "group": "Contract Terms",
     "id": "CONTRACTINCENTIVE2",
-    "label": "ContractIncentive2",
+    "label": "合同激励2数值",
     "offset": 516,
     "bits": 28,
     "shift": 4,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "合同条款"
   },
   {
     "section": "Contract",
     "group": "Contract Terms",
     "id": "CONTRACTINCENTIVE3",
-    "label": "ContractIncentive3",
+    "label": "合同激励3数值",
     "offset": 520,
     "bits": 28,
     "shift": 4,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "合同条款"
   },
   {
     "section": "Contract",
     "group": "Contract Terms",
     "id": "CONTRACTINCENTIVETYPE1",
-    "label": "ContractIncentiveType1",
+    "label": "合同激励1类型",
     "offset": 512,
     "bits": 4,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "合同条款"
   },
   {
     "section": "Contract",
     "group": "Contract Terms",
     "id": "CONTRACTINCENTIVETYPE2",
-    "label": "ContractIncentiveType2",
+    "label": "合同激励2类型",
     "offset": 516,
     "bits": 4,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "合同条款"
   },
   {
     "section": "Contract",
     "group": "Contract Terms",
     "id": "CONTRACTINCENTIVETYPE3",
-    "label": "ContractIncentiveType3",
+    "label": "合同激励3类型",
     "offset": 520,
     "bits": 4,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "合同条款"
   },
   {
     "section": "Contract",
     "group": "Contract Terms",
     "id": "CONTRACTPROMISEIMPORTANCE1",
-    "label": "ContractPromiseImportance1",
+    "label": "合同承诺1重要程度",
     "offset": 524,
     "bits": 8,
     "shift": 6,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "合同条款"
   },
   {
     "section": "Contract",
     "group": "Contract Terms",
     "id": "CONTRACTPROMISEIMPORTANCE2",
-    "label": "ContractPromiseImportance2",
+    "label": "合同承诺2重要程度",
     "offset": 524,
     "bits": 8,
     "shift": 14,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "合同条款"
   },
   {
     "section": "Contract",
     "group": "Contract Terms",
     "id": "CONTRACTPROMISEPLAYERID1",
-    "label": "ContractPromisePlayerId1",
+    "label": "合同承诺1球员标识",
     "offset": 528,
     "bits": 16,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "合同条款"
   },
   {
     "section": "Contract",
     "group": "Contract Terms",
     "id": "CONTRACTPROMISEPLAYERID2",
-    "label": "ContractPromisePlayerId2",
+    "label": "合同承诺2球员标识",
     "offset": 530,
     "bits": 16,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "合同条款"
   },
   {
     "section": "Contract",
     "group": "Contract Terms",
     "id": "CONTRACTPROMISETYPE1",
-    "label": "ContractPromiseType1",
+    "label": "合同承诺1类型",
     "offset": 524,
     "bits": 3,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "合同条款"
   },
   {
     "section": "Contract",
     "group": "Contract Terms",
     "id": "CONTRACTPROMISETYPE2",
-    "label": "ContractPromiseType2",
+    "label": "合同承诺2类型",
     "offset": 524,
     "bits": 3,
     "shift": 3,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "合同条款"
   },
   {
     "section": "Contract",
     "group": "Contract Terms",
     "id": "EXTENSIONLENGTH",
-    "label": "Extension Length",
+    "label": "续约年限",
     "offset": 896,
     "bits": 3,
     "shift": 18,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "合同条款"
   },
   {
     "section": "Contract",
     "group": "Contract Terms",
     "id": "MYTEAMCONTRACTSREMAINING",
-    "label": "MyTeamContractsRemaining",
+    "label": "梦幻球队剩余合同数",
     "offset": 1048,
     "bits": 8,
     "shift": 8,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "合同条款"
   },
   {
     "section": "Contract",
     "group": "Contract Terms",
     "id": "NUMCONTRACTINCENTIVES",
-    "label": "NumContractIncentives",
+    "label": "合同激励数量",
     "offset": 504,
     "bits": 2,
     "shift": 30,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "合同条款"
   },
   {
     "section": "Contract",
     "group": "Contract Terms",
     "id": "TENDAYCONTRACTDAYSLEFT",
-    "label": "TenDayContractDaysLeft",
+    "label": "十天合同剩余天数",
     "offset": 424,
     "bits": 4,
     "shift": 17,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "合同条款"
   },
   {
     "section": "Contract",
     "group": "Contract Terms",
     "id": "YEARSLEFT",
-    "label": "Years Left",
+    "label": "合同剩余年数",
     "offset": 448,
     "bits": 5,
     "shift": 27,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "合同条款"
   },
   {
     "section": "Contract",
     "group": "Contract Options",
     "id": "CONTRACTOPTION",
-    "label": "ContractOption",
+    "label": "合同选项",
     "offset": 880,
     "bits": 2,
     "shift": 21,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "合同选项"
   },
   {
     "section": "Contract",
     "group": "Contract Options",
     "id": "EXTENSIONNOTRADE",
-    "label": "Extension No Trade",
+    "label": "续约不可交易",
     "offset": 880,
     "bits": 1,
     "shift": 5,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "合同选项"
   },
   {
     "section": "Contract",
     "group": "Contract Options",
     "id": "EXTENSIONOPTION",
-    "label": "Extension Option",
+    "label": "续约选项",
     "offset": 888,
     "bits": 2,
     "shift": 7,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "合同选项"
   },
   {
     "section": "Contract",
     "group": "Contract Options",
     "id": "NOTRADE",
-    "label": "No Trade",
+    "label": "不可交易条款",
     "offset": 456,
     "bits": 1,
     "shift": 18,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "合同选项"
   },
   {
     "section": "Contract",
     "group": "Contract Options",
     "id": "NOTRADEDAYSLEFT",
-    "label": "NoTradeDaysLeft",
+    "label": "不可交易剩余天数",
     "offset": 746,
     "bits": 16,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "合同选项"
   },
   {
     "section": "Contract",
     "group": "Contract Status",
     "id": "FREEAGENCYTYPE",
-    "label": "Free Agency Type",
+    "label": "自由球员类型",
     "offset": 1044,
     "bits": 2,
     "shift": 14,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "合同状态"
   },
   {
     "section": "Contract",
     "group": "Contract Status",
     "id": "HASQUALIFYINGOFFER",
-    "label": "HasQualifyingOffer",
+    "label": "持有资质报价",
     "offset": 726,
     "bits": 1,
     "shift": 3,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "合同状态"
   },
   {
     "section": "Contract",
     "group": "Contract Status",
     "id": "ISWAIVED",
-    "label": "IsWaived",
+    "label": "是否被裁",
     "offset": 456,
     "bits": 1,
     "shift": 19,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "合同状态"
   },
   {
     "section": "Contract",
     "group": "Contract Status",
     "id": "OFFSEASONFREEAGENT",
-    "label": "OffSeasonFreeAgent",
+    "label": "休赛期自由球员",
     "offset": 726,
     "bits": 1,
     "shift": 4,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "合同状态"
   },
   {
     "section": "Contract",
     "group": "Contract Status",
     "id": "OFFSEASONFREEAGENTEXTENDEDDEADLINE",
-    "label": "OffSeasonFreeAgentExtendedDeadline",
+    "label": "休赛期自由球员延长期限",
     "offset": 284,
     "bits": 1,
     "shift": 2,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "合同状态"
   },
   {
     "section": "Contract",
     "group": "Contract Status",
     "id": "RESIGNSTATUS",
-    "label": "ResignStatus",
+    "label": "续签状态",
     "offset": 748,
     "bits": 3,
     "shift": 1,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "合同状态"
   },
   {
     "section": "Contract",
     "group": "Contract Status",
     "id": "SIGNINGCOOLDOWNLEFT",
-    "label": "SigningCooldownLeft",
+    "label": "签约冷却剩余时间",
     "offset": 888,
     "bits": 7,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "合同状态"
   },
   {
     "section": "Contract",
     "group": "Contract Status",
     "id": "2WAYNBADAYSLEFT",
-    "label": "Two-Way NBA Days Left",
+    "label": "双向合同联盟比赛剩余天数",
     "offset": 412,
     "bits": 6,
     "shift": 26,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "合同状态"
   },
   {
     "section": "Contract",
     "group": "Contract Status",
     "id": "WASBOUGHTOUT",
-    "label": "WasBoughtOut",
+    "label": "是否被买断",
     "offset": 1076,
     "bits": 1,
     "shift": 14,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "合同状态"
   },
   {
     "section": "Contract",
     "group": "Salary",
     "id": "LASTYEARWAGE",
-    "label": "LastYearWage",
+    "label": "上年薪资",
     "offset": 532,
     "bits": 31,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "薪资"
   },
   {
     "section": "Contract",
     "group": "Salary",
     "id": "SALARYYEAR1",
-    "label": "Salary Year 1",
+    "label": "合同第1年薪资",
     "offset": 480,
     "bits": 31,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "薪资"
   },
   {
     "section": "Contract",
     "group": "Salary",
     "id": "SALARYYEAR2",
-    "label": "Salary Year 2",
+    "label": "合同第2年薪资",
     "offset": 484,
     "bits": 31,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "薪资"
   },
   {
     "section": "Contract",
     "group": "Salary",
     "id": "SALARYYEAR3",
-    "label": "Salary Year 3",
+    "label": "合同第3年薪资",
     "offset": 488,
     "bits": 31,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "薪资"
   },
   {
     "section": "Contract",
     "group": "Salary",
     "id": "SALARYYEAR4",
-    "label": "Salary Year 4",
+    "label": "合同第4年薪资",
     "offset": 492,
     "bits": 31,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "薪资"
   },
   {
     "section": "Contract",
     "group": "Salary",
     "id": "SALARYYEAR5",
-    "label": "Salary Year 5",
+    "label": "合同第5年薪资",
     "offset": 496,
     "bits": 31,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "薪资"
   },
   {
     "section": "Contract",
     "group": "Salary",
     "id": "SALARYYEAR6",
-    "label": "Salary Year 6",
+    "label": "合同第6年薪资",
     "offset": 500,
     "bits": 31,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "薪资"
   },
   {
     "section": "Contract",
     "group": "Salary",
     "id": "WAGE7",
-    "label": "Wage7",
+    "label": "合同第7年薪资",
     "offset": 504,
     "bits": 30,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "薪资"
   },
   {
     "section": "Contract",
     "group": "Salary",
     "id": "WAGE8",
-    "label": "Wage8",
+    "label": "合同第8年薪资",
     "offset": 508,
     "bits": 32,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "薪资"
   },
   {
     "section": "Stats",
     "group": "Career High Stats",
     "id": "ASSISTS",
-    "label": "Assists",
+    "label": "助攻",
     "offset": 884,
     "bits": 6,
     "shift": 14,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "生涯单场最高"
   },
   {
     "section": "Stats",
     "group": "Career High Stats",
     "id": "BLOCKS",
-    "label": "Blocks",
+    "label": "盖帽",
     "offset": 424,
     "bits": 5,
     "shift": 27,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "生涯单场最高"
   },
   {
     "section": "Stats",
     "group": "Career High Stats",
     "id": "DEFENSEREBOUNDS",
-    "label": "Defensive Rebounds",
+    "label": "防守篮板",
     "offset": 1016,
     "bits": 6,
     "shift": 19,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "生涯单场最高"
   },
   {
     "section": "Stats",
     "group": "Career High Stats",
     "id": "FIELDGOALSATTEMPTED",
-    "label": "Field Goals Attempted",
+    "label": "投篮出手",
     "offset": 444,
     "bits": 7,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "生涯单场最高"
   },
   {
     "section": "Stats",
     "group": "Career High Stats",
     "id": "FIELDGOALSMADE",
-    "label": "Field Goals Made",
+    "label": "投篮命中",
     "offset": 440,
     "bits": 7,
     "shift": 25,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "生涯单场最高"
   },
   {
     "section": "Stats",
     "group": "Career High Stats",
     "id": "FREETHROWATTEMPTED",
-    "label": "Free Throws Attempted",
+    "label": "罚球出手",
     "offset": 448,
     "bits": 6,
     "shift": 1,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "生涯单场最高"
   },
   {
     "section": "Stats",
     "group": "Career High Stats",
     "id": "FREETHROWMADE",
-    "label": "Free Throws Made",
+    "label": "罚球命中",
     "offset": 448,
     "bits": 6,
     "shift": 7,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "生涯单场最高"
   },
   {
     "section": "Stats",
     "group": "Career High Stats",
     "id": "MINUTESPLAYED",
-    "label": "Minutes Played",
+    "label": "上场分钟",
     "offset": 836,
     "bits": 7,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "生涯单场最高"
   },
   {
     "section": "Stats",
     "group": "Career High Stats",
     "id": "OFFENSIVEREBOUNDS",
-    "label": "Offensive Rebounds",
+    "label": "进攻篮板",
     "offset": 1016,
     "bits": 6,
     "shift": 13,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "生涯单场最高"
   },
   {
     "section": "Stats",
     "group": "Career High Stats",
     "id": "POINTS",
-    "label": "Points",
+    "label": "得分",
     "offset": 440,
     "bits": 8,
     "shift": 17,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "生涯单场最高"
   },
   {
     "section": "Stats",
     "group": "Career High Stats",
     "id": "REBOUNDS",
-    "label": "Rebounds",
+    "label": "篮板",
     "offset": 884,
     "bits": 6,
     "shift": 20,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "生涯单场最高"
   },
   {
     "section": "Stats",
     "group": "Career High Stats",
     "id": "STEALS",
-    "label": "Steals",
+    "label": "抢断",
     "offset": 372,
     "bits": 5,
     "shift": 27,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "生涯单场最高"
   },
   {
     "section": "Stats",
     "group": "Career High Stats",
     "id": "3POINTERSATTEMPTED",
-    "label": "Three Pointers Attempted",
+    "label": "三分出手",
     "offset": 444,
     "bits": 7,
     "shift": 17,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "生涯单场最高"
   },
   {
     "section": "Stats",
     "group": "Career High Stats",
     "id": "3POINTERSMADE",
-    "label": "Three Pointers Made",
+    "label": "三分命中",
     "offset": 448,
     "bits": 7,
     "shift": 13,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "生涯单场最高"
   },
   {
     "section": "Stats",
     "group": "Season High Stats",
     "id": "ASSISTS",
-    "label": "Assists",
+    "label": "助攻",
     "offset": 456,
     "bits": 6,
     "shift": 12,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "赛季单场最高"
   },
   {
     "section": "Stats",
     "group": "Season High Stats",
     "id": "BLOCKS",
-    "label": "Blocks",
+    "label": "盖帽",
     "offset": 452,
     "bits": 5,
     "shift": 22,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "赛季单场最高"
   },
   {
     "section": "Stats",
     "group": "Season High Stats",
     "id": "DEFENSEREBOUNDS",
-    "label": "Defensive Rebounds",
+    "label": "防守篮板",
     "offset": 280,
     "bits": 6,
     "shift": 4,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "赛季单场最高"
   },
   {
     "section": "Stats",
     "group": "Season High Stats",
     "id": "FIELDGOALSATTEMPTED",
-    "label": "Field Goals Attempted",
+    "label": "投篮出手",
     "offset": 452,
     "bits": 7,
     "shift": 15,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "赛季单场最高"
   },
   {
     "section": "Stats",
     "group": "Season High Stats",
     "id": "FIELDGOALSMADE",
-    "label": "Field Goals Made",
+    "label": "投篮命中",
     "offset": 452,
     "bits": 7,
     "shift": 8,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "赛季单场最高"
   },
   {
     "section": "Stats",
     "group": "Season High Stats",
     "id": "FREETHROWATTEMPTED",
-    "label": "Free Throws Attempted",
+    "label": "罚球出手",
     "offset": 456,
     "bits": 6,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "赛季单场最高"
   },
   {
     "section": "Stats",
     "group": "Season High Stats",
     "id": "FREETHROWMADE",
-    "label": "Free Throws Made",
+    "label": "罚球命中",
     "offset": 456,
     "bits": 6,
     "shift": 6,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "赛季单场最高"
   },
   {
     "section": "Stats",
     "group": "Season High Stats",
     "id": "MINUTESPLAYED",
-    "label": "Minutes Played",
+    "label": "上场分钟",
     "offset": 836,
     "bits": 7,
     "shift": 7,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "赛季单场最高"
   },
   {
     "section": "Stats",
     "group": "Season High Stats",
     "id": "OFFENSIVEREBOUNDS",
-    "label": "Offensive Rebounds",
+    "label": "进攻篮板",
     "offset": 1016,
     "bits": 6,
     "shift": 25,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "赛季单场最高"
   },
   {
     "section": "Stats",
     "group": "Season High Stats",
     "id": "POINTS",
-    "label": "Points",
+    "label": "得分",
     "offset": 452,
     "bits": 8,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "赛季单场最高"
   },
   {
     "section": "Stats",
     "group": "Season High Stats",
     "id": "REBOUNDS",
-    "label": "Rebounds",
+    "label": "篮板",
     "offset": 444,
     "bits": 6,
     "shift": 24,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "赛季单场最高"
   },
   {
     "section": "Stats",
     "group": "Season High Stats",
     "id": "STEALS",
-    "label": "Steals",
+    "label": "抢断",
     "offset": 452,
     "bits": 5,
     "shift": 27,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "赛季单场最高"
   },
   {
     "section": "Stats",
     "group": "Season High Stats",
     "id": "3POINTERSATTEMPTED",
-    "label": "Three Pointers Attempted",
+    "label": "三分出手",
     "offset": 448,
     "bits": 7,
     "shift": 20,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "赛季单场最高"
   },
   {
     "section": "Stats",
     "group": "Season High Stats",
     "id": "3POINTERSMADE",
-    "label": "Three Pointers Made",
+    "label": "三分命中",
     "offset": 1044,
     "bits": 7,
     "shift": 18,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "赛季单场最高"
   },
   {
     "section": "Stats",
     "group": "Stat IDs",
     "id": "CURRENTYEARSTATID",
-    "label": "Current Year Stat ID",
+    "label": "本赛季数据标识",
     "offset": 304,
     "bits": 16,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "数据标识"
   },
   {
     "section": "Stats",
     "group": "Stat IDs",
     "id": "STATSID1",
-    "label": "STATS_ID#1",
+    "label": "历史数据标识1",
     "offset": 306,
     "bits": 16,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "数据标识"
   },
   {
     "section": "Stats",
     "group": "Stat IDs",
     "id": "STATSID2",
-    "label": "STATS_ID#2",
+    "label": "历史数据标识2",
     "offset": 308,
     "bits": 16,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "数据标识"
   },
   {
     "section": "Stats",
     "group": "Stat IDs",
     "id": "STATSID3",
-    "label": "STATS_ID#3",
+    "label": "历史数据标识3",
     "offset": 310,
     "bits": 16,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "数据标识"
   },
   {
     "section": "Stats",
     "group": "Stat IDs",
     "id": "STATSID4",
-    "label": "STATS_ID#4",
+    "label": "历史数据标识4",
     "offset": 312,
     "bits": 16,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "数据标识"
   },
   {
     "section": "Stats",
     "group": "Stat IDs",
     "id": "STATSID5",
-    "label": "STATS_ID#5",
+    "label": "历史数据标识5",
     "offset": 314,
     "bits": 16,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "数据标识"
   },
   {
     "section": "Stats",
     "group": "Stat IDs",
     "id": "STATSID6",
-    "label": "STATS_ID#6",
+    "label": "历史数据标识6",
     "offset": 316,
     "bits": 16,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "数据标识"
   },
   {
     "section": "Stats",
     "group": "Stat IDs",
     "id": "STATSID7",
-    "label": "STATS_ID#7",
+    "label": "历史数据标识7",
     "offset": 318,
     "bits": 16,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "数据标识"
   },
   {
     "section": "Stats",
     "group": "Stat IDs",
     "id": "STATSID8",
-    "label": "STATS_ID#8",
+    "label": "历史数据标识8",
     "offset": 320,
     "bits": 16,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "数据标识"
   },
   {
     "section": "Stats",
     "group": "Stat IDs",
     "id": "STATSID9",
-    "label": "STATS_ID#9",
+    "label": "历史数据标识9",
     "offset": 322,
     "bits": 16,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "数据标识"
   },
   {
     "section": "Stats",
     "group": "Stat IDs",
     "id": "STATSID10",
-    "label": "STATS_ID#10",
+    "label": "历史数据标识10",
     "offset": 324,
     "bits": 16,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "数据标识"
   },
   {
     "section": "Stats",
     "group": "Stat IDs",
     "id": "STATSID11",
-    "label": "STATS_ID#11",
+    "label": "历史数据标识11",
     "offset": 326,
     "bits": 16,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "数据标识"
   },
   {
     "section": "Stats",
     "group": "Stat IDs",
     "id": "STATSID12",
-    "label": "STATS_ID#12",
+    "label": "历史数据标识12",
     "offset": 328,
     "bits": 16,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "数据标识"
   },
   {
     "section": "Stats",
     "group": "Stat IDs",
     "id": "STATSID13",
-    "label": "STATS_ID#13",
+    "label": "历史数据标识13",
     "offset": 330,
     "bits": 16,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "数据标识"
   },
   {
     "section": "Stats",
     "group": "Stat IDs",
     "id": "STATSID14",
-    "label": "STATS_ID#14",
+    "label": "历史数据标识14",
     "offset": 332,
     "bits": 16,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "数据标识"
   },
   {
     "section": "Stats",
     "group": "Stat IDs",
     "id": "STATSID15",
-    "label": "STATS_ID#15",
+    "label": "历史数据标识15",
     "offset": 334,
     "bits": 16,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "数据标识"
   },
   {
     "section": "Stats",
     "group": "Stat IDs",
     "id": "STATSID16",
-    "label": "STATS_ID#16",
+    "label": "历史数据标识16",
     "offset": 336,
     "bits": 16,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "数据标识"
   },
   {
     "section": "Stats",
     "group": "Stat IDs",
     "id": "STATSID17",
-    "label": "STATS_ID#17",
+    "label": "历史数据标识17",
     "offset": 338,
     "bits": 16,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "数据标识"
   },
   {
     "section": "Stats",
     "group": "Stat IDs",
     "id": "STATSID18",
-    "label": "STATS_ID#18",
+    "label": "历史数据标识18",
     "offset": 340,
     "bits": 16,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "数据标识"
   },
   {
     "section": "Stats",
     "group": "Stat IDs",
     "id": "STATSID19",
-    "label": "STATS_ID#19",
+    "label": "历史数据标识19",
     "offset": 342,
     "bits": 16,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "数据标识"
   },
   {
     "section": "Stats",
     "group": "Stat IDs",
     "id": "STATSID20",
-    "label": "STATS_ID#20",
+    "label": "历史数据标识20",
     "offset": 344,
     "bits": 16,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "数据标识"
   },
   {
     "section": "Stats",
     "group": "Stat IDs",
     "id": "STATSID21",
-    "label": "STATS_ID#21",
+    "label": "历史数据标识21",
     "offset": 346,
     "bits": 16,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "数据标识"
   },
   {
     "section": "Stats",
     "group": "Stat IDs",
     "id": "STATSID22",
-    "label": "STATS_ID#22",
+    "label": "历史数据标识22",
     "offset": 348,
     "bits": 16,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "数据标识"
   },
   {
     "section": "Stats",
     "group": "Stat IDs",
     "id": "STATSID23",
-    "label": "STATS_ID#23",
+    "label": "历史数据标识23",
     "offset": 350,
     "bits": 16,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "数据标识"
   },
   {
     "section": "Stats",
     "group": "Stat IDs",
     "id": "STATSID24",
-    "label": "STATS_ID#24",
+    "label": "历史数据标识24",
     "offset": 352,
     "bits": 16,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "数据标识"
   },
   {
     "section": "Stats",
     "group": "Stat IDs",
     "id": "STATSID25",
-    "label": "STATS_ID#25",
+    "label": "历史数据标识25",
     "offset": 354,
     "bits": 16,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "数据标识"
   },
   {
     "section": "Stats",
     "group": "Stat IDs",
     "id": "STATSID26",
-    "label": "STATS_ID#26",
+    "label": "历史数据标识26",
     "offset": 356,
     "bits": 16,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "数据标识"
   },
   {
     "section": "Stats",
     "group": "Stat IDs",
     "id": "STATSID27",
-    "label": "STATS_ID#27",
+    "label": "历史数据标识27",
     "offset": 358,
     "bits": 16,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "数据标识"
   },
   {
     "section": "Stats",
     "group": "Stat IDs",
     "id": "STATSID28",
-    "label": "STATS_ID#28",
+    "label": "历史数据标识28",
     "offset": 360,
     "bits": 16,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "数据标识"
   },
   {
     "section": "Stats",
     "group": "Stat IDs",
     "id": "STATSID29",
-    "label": "STATS_ID#29",
+    "label": "历史数据标识29",
     "offset": 362,
     "bits": 16,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "数据标识"
   },
   {
     "section": "Stats",
     "group": "Stat IDs",
     "id": "STATSID30",
-    "label": "STATS_ID#30",
+    "label": "历史数据标识30",
     "offset": 364,
     "bits": 16,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "数据标识"
   },
   {
     "section": "Stats",
     "group": "Stat IDs",
     "id": "STATSID31",
-    "label": "STATS_ID#31",
+    "label": "历史数据标识31",
     "offset": 366,
     "bits": 16,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "数据标识"
   },
   {
     "section": "Stats",
     "group": "Stat IDs",
     "id": "STATSID32",
-    "label": "STATS_ID#32",
+    "label": "历史数据标识32",
     "offset": 368,
     "bits": 16,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "数据标识"
   },
   {
     "section": "Stats",
     "group": "History",
     "id": "CONFERENCEPERSCORERANKING",
-    "label": "ConferencePERScoreRanking",
+    "label": "分区效率值排名",
     "offset": 732,
     "bits": 16,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "历史记录"
   },
   {
     "section": "Stats",
     "group": "History",
     "id": "CONFERENCEPERSCORERANKINGBYPOSITION",
-    "label": "ConferencePERScoreRankingByPosition",
+    "label": "分区按位置效率值排名",
     "offset": 734,
     "bits": 16,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "历史记录"
   },
   {
     "section": "Stats",
     "group": "History",
     "id": "DEFENSERATINGRANKING",
-    "label": "DefenseRatingRanking",
+    "label": "进攻效率排名",
     "offset": 260,
     "bits": 16,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "历史记录"
   },
   {
     "section": "Stats",
     "group": "History",
     "id": "GAMESCOREHISTORYDATE0",
-    "label": "GameScoreHistoryDate[0]",
+    "label": "比赛评分记录1日期",
     "offset": 780,
     "bits": 32,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "历史记录"
   },
   {
     "section": "Stats",
     "group": "History",
     "id": "GAMESCOREHISTORYDATE1",
-    "label": "GameScoreHistoryDate[1]",
+    "label": "比赛评分记录2日期",
     "offset": 784,
     "bits": 32,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "历史记录"
   },
   {
     "section": "Stats",
     "group": "History",
     "id": "GAMESCOREHISTORYDATE2",
-    "label": "GameScoreHistoryDate[2]",
+    "label": "比赛评分记录3日期",
     "offset": 788,
     "bits": 32,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "历史记录"
   },
   {
     "section": "Stats",
     "group": "History",
     "id": "GAMESCOREHISTORYDATE3",
-    "label": "GameScoreHistoryDate[3]",
+    "label": "比赛评分记录4日期",
     "offset": 792,
     "bits": 32,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "历史记录"
   },
   {
     "section": "Stats",
     "group": "History",
     "id": "GAMESCOREHISTORYDATE4",
-    "label": "GameScoreHistoryDate[4]",
+    "label": "比赛评分记录5日期",
     "offset": 796,
     "bits": 32,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "历史记录"
   },
   {
     "section": "Stats",
     "group": "History",
     "id": "GAMESCOREHISTORYMINUTES0",
-    "label": "GameScoreHistoryMinutes[0]",
+    "label": "比赛评分记录1分钟",
     "offset": 868,
     "bits": 8,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "历史记录"
   },
   {
     "section": "Stats",
     "group": "History",
     "id": "GAMESCOREHISTORYMINUTES1",
-    "label": "GameScoreHistoryMinutes[1]",
+    "label": "比赛评分记录2分钟",
     "offset": 869,
     "bits": 8,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "历史记录"
   },
   {
     "section": "Stats",
     "group": "History",
     "id": "GAMESCOREHISTORYMINUTES2",
-    "label": "GameScoreHistoryMinutes[2]",
+    "label": "比赛评分记录3分钟",
     "offset": 870,
     "bits": 8,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "历史记录"
   },
   {
     "section": "Stats",
     "group": "History",
     "id": "GAMESCOREHISTORYMINUTES3",
-    "label": "GameScoreHistoryMinutes[3]",
+    "label": "比赛评分记录4分钟",
     "offset": 871,
     "bits": 8,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "历史记录"
   },
   {
     "section": "Stats",
     "group": "History",
     "id": "GAMESCOREHISTORYMINUTES4",
-    "label": "GameScoreHistoryMinutes[4]",
+    "label": "比赛评分记录5分钟",
     "offset": 872,
     "bits": 8,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "历史记录"
   },
   {
     "section": "Stats",
     "group": "History",
     "id": "GAMESCOREHISTORYVALUE0",
-    "label": "GameScoreHistoryValue[0]",
+    "label": "比赛评分记录1数值",
     "offset": 760,
     "bits": 32,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "历史记录"
   },
   {
     "section": "Stats",
     "group": "History",
     "id": "GAMESCOREHISTORYVALUE1",
-    "label": "GameScoreHistoryValue[1]",
+    "label": "比赛评分记录2数值",
     "offset": 764,
     "bits": 32,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "历史记录"
   },
   {
     "section": "Stats",
     "group": "History",
     "id": "GAMESCOREHISTORYVALUE2",
-    "label": "GameScoreHistoryValue[2]",
+    "label": "比赛评分记录3数值",
     "offset": 768,
     "bits": 32,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "历史记录"
   },
   {
     "section": "Stats",
     "group": "History",
     "id": "GAMESCOREHISTORYVALUE3",
-    "label": "GameScoreHistoryValue[3]",
+    "label": "比赛评分记录4数值",
     "offset": 772,
     "bits": 32,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "历史记录"
   },
   {
     "section": "Stats",
     "group": "History",
     "id": "GAMESCOREHISTORYVALUE4",
-    "label": "GameScoreHistoryValue[4]",
+    "label": "比赛评分记录5数值",
     "offset": 776,
     "bits": 32,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "历史记录"
   },
   {
     "section": "Stats",
     "group": "History",
     "id": "LEAGUEPERSCORERANKING",
-    "label": "LeaguePERScoreRanking",
+    "label": "联盟效率值排名",
     "offset": 728,
     "bits": 16,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "历史记录"
   },
   {
     "section": "Stats",
     "group": "History",
     "id": "LEAGUEPERSCORERANKINGBYPOSITION",
-    "label": "LeaguePERScoreRankingByPosition",
+    "label": "联盟按位置效率值排名",
     "offset": 730,
     "bits": 16,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "历史记录"
   },
   {
     "section": "Stats",
     "group": "History",
     "id": "OFFENSERATINGRANKING",
-    "label": "OffenseRatingRanking",
+    "label": "进攻效率排名",
     "offset": 260,
     "bits": 16,
     "shift": 16,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "历史记录"
   },
   {
     "section": "Advanced",
     "group": "Engine",
     "id": "ARECACHEDRATINGSVALID",
-    "label": "AreCachedRatingsValid",
+    "label": "能力评分缓存有效",
     "offset": 880,
     "bits": 1,
     "shift": 6,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "游戏内部"
   },
   {
     "section": "Advanced",
     "group": "Engine",
     "id": "ISCACHEDDESCRIPTIONVALID",
-    "label": "IsCachedDescriptionValid",
+    "label": "球员描述缓存有效",
     "offset": 1048,
     "bits": 1,
     "shift": 7,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "游戏内部"
   },
   {
     "section": "Advanced",
     "group": "Engine",
     "id": "ISGAMEDATAHACK",
-    "label": "IsGameDataHack",
+    "label": "游戏数据修改标记",
     "offset": 300,
     "bits": 1,
     "shift": 14,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "游戏内部"
   },
   {
     "section": "Advanced",
     "group": "Engine",
     "id": "PRESERVEDID",
-    "label": "PreservedId",
+    "label": "保留标识",
     "offset": 848,
     "bits": 32,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "游戏内部"
   },
   {
     "section": "Advanced",
     "group": "Engine",
     "id": "SHOULDPRESERVEBITFIELD",
-    "label": "ShouldPreserveBitfield",
+    "label": "保留位字段标记",
     "offset": 272,
     "bits": 3,
     "shift": 28,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "游戏内部"
   },
   {
     "section": "Advanced",
     "group": "Engine",
     "id": "SYSTEMMASTERYINTERNAL0",
-    "label": "SystemMastery_Internal[0]",
+    "label": "体系熟练度内部字段0",
     "offset": 932,
     "bits": 16,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "游戏内部"
   },
   {
     "section": "Advanced",
     "group": "Engine",
     "id": "SYSTEMMASTERYINTERNAL1",
-    "label": "SystemMastery_Internal[1]",
+    "label": "体系熟练度内部字段1",
     "offset": 934,
     "bits": 16,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "游戏内部"
   },
   {
     "section": "Advanced",
     "group": "Engine",
     "id": "SYSTEMMASTERYINTERNAL2",
-    "label": "SystemMastery_Internal[2]",
+    "label": "体系熟练度内部字段2",
     "offset": 936,
     "bits": 16,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "游戏内部"
   },
   {
     "section": "Advanced",
     "group": "Engine",
     "id": "SYSTEMMASTERYINTERNAL3",
-    "label": "SystemMastery_Internal[3]",
+    "label": "体系熟练度内部字段3",
     "offset": 938,
     "bits": 16,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "游戏内部"
   },
   {
     "section": "Advanced",
     "group": "Engine",
     "id": "SYSTEMMASTERYINTERNAL4",
-    "label": "SystemMastery_Internal[4]",
+    "label": "体系熟练度内部字段4",
     "offset": 940,
     "bits": 16,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "游戏内部"
   },
   {
     "section": "Advanced",
     "group": "Engine",
     "id": "SYSTEMMASTERYINTERNAL5",
-    "label": "SystemMastery_Internal[5]",
+    "label": "体系熟练度内部字段5",
     "offset": 942,
     "bits": 16,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "游戏内部"
   },
   {
     "section": "Advanced",
     "group": "Engine",
     "id": "SYSTEMMASTERYINTERNAL6",
-    "label": "SystemMastery_Internal[6]",
+    "label": "体系熟练度内部字段6",
     "offset": 944,
     "bits": 16,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "游戏内部"
   },
   {
     "section": "Advanced",
     "group": "Engine",
     "id": "SYSTEMMASTERYINTERNAL7",
-    "label": "SystemMastery_Internal[7]",
+    "label": "体系熟练度内部字段7",
     "offset": 946,
     "bits": 16,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "游戏内部"
   },
   {
     "section": "Advanced",
     "group": "Engine",
     "id": "TEMPORARYFLAG",
-    "label": "TemporaryFlag",
+    "label": "临时标记",
     "offset": 372,
     "bits": 1,
     "shift": 2,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "游戏内部"
   },
   {
     "section": "Advanced",
     "group": "Engine",
     "id": "WEARANDTEARINTERNAL0",
-    "label": "WearAndTear_Internal[0]",
+    "label": "身体磨损内部字段0",
     "offset": 900,
     "bits": 16,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "游戏内部"
   },
   {
     "section": "Advanced",
     "group": "Engine",
     "id": "WEARANDTEARINTERNAL1",
-    "label": "WearAndTear_Internal[1]",
+    "label": "身体磨损内部字段1",
     "offset": 902,
     "bits": 16,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "游戏内部"
   },
   {
     "section": "Advanced",
     "group": "Engine",
     "id": "WEARANDTEARINTERNAL2",
-    "label": "WearAndTear_Internal[2]",
+    "label": "身体磨损内部字段2",
     "offset": 904,
     "bits": 16,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "游戏内部"
   },
   {
     "section": "Advanced",
     "group": "Engine",
     "id": "WEARANDTEARINTERNAL3",
-    "label": "WearAndTear_Internal[3]",
+    "label": "身体磨损内部字段3",
     "offset": 906,
     "bits": 16,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "游戏内部"
   },
   {
     "section": "Advanced",
     "group": "Engine",
     "id": "WEARANDTEARINTERNAL4",
-    "label": "WearAndTear_Internal[4]",
+    "label": "身体磨损内部字段4",
     "offset": 908,
     "bits": 16,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "游戏内部"
   },
   {
     "section": "Advanced",
     "group": "Engine",
     "id": "WEARANDTEARINTERNAL5",
-    "label": "WearAndTear_Internal[5]",
+    "label": "身体磨损内部字段5",
     "offset": 910,
     "bits": 16,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "游戏内部"
   },
   {
     "section": "Advanced",
     "group": "Engine",
     "id": "WEARANDTEARINTERNAL6",
-    "label": "WearAndTear_Internal[6]",
+    "label": "身体磨损内部字段6",
     "offset": 912,
     "bits": 16,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "游戏内部"
   },
   {
     "section": "Advanced",
     "group": "Engine",
     "id": "WEARANDTEARINTERNAL7",
-    "label": "WearAndTear_Internal[7]",
+    "label": "身体磨损内部字段7",
     "offset": 914,
     "bits": 16,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "游戏内部"
   },
   {
     "section": "Advanced",
     "group": "Engine",
     "id": "WEARANDTEARINTERNAL8",
-    "label": "WearAndTear_Internal[8]",
+    "label": "身体磨损内部字段8",
     "offset": 916,
     "bits": 16,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "游戏内部"
   },
   {
     "section": "Advanced",
     "group": "Engine",
     "id": "WEARANDTEARINTERNAL9",
-    "label": "WearAndTear_Internal[9]",
+    "label": "身体磨损内部字段9",
     "offset": 918,
     "bits": 16,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "游戏内部"
   },
   {
     "section": "Advanced",
     "group": "Engine",
     "id": "WEARANDTEARINTERNAL10",
-    "label": "WearAndTear_Internal[10]",
+    "label": "身体磨损内部字段10",
     "offset": 920,
     "bits": 16,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "游戏内部"
   },
   {
     "section": "Advanced",
     "group": "Engine",
     "id": "WEARANDTEARINTERNAL11",
-    "label": "WearAndTear_Internal[11]",
+    "label": "身体磨损内部字段11",
     "offset": 922,
     "bits": 16,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "游戏内部"
   },
   {
     "section": "Advanced",
     "group": "Engine",
     "id": "WEARANDTEARINTERNAL12",
-    "label": "WearAndTear_Internal[12]",
+    "label": "身体磨损内部字段12",
     "offset": 924,
     "bits": 16,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "游戏内部"
   },
   {
     "section": "Advanced",
     "group": "Engine",
     "id": "WEARANDTEARINTERNAL13",
-    "label": "WearAndTear_Internal[13]",
+    "label": "身体磨损内部字段13",
     "offset": 926,
     "bits": 16,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "游戏内部"
   },
   {
     "section": "Advanced",
     "group": "Engine",
     "id": "WEARANDTEARINTERNAL14",
-    "label": "WearAndTear_Internal[14]",
+    "label": "身体磨损内部字段14",
     "offset": 928,
     "bits": 16,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "游戏内部"
   },
   {
     "section": "Advanced",
     "group": "Engine",
     "id": "WEARANDTEARINTERNAL15",
-    "label": "WearAndTear_Internal[15]",
+    "label": "身体磨损内部字段15",
     "offset": 930,
     "bits": 16,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "游戏内部"
   },
   {
     "section": "Advanced",
     "group": "Engine",
     "id": "YEARDRAFTEDINTERNAL",
-    "label": "YearDrafted_Internal",
+    "label": "内部选秀年份",
     "offset": 440,
     "bits": 8,
     "shift": 8,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "游戏内部"
   },
   {
     "section": "Advanced",
     "group": "Flags",
     "id": "DISABLEBIGHEAD",
-    "label": "DisableBigHead",
+    "label": "禁用大头模式",
     "offset": 1028,
     "bits": 1,
     "shift": 31,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "状态标记"
   },
   {
     "section": "Advanced",
     "group": "Flags",
     "id": "HASDONEDUNKCONTEST",
-    "label": "HasDoneDunkContest",
+    "label": "参加过扣篮大赛",
     "offset": 460,
     "bits": 1,
     "shift": 22,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "状态标记"
   },
   {
     "section": "Advanced",
     "group": "Flags",
     "id": "HASFAKEATTRIBUTES",
-    "label": "HasFakeAttributes",
+    "label": "使用虚拟能力值",
     "offset": 372,
     "bits": 1,
     "shift": 23,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "状态标记"
   },
   {
     "section": "Advanced",
     "group": "Flags",
     "id": "HASUSEDTRADEREASONTHISSEASONINTERNAL",
-    "label": "HasUsedTradeReasonThisSeasonInternal",
+    "label": "本赛季已使用交易原因标记",
     "offset": 476,
     "bits": 6,
     "shift": 26,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "状态标记"
   },
   {
     "section": "Advanced",
     "group": "Flags",
     "id": "ISPENDINGACQUIREDPLAYER",
-    "label": "IsPendingAcquiredPlayer",
+    "label": "待获取球员",
     "offset": 464,
     "bits": 1,
     "shift": 21,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "状态标记"
   },
   {
     "section": "Advanced",
     "group": "Flags",
     "id": "LOADASCREATEDPLAYERIFARTISMISSING",
-    "label": "LoadAsCreatedPlayerIfArtIsMissing",
+    "label": "缺少外观资源时按自建球员加载",
     "offset": 500,
     "bits": 1,
     "shift": 31,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "状态标记"
   },
   {
     "section": "Advanced",
     "group": "Flags",
     "id": "LOADMANAGMENTREGIME",
-    "label": "LoadManagmentRegime",
+    "label": "加载管理模式",
     "offset": 456,
     "bits": 2,
     "shift": 20,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "状态标记"
   },
   {
     "section": "Advanced",
     "group": "IDs",
     "id": "SIGNATUREID",
-    "label": "*Signature ID",
+    "label": "动作标识",
     "offset": 288,
     "bits": 32,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "各类标识"
   },
   {
     "section": "Advanced",
     "group": "IDs",
     "id": "UNIQUESIGNATUREID",
-    "label": "*Unique Signature ID",
+    "label": "唯一动作标识",
     "offset": 88,
     "bits": 32,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "各类标识"
   },
   {
     "section": "Advanced",
     "group": "IDs",
     "id": "ACTIONSHOTID",
-    "label": "ActionShotId",
+    "label": "动作镜头标识",
     "offset": 1056,
     "bits": 16,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "各类标识"
   },
   {
     "section": "Advanced",
     "group": "IDs",
     "id": "AUDIOSIGNATUREID",
-    "label": "Audio Signature ID",
+    "label": "语音动作标识",
     "offset": 292,
     "bits": 32,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "各类标识"
   },
   {
     "section": "Advanced",
     "group": "IDs",
     "id": "CLANID",
-    "label": "ClanId",
+    "label": "社群标识",
     "offset": 268,
     "bits": 30,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "各类标识"
   },
   {
     "section": "Advanced",
     "group": "IDs",
     "id": "FIRSTLASTNAMESID",
-    "label": "FirstLastNameSID",
+    "label": "姓名标识",
     "offset": 744,
     "bits": 16,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "各类标识"
   },
   {
     "section": "Advanced",
     "group": "IDs",
     "id": "FRANCHISEPLAYERDATAINDEX",
-    "label": "FranchisePlayerDataIndex",
+    "label": "球队核心球员数据索引",
     "offset": 1028,
     "bits": 16,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "各类标识"
   },
   {
     "section": "Advanced",
     "group": "IDs",
     "id": "GRAPHICID",
-    "label": "GraphicId",
+    "label": "图形标识",
     "offset": 272,
     "bits": 16,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "各类标识"
   },
   {
     "section": "Advanced",
     "group": "IDs",
     "id": "MURALID",
-    "label": "MuralId",
+    "label": "壁画标识",
     "offset": 1024,
     "bits": 22,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "各类标识"
   },
   {
     "section": "Advanced",
     "group": "IDs",
     "id": "OFFSPRINGPARENTUNIQUEID",
-    "label": "OffspringParentUniqueId",
+    "label": "父代球员唯一标识",
     "offset": 1040,
     "bits": 16,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "各类标识"
   },
   {
     "section": "Advanced",
     "group": "IDs",
     "id": "PHOTOID",
-    "label": "PhotoId",
+    "label": "照片标识",
     "offset": 1048,
     "bits": 16,
     "shift": 16,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "各类标识"
   },
   {
     "section": "Advanced",
     "group": "IDs",
     "id": "SHOTCHARTDATAINDEX",
-    "label": "ShotChartDataIndex",
+    "label": "投篮分布图数据索引",
     "offset": 1036,
     "bits": 11,
     "shift": 20,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "各类标识"
   },
   {
     "section": "Advanced",
     "group": "Modes",
     "id": "PNOTIER",
-    "label": "PNOTier",
+    "label": "模式等级",
     "offset": 836,
     "bits": 2,
     "shift": 24,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "模式"
   },
   {
     "section": "Advanced",
     "group": "Other",
     "id": "ALLSTAR3PTER",
-    "label": "AllStar3Pter",
+    "label": "全明星三分赛选手",
     "offset": 726,
     "bits": 1,
     "shift": 6,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "其他"
   },
   {
     "section": "Advanced",
     "group": "Other",
     "id": "ALLSTARDUNKER",
-    "label": "AllStarDunker",
+    "label": "全明星扣篮赛选手",
     "offset": 726,
     "bits": 1,
     "shift": 7,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "其他"
   },
   {
     "section": "Advanced",
     "group": "Other",
     "id": "DATELASTCHITCHATUSED",
-    "label": "DateLastChitChatUsed",
+    "label": "上次闲聊日期",
     "offset": 828,
     "bits": 32,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "其他"
   },
   {
     "section": "Advanced",
     "group": "Other",
     "id": "DAYSSINCEDECLARATIONTOEXTEND",
-    "label": "DaysSinceDeclarationToExtend",
+    "label": "距宣布续约天数",
     "offset": 992,
     "bits": 5,
     "shift": 27,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "其他"
   },
   {
     "section": "Advanced",
     "group": "Other",
     "id": "FACEOFTHEFRANCHISE",
-    "label": "FaceOfTheFranchise",
+    "label": "球队门面",
     "offset": 372,
     "bits": 1,
     "shift": 22,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "其他"
   },
   {
     "section": "Advanced",
     "group": "Other",
     "id": "GAMEFITNESS",
-    "label": "GameFitness",
+    "label": "比赛体能状态",
     "offset": 1032,
     "bits": 10,
     "shift": 10,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "其他"
   },
   {
     "section": "Advanced",
     "group": "Other",
     "id": "JERSEYSALES",
-    "label": "JerseySales",
+    "label": "球衣销量",
     "offset": 740,
     "bits": 32,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "其他"
   },
   {
     "section": "Advanced",
     "group": "Other",
     "id": "MAKEACOACH",
-    "label": "MakeACoach",
+    "label": "转为教练",
     "offset": 1036,
     "bits": 1,
     "shift": 31,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "其他"
   },
   {
     "section": "Advanced",
     "group": "Other",
     "id": "NOMADDUNK",
-    "label": "NoMadDunk",
+    "label": "游牧式扣篮标记",
     "offset": 268,
     "bits": 1,
     "shift": 31,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "其他"
   },
   {
     "section": "Advanced",
     "group": "Other",
     "id": "NOTINTERESTED",
-    "label": "NotInterested",
+    "label": "缺乏兴趣",
     "offset": 372,
     "bits": 1,
     "shift": 3,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "其他"
   },
   {
     "section": "Advanced",
     "group": "Other",
     "id": "PREFERREDJERSEYTYPE",
-    "label": "PreferredJerseyType",
+    "label": "偏好球衣类型",
     "offset": 460,
     "bits": 3,
     "shift": 8,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "其他"
   },
   {
     "section": "Advanced",
     "group": "Other",
     "id": "PROGRESSIVEFATIGUE",
-    "label": "ProgressiveFatigue",
+    "label": "累积疲劳",
     "offset": 440,
     "bits": 7,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "其他"
   },
   {
     "section": "Advanced",
     "group": "Other",
     "id": "PROSCOUTINGINDEX",
-    "label": "ProScoutingIndex",
+    "label": "职业球探索引",
     "offset": 758,
     "bits": 16,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "其他"
   },
   {
     "section": "Advanced",
     "group": "Other",
     "id": "RECENTLYTRADED",
-    "label": "RecentlyTraded",
+    "label": "近期被交易",
     "offset": 444,
     "bits": 1,
     "shift": 30,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "其他"
   },
   {
     "section": "Advanced",
     "group": "Other",
     "id": "SHOTDEFENSIVEIMMUNITYMODIFIER",
-    "label": "ShotDefensiveImmunityModifier",
+    "label": "投篮抗防守干扰修正",
     "offset": 1044,
     "bits": 2,
     "shift": 16,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "其他"
   },
   {
     "section": "Advanced",
     "group": "Other",
     "id": "TAKEOVERSPECIALABILITIES0",
-    "label": "TakeoverSpecialAbilities[0]",
+    "label": "主宰特殊能力字段0",
     "offset": 948,
     "bits": 32,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "其他"
   },
   {
     "section": "Advanced",
     "group": "Other",
     "id": "TAKEOVERSPECIALABILITIES1",
-    "label": "TakeoverSpecialAbilities[1]",
+    "label": "主宰特殊能力字段1",
     "offset": 952,
     "bits": 32,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "其他"
   },
   {
     "section": "Advanced",
     "group": "Other",
     "id": "TAKEOVERSPECIALABILITIES2",
-    "label": "TakeoverSpecialAbilities[2]",
+    "label": "主宰特殊能力字段2",
     "offset": 956,
     "bits": 32,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "其他"
   },
   {
     "section": "Advanced",
     "group": "Other",
     "id": "TAKEOVERSPECIALABILITIES3",
-    "label": "TakeoverSpecialAbilities[3]",
+    "label": "主宰特殊能力字段3",
     "offset": 960,
     "bits": 32,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "其他"
   },
   {
     "section": "Advanced",
     "group": "Other",
     "id": "TAKEOVERSPECIALABILITIES4",
-    "label": "TakeoverSpecialAbilities[4]",
+    "label": "主宰特殊能力字段4",
     "offset": 964,
     "bits": 32,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "其他"
   },
   {
     "section": "Advanced",
     "group": "Other",
     "id": "TAKEOVERSPECIALABILITIES5",
-    "label": "TakeoverSpecialAbilities[5]",
+    "label": "主宰特殊能力字段5",
     "offset": 968,
     "bits": 32,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "其他"
   },
   {
     "section": "Advanced",
     "group": "Other",
     "id": "TAKEOVERSPECIALABILITIES6",
-    "label": "TakeoverSpecialAbilities[6]",
+    "label": "主宰特殊能力字段6",
     "offset": 972,
     "bits": 32,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "其他"
   },
   {
     "section": "Advanced",
     "group": "Other",
     "id": "TYPE",
-    "label": "Type",
+    "label": "内部类型",
     "offset": 976,
     "bits": 4,
     "shift": 27,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "其他"
   },
   {
     "section": "Advanced",
     "group": "Other",
     "id": "YEARSOFACQUIREDPLAYER",
-    "label": "YearsOfAcquiredPlayer",
+    "label": "获得该球员年数",
     "offset": 874,
     "bits": 6,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "其他"
   },
   {
     "section": "Advanced",
     "group": "Reserved",
     "id": "AFTERBADGEPADDING",
-    "label": "_after_badge_padding",
+    "label": "徽章后保留位",
     "offset": 1268,
     "bits": 6,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "保留字段"
   },
   {
     "section": "Advanced",
     "group": "Reserved",
     "id": "AFTERSEASONSTATSPADDING",
-    "label": "_after_season_stats_padding",
+    "label": "赛季数据后保留位",
     "offset": 370,
     "bits": 16,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "保留字段"
   },
   {
     "section": "Advanced",
     "group": "Reserved",
     "id": "CONTRACTPROMISEPADDING",
-    "label": "_contract_promise_padding",
+    "label": "合同承诺保留位",
     "offset": 524,
     "bits": 10,
     "shift": 22,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "保留字段"
   },
   {
     "section": "Advanced",
     "group": "Reserved",
     "id": "PADDING",
-    "label": "_padding",
+    "label": "保留位",
     "offset": 1080,
     "bits": 25,
     "shift": 7,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "保留字段"
   },
   {
     "section": "Advanced",
     "group": "Reserved",
     "id": "UNUSEDPADDING",
-    "label": "__unused_padding",
+    "label": "未使用保留位",
     "offset": 892,
     "bits": 7,
     "shift": 25,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "保留字段"
   },
   {
     "section": "Appearance",
     "group": "Presentation",
     "id": "JERSEYBAGGINESS",
-    "label": "JerseyBagginess",
+    "label": "球衣宽松度",
     "offset": 888,
     "bits": 4,
     "shift": 16,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "外观展示"
   },
   {
     "section": "Appearance",
     "group": "Presentation",
     "id": "MYPLAYERCLOTHESTYPE",
-    "label": "MyPlayerClothesType",
+    "label": "自建球员服装类型",
     "offset": 1080,
     "bits": 3,
     "shift": 0,
-    "kind": "bits"
+    "kind": "bits",
+    "group_label": "外观展示"
   }
 ]
