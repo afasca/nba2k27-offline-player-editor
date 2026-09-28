@@ -19,6 +19,7 @@ import time
 import tkinter as tk
 from tkinter import messagebox, ttk
 from collections import Counter
+from decimal import Decimal, InvalidOperation, ROUND_HALF_UP
 
 import psutil
 from PIL import ImageGrab
@@ -35,6 +36,9 @@ PLAYER_STRIDE = 1272
 PLAYBOOK_STRIDE = 536
 PLAYBOOK_SLOTS = 88
 PLAYBOOK_EDITABLE_SLOTS = 80
+BODY_RATIO = Decimal("1.4")
+BODY_MIN_CM = Decimal("50")
+BODY_MAX_CM = Decimal("327.67")
 FIELD_FILE = Path(getattr(sys, "_MEIPASS", Path(__file__).parent)) / "player_fields.json"
 EXTRA_FILE = Path(getattr(sys, "_MEIPASS", Path(__file__).parent)) / "player_extra_fields.json"
 ADVANCED_FILE = Path(getattr(sys, "_MEIPASS", Path(__file__).parent)) / "player_advanced_fields.json"
@@ -855,10 +859,16 @@ class PlayerEditor(tk.Tk):
             ttk.Label(body, text=label).grid(row=i, column=0, sticky="w", pady=8)
             ttk.Entry(body, textvariable=var, width=16).grid(row=i, column=1, sticky="w", padx=12)
             ttk.Label(body, text=hint, foreground="#666666").grid(row=i, column=2, sticky="w")
+        ratio_actions = ttk.Frame(body)
+        ratio_actions.grid(row=3, column=0, columnspan=3, sticky="w", pady=(5, 10))
+        ttk.Button(ratio_actions, text="按身高 × 1.4 填臂展",
+                   command=lambda: self._fill_body_ratio(from_height=True)).pack(side="left")
+        ttk.Button(ratio_actions, text="按臂展 ÷ 1.4 填身高",
+                   command=lambda: self._fill_body_ratio(from_height=False)).pack(side="left", padx=10)
         ttk.Checkbutton(body, text="使用自定义外观比例", variable=self.custom_scales).grid(
-            row=3, column=0, columnspan=2, sticky="w", pady=10)
-        ttk.Label(body, text="调整比例时自动启用自定义比例；臂展模型效果待进一步确认。",
-                  foreground="#666666").grid(row=4, column=0, columnspan=3, sticky="w")
+            row=4, column=0, columnspan=2, sticky="w", pady=10)
+        ttk.Label(body, text="1.4 按钮只填数值，不自动保存；模型效果待验证。修改手臂比例会启用自定义外观比例。",
+                  foreground="#666666", wraplength=650).grid(row=5, column=0, columnspan=3, sticky="w")
         self._make_signature_tab()
         self._make_playbook_tab()
         groups = []
@@ -894,6 +904,28 @@ class PlayerEditor(tk.Tk):
         ttk.Button(bottom, text="复制 DNA", command=self.copy_dna_dialog).pack(side="right", padx=8)
         ttk.Label(bottom, text="修改会立即写入游戏内存；请在游戏里保存名单。", foreground="#666666").pack(side="left")
         self.tabs.bind("<<NotebookTabChanged>>", self._tab_changed)
+
+    def _fill_body_ratio(self, *, from_height: bool):
+        source_var = self.height if from_height else self.wingspan
+        target_var = self.wingspan if from_height else self.height
+        source_name = "身高" if from_height else "臂展"
+        target_name = "臂展" if from_height else "身高"
+        try:
+            try:
+                source = Decimal(source_var.get().strip())
+            except InvalidOperation as exc:
+                raise ValueError(f"请先输入有效的{source_name}数值。") from exc
+            if not source.is_finite() or not BODY_MIN_CM <= source <= BODY_MAX_CM:
+                raise ValueError(f"{source_name}须在 {BODY_MIN_CM} 到 {BODY_MAX_CM} 厘米之间。")
+            target = (source * BODY_RATIO if from_height else source / BODY_RATIO).quantize(
+                Decimal("0.01"), rounding=ROUND_HALF_UP)
+            if not BODY_MIN_CM <= target <= BODY_MAX_CM:
+                raise ValueError(f"按 1.4 换算得到的{target_name}为 {target} 厘米，"
+                                 f"超出可保存范围 {BODY_MIN_CM}–{BODY_MAX_CM} 厘米。")
+            target_var.set(f"{target:.2f}")
+            self.status.set(f"已按 1.4 填入{target_name} {target:.2f} 厘米；请点击“保存修改”。")
+        except ValueError as exc:
+            messagebox.showerror("比例换算失败", str(exc), parent=self)
 
     def _make_profile_tab(self):
         page = ttk.Frame(self.tabs)
