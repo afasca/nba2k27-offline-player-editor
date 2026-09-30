@@ -34,7 +34,7 @@ PLAYER_STRIDE = 1272
 PLAYBOOK_STRIDE = 536
 PLAYBOOK_SLOTS = 88
 PLAYBOOK_EDITABLE_SLOTS = 80
-BODY_RATIO = Decimal("1.4")
+BODY_RATIO = Decimal("1.38")
 BODY_MIN_CM = Decimal("50")
 BODY_MAX_CM = Decimal("327.67")
 RATING_MIN = 25
@@ -1089,15 +1089,15 @@ class PlayerEditor(tk.Tk):
                         lambda v=var, k=key: v.get().strip() != str(self.baseline[k]))
         ratio_actions = ttk.Frame(page)
         ratio_actions.grid(row=3, column=0, columnspan=3, sticky="w", pady=(8, 10))
-        ttk.Button(ratio_actions, text="按身高 × 1.4 填臂展",
+        ttk.Button(ratio_actions, text=f"按身高 × {BODY_RATIO} 填臂展",
                    command=lambda: self._fill_body_ratio(from_height=True)).pack(side="left")
-        ttk.Button(ratio_actions, text="按臂展 ÷ 1.4 填身高",
+        ttk.Button(ratio_actions, text=f"按臂展 ÷ {BODY_RATIO} 填身高",
                    command=lambda: self._fill_body_ratio(from_height=False)).pack(side="left", padx=10)
         check = ttk.Checkbutton(page, text="使用自定义外观比例", variable=self.custom_scales)
         check.grid(row=4, column=0, columnspan=2, sticky="w", pady=10)
         self._track(self.custom_scales, check, [(self.tabs, page)],
                     lambda: self.custom_scales.get() != self.baseline["custom_scales"])
-        ttk.Label(page, text="1.4 按钮只填数值，不自动保存；模型效果待验证。修改手臂比例会启用自定义外观比例。",
+        ttk.Label(page, text=f"{BODY_RATIO} 按钮只填数值，不自动保存；模型效果待验证。修改手臂比例会启用自定义外观比例。",
                   style="Muted.TLabel", wraplength=680).grid(row=5, column=0, columnspan=3, sticky="w")
 
     def _make_rating_tab(self):
@@ -1216,10 +1216,10 @@ class PlayerEditor(tk.Tk):
             target = (source * BODY_RATIO if from_height else source / BODY_RATIO).quantize(
                 Decimal("0.01"), rounding=ROUND_HALF_UP)
             if not BODY_MIN_CM <= target <= BODY_MAX_CM:
-                raise ValueError(f"按 1.4 换算得到的{target_name}为 {target} 厘米，"
+                raise ValueError(f"按 {BODY_RATIO} 换算得到的{target_name}为 {target} 厘米，"
                                  f"超出可保存范围 {BODY_MIN_CM}–{BODY_MAX_CM} 厘米。")
             target_var.set(f"{target:.2f}")
-            self.status.set(f"已按 1.4 填入{target_name} {target:.2f} 厘米；请点击“保存修改”。")
+            self.status.set(f"已按 {BODY_RATIO} 填入{target_name} {target:.2f} 厘米；请点击“保存修改”。")
         except ValueError as exc:
             messagebox.showerror("比例换算失败", str(exc), parent=self)
 
