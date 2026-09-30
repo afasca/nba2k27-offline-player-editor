@@ -17,7 +17,7 @@ import tkinter as tk
 import traceback
 from tkinter import messagebox, ttk
 from collections import Counter
-from decimal import Decimal, InvalidOperation, ROUND_HALF_UP
+from decimal import Decimal, InvalidOperation, ROUND_FLOOR
 
 import psutil
 from playbook_catalog import DETAIL_ORDER, GROUP_DETAILS, POSITION_NAMES, TYPE_ORDER, classify_play
@@ -34,7 +34,7 @@ PLAYER_STRIDE = 1272
 PLAYBOOK_STRIDE = 536
 PLAYBOOK_SLOTS = 88
 PLAYBOOK_EDITABLE_SLOTS = 80
-BODY_RATIO = Decimal("1.38")
+BODY_RATIO = Decimal("1.3")
 BODY_MIN_CM = Decimal("50")
 BODY_MAX_CM = Decimal("327.67")
 RATING_MIN = 25
@@ -1097,7 +1097,7 @@ class PlayerEditor(tk.Tk):
         check.grid(row=4, column=0, columnspan=2, sticky="w", pady=10)
         self._track(self.custom_scales, check, [(self.tabs, page)],
                     lambda: self.custom_scales.get() != self.baseline["custom_scales"])
-        ttk.Label(page, text=f"{BODY_RATIO} 按钮只填数值，不自动保存；模型效果待验证。修改手臂比例会启用自定义外观比例。",
+        ttk.Label(page, text=f"{BODY_RATIO} 换算前后均向下取整，身高和臂展都填整数，不自动保存。修改手臂比例会启用自定义外观比例。",
                   style="Muted.TLabel", wraplength=680).grid(row=5, column=0, columnspan=3, sticky="w")
 
     def _make_rating_tab(self):
@@ -1213,13 +1213,15 @@ class PlayerEditor(tk.Tk):
                 raise ValueError(f"请先输入有效的{source_name}数值。") from exc
             if not source.is_finite() or not BODY_MIN_CM <= source <= BODY_MAX_CM:
                 raise ValueError(f"{source_name}须在 {BODY_MIN_CM} 到 {BODY_MAX_CM} 厘米之间。")
-            target = (source * BODY_RATIO if from_height else source / BODY_RATIO).quantize(
-                Decimal("0.01"), rounding=ROUND_HALF_UP)
+            source = source.to_integral_value(rounding=ROUND_FLOOR)
+            target = (source * BODY_RATIO if from_height else source / BODY_RATIO).to_integral_value(
+                rounding=ROUND_FLOOR)
             if not BODY_MIN_CM <= target <= BODY_MAX_CM:
                 raise ValueError(f"按 {BODY_RATIO} 换算得到的{target_name}为 {target} 厘米，"
                                  f"超出可保存范围 {BODY_MIN_CM}–{BODY_MAX_CM} 厘米。")
-            target_var.set(f"{target:.2f}")
-            self.status.set(f"已按 {BODY_RATIO} 填入{target_name} {target:.2f} 厘米；请点击“保存修改”。")
+            source_var.set(f"{source:.0f}")
+            target_var.set(f"{target:.0f}")
+            self.status.set(f"已按 {BODY_RATIO} 换算，身高和臂展均向下取整：{source_name} {source:.0f}、{target_name} {target:.0f} 厘米；请点击“保存修改”。")
         except ValueError as exc:
             messagebox.showerror("比例换算失败", str(exc), parent=self)
 
