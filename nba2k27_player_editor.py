@@ -53,6 +53,34 @@ FREE_AGENT = "自由球员"
 # Primary/secondary RGBA colours and short name in the team record (this build).
 TEAM_COLOR_OFFSET = 4940
 TEAM_ABBR_OFFSET = 848
+STAFF_TEAM_ARRAY_OFFSET = 3952
+STAFF_TEAM_SLOTS = 32
+STAFF_STRIDE = 456
+STAFF_JOB_OFFSET = 386
+STAFF_JOB_SHIFT = 0
+STAFF_JOB_BITS = 5
+STAFF_TARGET_JOB_OFFSET = 332
+STAFF_TARGET_JOB_SHIFT = 25
+STAFF_FIRST_OFFSET = 80
+STAFF_LAST_OFFSET = 120
+STAFF_UID_OFFSET = 288
+STAFF_TEAM_OFFSET = 24
+STAFF_STATUS_OFFSET = 383
+STAFF_ATTRIBUTE_FIELDS = (
+    ("motivation", "动力", 358), ("basketball_iq", "篮球智商", 360),
+    ("work_ethic", "职业道德", 361), ("offense", "进攻教练", 362),
+    ("defense", "防守教练", 363), ("business", "商业", 364),
+    ("training", "训练", 365), ("charisma", "魅力", 366),
+)
+STAFF_JOB_NAMES = {
+    0: "主教练", 1: "首席球探", 2: "队医", 3: "总经理", 4: "首席财务官",
+    5: "老板", 6: "助理主教练", 7: "助理总经理", 8: "投篮教练",
+    9: "后卫教练", 10: "侧翼教练", 11: "内线教练", 12: "低位防守教练",
+    13: "外线防守教练", 14: "国内球探", 15: "国内球探", 16: "未使用",
+    17: "未使用", 18: "未使用", 19: "国际球探", 20: "力量训练师",
+    21: "体能训练师", 22: "运动心理师", 23: "运动科学师", 24: "理疗师",
+    25: "睡眠医生",
+}
 
 LEAGUE_ORDER = ("NBA", "WNBA", "G 联盟", "国家队", "其他联赛", "自由球员")
 WNBA_TEAMS = frozenset({
@@ -447,7 +475,7 @@ class GameMemory:
         data = self.read(self.table, self.count * PLAYER_STRIDE)
         stats = self.read(self.stats_table, self.stats_count * 64) if self.stats_table and 0 < self.stats_count < 100000 else b""
         free_agent = {"team": FREE_AGENT, "league": FREE_AGENT, "nick": "", "abbr": "FA",
-                      "colors": ("#343a46", "#8b93a1")}
+                      "colors": ("#343a46", "#8b93a1"), "team_ptr": 0}
         team_details: dict[int, dict] = {}
         self.teams = {(FREE_AGENT, FREE_AGENT): free_agent}
         result = []
@@ -468,10 +496,10 @@ class GameMemory:
                         colors = colors_from_record(self.read(team_ptr + TEAM_COLOR_OFFSET, 8))
                         info = {"team": team_name, "league": classify_league(team_name, roster_type),
                                 "nick": nickname.strip(), "abbr": abbr.upper()[:4],
-                                "colors": colors or fallback_colors(team_name)}
+                                "colors": colors or fallback_colors(team_name), "team_ptr": team_ptr}
                     except OSError:
                         info = {"team": "球队未知", "league": "其他联赛", "nick": "", "abbr": "?",
-                                "colors": fallback_colors("球队未知")}
+                                "colors": fallback_colors("球队未知"), "team_ptr": team_ptr}
                     if not info["abbr"]:
                         info["abbr"] = "".join(word[0] for word in info["team"].split()[:3]).upper() or "?"
                     team_details[team_ptr] = info
@@ -492,6 +520,53 @@ class GameMemory:
 
     def team_info(self, player: dict) -> dict:
         return self.teams.get((player["league"], player["team"])) or self.teams[(FREE_AGENT, FREE_AGENT)]
+
+    def team_options(self) -> list[dict]:
+        """Return teams whose live records expose the staff pointer array."""
+        result = [info for info in self.teams.values() if info.get("team_ptr")]
+        return sorted(result, key=lambda info: (LEAGUE_ORDER.index(info["league"])
+                                                if info["league"] in LEAGUE_ORDER else 99,
+                                                info["team"]))
+
+    def team_staff(self, team: dict) -> list[dict]:
+        """Read staff records referenced by one live team record."""
+        team_ptr = int(team.get("team_ptr") or 0)
+        if not team_ptr:
+            return []
+        row = self.read(team_ptr, STAFF_TEAM_ARRAY_OFFSET + STAFF_TEAM_SLOTS * 8)
+        pointers = struct.unpack_from(f"<{STAFF_TEAM_SLOTS}Q", row, STAFF_TEAM_ARRAY_OFFSET)
+        result, seen = [], set()
+        for slot, address in enumerate(pointers):
+            if not address or address in seen:
+                continue
+            seen.add(address)
+            staff = self.read(address, STAFF_STRIDE)
+            first = decode_name(staff[STAFF_FIRST_OFFSET:STAFF_FIRST_OFFSET + 40])
+            last = decode_name(staff[STAFF_LAST_OFFSET:STAFF_LAST_OFFSET + 40])
+            word = struct.unpack_from("<I", staff, STAFF_JOB_OFFSET)[0]
+            target_word = struct.unpack_from("<I", staff, STAFF_TARGET_JOB_OFFSET)[0]
+            job = (word >> STAFF_JOB_SHIFT) & ((1 << STAFF_JOB_BITS) - 1)
+            target_job = (target_word >> STAFF_TARGET_JOB_SHIFT) & ((1 << STAFF_JOB_BITS) - 1)
+            attributes = {key: staff[offset] for key, _label, offset in STAFF_ATTRIBUTE_FIELDS}
+            result.append({"slot": slot, "address": address,
+                           "uid": struct.unpack_from("<H", staff, STAFF_UID_OFFSET)[0],
+                           "first_name": first, "last_name": last,
+                           "name": f"{first} {last}".strip() or f"未命名员工 #{slot}",
+                           "job": job, "target_job": target_job,
+                           "team_ptr": struct.unpack_from("<Q", staff, STAFF_TEAM_OFFSET)[0],
+                           "status": staff[STAFF_STATUS_OFFSET] & 3, "attributes": attributes})
+        return result
+
+    def apply_staff(self, staff: dict, changes: dict[int, bytes], *, label: str) -> Path:
+        """Write a staff record after checking its UID and team association."""
+        address = int(staff["address"])
+        current = self.read(address, STAFF_STRIDE)
+        if struct.unpack_from("<H", current, STAFF_UID_OFFSET)[0] != staff["uid"]:
+            raise RuntimeError("员工记录已变化，请重新读取球队员工。")
+        if staff.get("team_ptr") and struct.unpack_from("<Q", current, STAFF_TEAM_OFFSET)[0] != staff["team_ptr"]:
+            raise RuntimeError("员工所属球队已变化，请重新读取球队员工。")
+        absolute = {address + offset: value for offset, value in changes.items()}
+        return self.apply_many(absolute, label=f"球队员工 {label}")
 
     def refresh_playbooks(self):
         """Read the live roster's authored playbook array and play CRC slots."""
@@ -867,6 +942,10 @@ class PlayerEditor(tk.Tk):
         self.current_edit_address: int | None = None
         self.last_backup: Path | None = None
         self.playbook_last_backup: Path | None = None
+        self.staff_last_backup: Path | None = None
+        self.staff_team_map: dict[str, dict] = {}
+        self.staff_items: dict[str, dict] = {}
+        self.staff_selected: dict | None = None
         self.book_option_map: dict[str, dict] = {}
         self.play_catalog_items: dict[str, int] = {}
         self.play_use_count: Counter[int] = Counter()
@@ -904,6 +983,12 @@ class PlayerEditor(tk.Tk):
         self.signature_preset_scope = tk.StringVar(value=ALL_SIGNATURES)
         self.signature_preset_info = tk.StringVar()
         self.playbook_preset_name = tk.StringVar()
+        self.staff_team_choice = tk.StringVar()
+        self.staff_first_name = tk.StringVar()
+        self.staff_last_name = tk.StringVar()
+        self.staff_job = tk.StringVar()
+        self.staff_attribute_inputs: dict[str, tk.StringVar] = {}
+        self.staff_status = tk.StringVar(value="选择球队后读取员工")
         self._make_ui()
         self._refresh_preset_boxes()
         self._bind_shortcuts()
@@ -982,6 +1067,7 @@ class PlayerEditor(tk.Tk):
         self.tabs = ttk.Notebook(right)
         self.tabs.pack(fill="both", expand=True, pady=(10, 0))
         self._make_profile_tab()
+        self._make_staff_tab()
         self._make_body_tab()
         self._make_rating_tab()
         self._make_extra_tabs()
@@ -1224,6 +1310,201 @@ class PlayerEditor(tk.Tk):
             self.status.set(f"已按 {BODY_RATIO} 换算，身高和臂展均向下取整：{source_name} {source:.0f}、{target_name} {target:.0f} 厘米；请点击“保存修改”。")
         except ValueError as exc:
             messagebox.showerror("比例换算失败", str(exc), parent=self)
+
+    def _make_staff_tab(self):
+        page = ttk.Frame(self.tabs, padding=10)
+        self.tabs.add(page, text="球队员工")
+        top = ttk.Frame(page)
+        top.pack(fill="x")
+        ttk.Label(top, text="球队").pack(side="left")
+        self.staff_team_box = ttk.Combobox(top, textvariable=self.staff_team_choice,
+                                            state="readonly", width=34)
+        self.staff_team_box.pack(side="left", padx=(8, 6), fill="x", expand=True)
+        self.staff_team_box.bind("<<ComboboxSelected>>", lambda _event: self._show_staff_team())
+        ttk.Button(top, text="重新读取", command=self._refresh_staff_teams).pack(side="left")
+        ttk.Label(page, text="可修改主教练、助理教练、训练师等员工的姓名、职位和主要能力。修改后点击保存员工；可单独撤销。",
+                  style="Muted.TLabel").pack(anchor="w", pady=(8, 8))
+
+        body = ttk.PanedWindow(page, orient="horizontal")
+        body.pack(fill="both", expand=True)
+        left = ttk.Frame(body, style="Card.TFrame", padding=8)
+        right = ttk.Frame(body, style="Card.TFrame", padding=14)
+        body.add(left, weight=2)
+        body.add(right, weight=3)
+        tree_frame = ttk.Frame(left, style="Card.TFrame")
+        tree_frame.pack(fill="both", expand=True)
+        self.staff_tree = ttk.Treeview(tree_frame, columns=("job", "name", "slot"), show="headings",
+                                       selectmode="browse")
+        for key, title, width in (("job", "职位", 118), ("name", "姓名", 150), ("slot", "槽位", 48)):
+            self.staff_tree.heading(key, text=title, anchor="w")
+            self.staff_tree.column(key, width=width, minwidth=42, anchor="w")
+        staff_scroll = ttk.Scrollbar(tree_frame, orient="vertical", command=self.staff_tree.yview)
+        self.staff_tree.configure(yscrollcommand=staff_scroll.set)
+        self.staff_tree.pack(side="left", fill="both", expand=True)
+        staff_scroll.pack(side="right", fill="y")
+        self.staff_tree.bind("<<TreeviewSelect>>", self._staff_select)
+
+        ttk.Label(right, text="员工资料", style="CardSection.TLabel").grid(row=0, column=0, columnspan=3,
+                                                                            sticky="w", pady=(0, 10))
+        ttk.Label(right, text="名").grid(row=1, column=0, sticky="w", pady=5)
+        ttk.Entry(right, textvariable=self.staff_first_name, width=22).grid(row=1, column=1, columnspan=2,
+                                                                             sticky="w", pady=5)
+        ttk.Label(right, text="姓").grid(row=2, column=0, sticky="w", pady=5)
+        ttk.Entry(right, textvariable=self.staff_last_name, width=22).grid(row=2, column=1, columnspan=2,
+                                                                            sticky="w", pady=5)
+        ttk.Label(right, text="职位").grid(row=3, column=0, sticky="w", pady=5)
+        self.staff_job_box = ttk.Combobox(right, textvariable=self.staff_job, state="readonly", width=28,
+                                          values=self._staff_job_choices())
+        self.staff_job_box.grid(row=3, column=1, columnspan=2, sticky="w", pady=5)
+        ttk.Separator(right).grid(row=4, column=0, columnspan=3, sticky="ew", pady=(12, 8))
+        for row, (key, label, _offset) in enumerate(STAFF_ATTRIBUTE_FIELDS, start=5):
+            ttk.Label(right, text=label).grid(row=row, column=0, sticky="w", pady=3)
+            var = tk.StringVar()
+            self.staff_attribute_inputs[key] = var
+            ttk.Entry(right, textvariable=var, width=12, justify="center").grid(row=row, column=1,
+                                                                                   sticky="w", pady=3)
+            ttk.Label(right, text="0–255", style="Muted.TLabel").grid(row=row, column=2, sticky="w", padx=8)
+        buttons = ttk.Frame(right)
+        buttons.grid(row=14, column=0, columnspan=3, sticky="w", pady=(14, 0))
+        ttk.Button(buttons, text="保存员工", style="Accent.TButton", command=self._save_staff).pack(side="left")
+        ttk.Button(buttons, text="撤销员工修改", command=self._undo_staff).pack(side="left", padx=8)
+        ttk.Label(right, textvariable=self.staff_status, style="Muted.TLabel", wraplength=380).grid(
+            row=15, column=0, columnspan=3, sticky="w", pady=(12, 0))
+        right.columnconfigure(2, weight=1)
+
+    @staticmethod
+    def _staff_job_choices() -> tuple[str, ...]:
+        return tuple(f"{value} · {STAFF_JOB_NAMES[value]}" for value in sorted(STAFF_JOB_NAMES))
+
+    @staticmethod
+    def _staff_job_value(text: str) -> int:
+        return int(text.split("·", 1)[0].strip())
+
+    def _refresh_staff_teams(self):
+        if not hasattr(self, "staff_team_box"):
+            return
+        self.staff_team_map = {}
+        if not self.memory or not hasattr(self.memory, "team_options"):
+            self.staff_team_box.configure(values=())
+            self.staff_team_choice.set("")
+            self._clear_staff_form()
+            return
+        for info in self.memory.team_options():
+            label = f"{info['team']} · {info['league']}"
+            self.staff_team_map[label] = info
+        values = tuple(self.staff_team_map)
+        self.staff_team_box.configure(values=values)
+        if self.staff_team_choice.get() not in self.staff_team_map:
+            self.staff_team_choice.set(values[0] if values else "")
+        self._show_staff_team()
+
+    def _show_staff_team(self):
+        self.staff_tree.delete(*self.staff_tree.get_children())
+        self.staff_items = {}
+        self.staff_selected = None
+        team = self.staff_team_map.get(self.staff_team_choice.get())
+        if not team or not self.memory:
+            self._clear_staff_form()
+            self.staff_status.set("选择球队后读取员工")
+            return
+        try:
+            staff_list = self.memory.team_staff(team)
+            for item in sorted(staff_list, key=lambda entry: (entry["job"], entry["slot"])):
+                iid = f"staff:{item['slot']}"
+                self.staff_items[iid] = item
+                job = STAFF_JOB_NAMES.get(item["job"], f"未知职位 {item['job']}")
+                self.staff_tree.insert("", "end", iid=iid,
+                                       values=(job, item["name"], item["slot"] + 1))
+            if staff_list:
+                first = next(iter(self.staff_tree.get_children()), None)
+                if first:
+                    self.staff_tree.selection_set(first)
+                    self.staff_tree.focus(first)
+                    self.staff_tree.see(first)
+            self.staff_status.set(f"{team['team']}：读取 {len(staff_list)} 名员工")
+        except Exception as exc:
+            self._clear_staff_form()
+            self.staff_status.set(str(exc))
+
+    def _staff_select(self, _event=None):
+        selected = self.staff_tree.selection()
+        item = self.staff_items.get(selected[0]) if selected else None
+        self.staff_selected = item
+        if not item:
+            self._clear_staff_form()
+            return
+        self.staff_first_name.set(item["first_name"])
+        self.staff_last_name.set(item["last_name"])
+        self.staff_job.set(f"{item['job']} · {STAFF_JOB_NAMES.get(item['job'], f'未知职位 {item['job']}')}")
+        for key, var in self.staff_attribute_inputs.items():
+            var.set(str(item["attributes"].get(key, 0)))
+
+    def _clear_staff_form(self):
+        self.staff_selected = None
+        self.staff_first_name.set("")
+        self.staff_last_name.set("")
+        self.staff_job.set("")
+        for var in self.staff_attribute_inputs.values():
+            var.set("")
+
+    def _save_staff(self):
+        staff = self.staff_selected
+        if not self.memory or not staff:
+            self.staff_status.set("请先选择一名员工")
+            return
+        try:
+            first = self.staff_first_name.get().strip()
+            last = self.staff_last_name.get().strip()
+            if not first or not last:
+                raise ValueError("员工姓名不能为空")
+            job = self._staff_job_value(self.staff_job.get())
+            changes: dict[int, bytes] = {}
+            if first != staff["first_name"]:
+                changes[STAFF_FIRST_OFFSET] = encode_name(first)
+            if last != staff["last_name"]:
+                changes[STAFF_LAST_OFFSET] = encode_name(last)
+            old_word = self.memory.u32(staff["address"] + STAFF_JOB_OFFSET)
+            job_mask = ((1 << STAFF_JOB_BITS) - 1) << STAFF_JOB_SHIFT
+            new_word = (old_word & ~job_mask) | (job << STAFF_JOB_SHIFT)
+            if job != staff["job"]:
+                changes[STAFF_JOB_OFFSET] = struct.pack("<I", new_word)
+            target_word = self.memory.u32(staff["address"] + STAFF_TARGET_JOB_OFFSET)
+            target_mask = ((1 << STAFF_JOB_BITS) - 1) << STAFF_TARGET_JOB_SHIFT
+            new_target_word = (target_word & ~target_mask) | (job << STAFF_TARGET_JOB_SHIFT)
+            if job != staff.get("target_job"):
+                changes[STAFF_TARGET_JOB_OFFSET] = struct.pack("<I", new_target_word)
+            for key, _label, offset in STAFF_ATTRIBUTE_FIELDS:
+                try:
+                    value = int(self.staff_attribute_inputs[key].get().strip())
+                except ValueError:
+                    raise ValueError(f"{dict((k, label) for k, label, _ in STAFF_ATTRIBUTE_FIELDS)[key]}：请输入整数") from None
+                if not 0 <= value <= 255:
+                    raise ValueError(f"{key} 须在 0 到 255 之间")
+                if value != staff["attributes"].get(key):
+                    changes[offset] = bytes([value])
+            if not changes:
+                self.staff_status.set("该员工没有需要保存的变化")
+                return
+            backup = self.memory.apply_staff(staff, changes, label=staff["name"])
+            self.staff_last_backup = backup
+            self._show_staff_team()
+            self.staff_status.set(f"已保存员工修改（{len(changes)} 处）；可撤销。")
+        except Exception as exc:
+            messagebox.showerror("保存员工失败", str(exc), parent=self)
+
+    def _undo_staff(self):
+        if not self.memory or not self.staff_last_backup:
+            self.staff_status.set("没有可撤销的员工修改")
+            return
+        if not messagebox.askyesno("撤销员工修改", "恢复上次保存的员工数据？", parent=self):
+            return
+        try:
+            self.memory.undo(self.staff_last_backup)
+            self.staff_last_backup = None
+            self._show_staff_team()
+            self.staff_status.set("已撤销上次员工修改")
+        except Exception as exc:
+            messagebox.showerror("撤销员工失败", str(exc), parent=self)
 
     def _make_profile_tab(self):
         area = ScrollFrame(self.tabs, padding=(20, 14))
@@ -1958,12 +2239,14 @@ class PlayerEditor(tk.Tk):
             return False
         self.last_backup = None
         self.playbook_last_backup = None
+        self.staff_last_backup = None
         self._reset_player()
         version = "" if self.memory.build_verified else " · 游戏版本未验证"
         self._set_connection(True, f"已连接 · {len(self.memory.players)} 名球员{version}")
         self.status.set("已连接游戏。从左侧选择球员，或停在游戏「编辑球员」页面后点「内存识别当前球员」。")
         if self.tabs.select() == str(self.playbook_page):
             self._refresh_playbooks()
+        self._refresh_staff_teams()
         return True
 
     def _reset_player(self):
