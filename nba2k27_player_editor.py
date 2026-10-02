@@ -1336,6 +1336,7 @@ class PlayerEditor(tk.Tk):
     def _make_staff_tab(self):
         page = ttk.Frame(self.tabs, padding=10)
         self.tabs.add(page, text="球队员工")
+        self.staff_page = page
         top = ttk.Frame(page)
         top.pack(fill="x")
         ttk.Label(top, text="球队").pack(side="left")
@@ -1409,9 +1410,11 @@ class PlayerEditor(tk.Tk):
             self.staff_field_tree.heading(key, text=title, anchor="w")
             self.staff_field_tree.column(key, width=width, minwidth=50, anchor="w")
         field_bar = ttk.Scrollbar(field_frame, orient="vertical", command=self.staff_field_tree.yview)
-        self.staff_field_tree.configure(yscrollcommand=field_bar.set)
+        field_xbar = ttk.Scrollbar(field_frame, orient="horizontal", command=self.staff_field_tree.xview)
+        self.staff_field_tree.configure(yscrollcommand=field_bar.set, xscrollcommand=field_xbar.set)
         self.staff_field_tree.pack(side="left", fill="both", expand=True)
         field_bar.pack(side="right", fill="y")
+        field_xbar.pack(side="bottom", fill="x")
         self.staff_field_tree.bind("<<TreeviewSelect>>", self._staff_field_select)
         field_controls = ttk.Frame(right, style="Card.TFrame")
         field_controls.grid(row=20, column=0, columnspan=3, sticky="ew", pady=(7, 0))
@@ -1420,7 +1423,7 @@ class PlayerEditor(tk.Tk):
         ttk.Button(field_controls, text="保存此字段", command=self._save_staff_field).pack(side="right")
         ttk.Button(field_controls, text="批量应用到选中员工", style="Accent.TButton",
                    command=self._staff_batch_field).pack(side="right", padx=8)
-        ttk.Button(field_controls, text="批量设为最高级", command=self._staff_batch_field_max).pack(side="right")
+        ttk.Button(field_controls, text="批量设为最大值", command=self._staff_batch_field_max).pack(side="right")
         right.columnconfigure(2, weight=1)
         right.rowconfigure(19, weight=1)
         right_scroll.bind_wheel()
@@ -1619,10 +1622,13 @@ class PlayerEditor(tk.Tk):
 
     def _staff_batch_field_max(self):
         field = self.staff_field_selected
-        if not field or "BADGE" not in field["id"]:
-            messagebox.showinfo("批量设为最高级", "请先选择一个徽章字段。", parent=self)
+        if not field:
+            messagebox.showinfo("批量设为最大值", "请先选择一个高级字段。", parent=self)
             return
-        self.staff_field_value.set(str(5 if field["bits"] >= 3 else 1))
+        if field["kind"] == "float":
+            messagebox.showinfo("批量设为最大值", "浮点字段没有统一的最大值，请手动输入。", parent=self)
+            return
+        self.staff_field_value.set(str((1 << field["bits"]) - 1))
         self._staff_batch_field()
 
     def _staff_batch_edit(self):
@@ -2540,17 +2546,21 @@ class PlayerEditor(tk.Tk):
 
     def _tab_changed(self, _event=None):
         playbook_open = self.tabs.select() == str(self.playbook_page)
+        staff_open = self.tabs.select() == str(self.staff_page)
         player_visible = str(self.player_panel) in self.main_panes.panes()
-        if playbook_open and player_visible:
+        hide_player_panel = playbook_open or staff_open
+        if hide_player_panel and player_visible:
             self.main_panes.forget(self.player_panel)
-        elif not playbook_open and not player_visible:
+        elif not hide_player_panel and not player_visible:
             self.main_panes.insert(0, self.player_panel, weight=0)
-        if not playbook_open:
+        if not playbook_open and not staff_open:
             return
         if not self.memory:
             self.connect()
-        elif not getattr(self.memory, "playbooks", None):
+        elif playbook_open and not getattr(self.memory, "playbooks", None):
             self._refresh_playbooks()
+        elif staff_open:
+            self._refresh_staff_teams()
 
     def _play_meta(self, crc: int) -> dict:
         entry = self.play_catalog.get(crc)
