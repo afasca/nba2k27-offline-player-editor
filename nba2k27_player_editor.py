@@ -1418,6 +1418,9 @@ class PlayerEditor(tk.Tk):
         ttk.Entry(field_controls, textvariable=self.staff_field_value, width=14, justify="center").pack(side="left")
         ttk.Label(field_controls, text="按字段定义的原始值", style="Muted.TLabel").pack(side="left", padx=8)
         ttk.Button(field_controls, text="保存此字段", command=self._save_staff_field).pack(side="right")
+        ttk.Button(field_controls, text="批量应用到选中员工", style="Accent.TButton",
+                   command=self._staff_batch_field).pack(side="right", padx=8)
+        ttk.Button(field_controls, text="批量设为最高级", command=self._staff_batch_field_max).pack(side="right")
         right.columnconfigure(2, weight=1)
         right.rowconfigure(19, weight=1)
         right_scroll.bind_wheel()
@@ -1479,11 +1482,10 @@ class PlayerEditor(tk.Tk):
 
     def _staff_select(self, _event=None):
         selected = self.staff_tree.selection()
-        item = self.staff_items.get(selected[0]) if len(selected) == 1 else None
+        item = self.staff_items.get(selected[0]) if selected else None
         self.staff_selected = item
         if not item:
             self._clear_staff_form()
-            self.staff_status.set(f"已选择 {len(selected)} 名员工；可使用批量修改") if selected else None
             self._refresh_staff_fields()
             return
         self.staff_first_name.set(item["first_name"])
@@ -1491,6 +1493,8 @@ class PlayerEditor(tk.Tk):
         self.staff_job.set(f"{item['job']} · {STAFF_JOB_NAMES.get(item['job'], f'未知职位 {item['job']}')}")
         for key, var in self.staff_attribute_inputs.items():
             var.set(str(item["attributes"].get(key, 0)))
+        if len(selected) > 1:
+            self.staff_status.set(f"已选择 {len(selected)} 名员工；高级字段显示第一名，可批量应用")
         self._refresh_staff_fields()
 
     def _staff_selected_items(self) -> list[dict]:
@@ -1504,11 +1508,13 @@ class PlayerEditor(tk.Tk):
         return (word >> field["shift"]) & ((1 << field["bits"]) - 1)
 
     @staticmethod
-    def _staff_field_pack(old_word: int, field: dict, value: int | float) -> bytes:
+    def _staff_field_pack(old_word: int, field: dict, value: int | float, *, clamp: bool = False) -> bytes:
         if field["kind"] == "float":
             return struct.pack("<f", float(value))
         maximum = (1 << field["bits"]) - 1
-        if not 0 <= int(value) <= maximum:
+        if clamp:
+            value = max(0, min(maximum, int(value)))
+        elif not 0 <= int(value) <= maximum:
             raise ValueError(f"{field['label']} 须在 0 到 {maximum} 之间")
         mask = maximum << field["shift"]
         return struct.pack("<I", (old_word & ~mask) | (int(value) << field["shift"]))
@@ -1543,7 +1549,7 @@ class PlayerEditor(tk.Tk):
         else:
             self.staff_field_value.set("")
 
-    def _staff_changes_for_field(self, staff: dict, field: dict, value: str) -> dict[int, bytes]:
+    def _staff_changes_for_field(self, staff: dict, field: dict, value: str, *, clamp: bool = False) -> dict[int, bytes]:
         try:
             parsed = float(value.strip()) if field["kind"] == "float" else int(value.strip(), 0)
         except ValueError:
@@ -1551,7 +1557,7 @@ class PlayerEditor(tk.Tk):
         if field["kind"] == "float" and not -1e9 <= parsed <= 1e9:
             raise ValueError(f"{field['label']} 超出允许范围")
         old_word = self.memory.u32(staff["address"] + field["offset"])
-        packed = self._staff_field_pack(old_word, field, parsed)
+        packed = self._staff_field_pack(old_word, field, parsed, clamp=clamp)
         if packed == self.memory.read(staff["address"] + field["offset"], 4):
             return {}
         return {field["offset"]: packed}
@@ -1562,7 +1568,7 @@ class PlayerEditor(tk.Tk):
             return
         try:
             changes = self._staff_changes_for_field(self.staff_selected, self.staff_field_selected,
-                                                    self.staff_field_value.get())
+                                                    self.staff_field_value.get(), clamp=True)
             if not changes:
                 self.staff_status.set("该字段没有变化")
                 return
@@ -1596,7 +1602,7 @@ class PlayerEditor(tk.Tk):
         buttons.pack(fill="x", padx=18, pady=20)
         def apply():
             try:
-                updates = [(staff, self._staff_changes_for_field(staff, field, value.get()))
+                updates = [(staff, self._staff_changes_for_field(staff, field, value.get(), clamp=True))
                            for staff in staff_list]
                 updates = [(staff, changes) for staff, changes in updates if changes]
                 if not updates:
@@ -1611,6 +1617,14 @@ class PlayerEditor(tk.Tk):
         ttk.Button(buttons, text="应用到选中员工", style="Accent.TButton", command=apply).pack(side="right", padx=8)
         dialog.bind("<Escape>", lambda _e: dialog.destroy())
 
+    def _staff_batch_field_max(self):
+        field = self.staff_field_selected
+        if not field or "BADGE" not in field["id"]:
+            messagebox.showinfo("批量设为最高级", "请先选择一个徽章字段。", parent=self)
+            return
+        self.staff_field_value.set(str(5 if field["bits"] >= 3 else 1))
+        self._staff_batch_field()
+
     def _staff_batch_edit(self):
         staff_list = self._staff_selected_items()
         if not staff_list:
@@ -1621,8 +1635,8 @@ class PlayerEditor(tk.Tk):
         dialog.transient(self)
         dialog.grab_set()
         dialog.geometry("520x520")
-        ttk.Label(dialog, text=f"对 {len(staff_list)} 名员工应用；空白属性保持原值。", style="Muted.TLabel").pack(
-            anchor="w", padx=18, pady=(16, 10))
+        ttk.Label(dialog, text=f"对 {len(staff_list)} 名员工应用；空白属性保持原值。",
+                  style="Muted.TLabel").pack(anchor="w", padx=18, pady=(16, 10))
         form = ttk.Frame(dialog)
         form.pack(fill="both", expand=True, padx=18)
         job = tk.StringVar(value="不修改")
@@ -1639,33 +1653,39 @@ class PlayerEditor(tk.Tk):
         buttons.pack(fill="x", padx=18, pady=16)
         def apply():
             try:
-                updates=[]
-                selected_job = None if job.get()=="不修改" else self._staff_job_value(job.get())
+                updates = []
+                selected_job = None if job.get() == "不修改" else self._staff_job_value(job.get())
                 for staff in staff_list:
-                    changes={}
+                    changes = {}
                     if selected_job is not None:
-                        old=self.memory.u32(staff['address']+STAFF_JOB_OFFSET)
-                        mask=((1<<STAFF_JOB_BITS)-1)<<STAFF_JOB_SHIFT
-                        changes[STAFF_JOB_OFFSET]=struct.pack('<I',(old&~mask)|(selected_job<<STAFF_JOB_SHIFT))
-                        target=self.memory.u32(staff['address']+STAFF_TARGET_JOB_OFFSET)
-                        tmask=((1<<STAFF_JOB_BITS)-1)<<STAFF_TARGET_JOB_SHIFT
-                        changes[STAFF_TARGET_JOB_OFFSET]=struct.pack('<I',(target&~tmask)|(selected_job<<STAFF_TARGET_JOB_SHIFT))
-                    for key,label,offset in STAFF_ATTRIBUTE_FIELDS:
-                        text=values[key].get().strip()
-                        if not text: continue
-                        number=int(text,0)
-                        if not 0<=number<=255: raise ValueError(f'{label} 须在 0 到 255 之间')
-                        changes[offset]=bytes([number])
-                    if changes: updates.append((staff,changes))
-                if not updates: raise ValueError('没有填写要修改的内容')
-                self.staff_last_backup=self.memory.apply_staff_many(updates,label='职位和基础属性')
-                dialog.destroy(); self._show_staff_team()
-                self.staff_status.set(f'已批量修改 {len(updates)} 名员工；可撤销')
+                        old = self.memory.u32(staff["address"] + STAFF_JOB_OFFSET)
+                        mask = ((1 << STAFF_JOB_BITS) - 1) << STAFF_JOB_SHIFT
+                        changes[STAFF_JOB_OFFSET] = struct.pack("<I", (old & ~mask) | (selected_job << STAFF_JOB_SHIFT))
+                        target = self.memory.u32(staff["address"] + STAFF_TARGET_JOB_OFFSET)
+                        target_mask = ((1 << STAFF_JOB_BITS) - 1) << STAFF_TARGET_JOB_SHIFT
+                        changes[STAFF_TARGET_JOB_OFFSET] = struct.pack(
+                            "<I", (target & ~target_mask) | (selected_job << STAFF_TARGET_JOB_SHIFT))
+                    for key, label, offset in STAFF_ATTRIBUTE_FIELDS:
+                        text = values[key].get().strip()
+                        if not text:
+                            continue
+                        number = int(text, 0)
+                        if not 0 <= number <= 255:
+                            raise ValueError(f"{label} 须在 0 到 255 之间")
+                        changes[offset] = bytes([number])
+                    if changes:
+                        updates.append((staff, changes))
+                if not updates:
+                    raise ValueError("没有填写要修改的内容")
+                self.staff_last_backup = self.memory.apply_staff_many(updates, label="职位和基础属性")
+                dialog.destroy()
+                self._show_staff_team()
+                self.staff_status.set(f"已批量修改 {len(updates)} 名员工；可撤销")
             except (ValueError, RuntimeError, OSError) as exc:
-                messagebox.showerror('批量修改员工失败',str(exc),parent=dialog)
-        ttk.Button(buttons,text='取消',command=dialog.destroy).pack(side='right')
-        ttk.Button(buttons,text='应用到选中员工',style='Accent.TButton',command=apply).pack(side='right',padx=8)
-        dialog.bind('<Escape>',lambda _e:dialog.destroy())
+                messagebox.showerror("批量修改员工失败", str(exc), parent=dialog)
+        ttk.Button(buttons, text="取消", command=dialog.destroy).pack(side="right")
+        ttk.Button(buttons, text="应用到选中员工", style="Accent.TButton", command=apply).pack(side="right", padx=8)
+        dialog.bind("<Escape>", lambda _e: dialog.destroy())
 
     def _clear_staff_form(self):
         self.staff_selected = None
