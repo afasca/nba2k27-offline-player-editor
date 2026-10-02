@@ -45,6 +45,7 @@ ADVANCED_FILE = Path(getattr(sys, "_MEIPASS", Path(__file__).parent)) / "player_
 APPEARANCE_FILE = Path(getattr(sys, "_MEIPASS", Path(__file__).parent)) / "player_appearance_fields.json"
 SIGNATURE_OPTIONS_FILE = Path(getattr(sys, "_MEIPASS", Path(__file__).parent)) / "player_signature_options.json"
 PLAYBOOK_PLAYS_FILE = Path(getattr(sys, "_MEIPASS", Path(__file__).parent)) / "playbook_plays.json"
+STAFF_FIELDS_FILE = Path(getattr(sys, "_MEIPASS", Path(__file__).parent)) / "staff_fields.json"
 BACKUP_DIR = Path.home() / "Documents" / "NBA2K27_PlayerEditor_Backups"
 SETTINGS_FILE = BACKUP_DIR / "editor_settings.json"
 PRESET_FILE = BACKUP_DIR / "presets.json"
@@ -568,6 +569,22 @@ class GameMemory:
         absolute = {address + offset: value for offset, value in changes.items()}
         return self.apply_many(absolute, label=f"球队员工 {label}")
 
+    def apply_staff_many(self, updates: list[tuple[dict, dict[int, bytes]]], *, label: str) -> Path:
+        """Apply one or more staff edits in one backup/undo operation."""
+        absolute: dict[int, bytes] = {}
+        for staff, changes in updates:
+            address = int(staff["address"])
+            current = self.read(address, STAFF_STRIDE)
+            if struct.unpack_from("<H", current, STAFF_UID_OFFSET)[0] != staff["uid"]:
+                raise RuntimeError("有员工记录已变化，请重新读取后再批量修改。")
+            if staff.get("team_ptr") and struct.unpack_from("<Q", current, STAFF_TEAM_OFFSET)[0] != staff["team_ptr"]:
+                raise RuntimeError("有员工所属球队已变化，请重新读取后再批量修改。")
+            for offset, value in changes.items():
+                absolute[address + offset] = value
+        if not absolute:
+            raise ValueError("没有需要写入的员工变化")
+        return self.apply_many(absolute, label=f"球队员工批量修改 · {label}")
+
     def refresh_playbooks(self):
         """Read the live roster's authored playbook array and play CRC slots."""
         root = self.u64(self.base + ROOT_RVA)
@@ -928,6 +945,7 @@ class PlayerEditor(tk.Tk):
         self.signature_options = json.loads(SIGNATURE_OPTIONS_FILE.read_text(encoding="utf-8"))
         self.play_catalog = {int(key, 16): {"name": value["name"], **classify_play(value["name"], value["word"])}
                              for key, value in json.loads(PLAYBOOK_PLAYS_FILE.read_text(encoding="utf-8")).items()}
+        self.staff_fields = json.loads(STAFF_FIELDS_FILE.read_text(encoding="utf-8"))
         self.signature_fields = [field for field in self.advanced_fields if field["section"] == "Signature"]
         self.memory: GameMemory | None = None
         self.selected: dict | None = None
@@ -988,6 +1006,10 @@ class PlayerEditor(tk.Tk):
         self.staff_last_name = tk.StringVar()
         self.staff_job = tk.StringVar()
         self.staff_attribute_inputs: dict[str, tk.StringVar] = {}
+        self.staff_field_search = tk.StringVar()
+        self.staff_field_value = tk.StringVar()
+        self.staff_field_selected: dict | None = None
+        self.staff_field_items: dict[str, dict] = {}
         self.staff_status = tk.StringVar(value="选择球队后读取员工")
         self._make_ui()
         self._refresh_preset_boxes()
@@ -1322,19 +1344,22 @@ class PlayerEditor(tk.Tk):
         self.staff_team_box.pack(side="left", padx=(8, 6), fill="x", expand=True)
         self.staff_team_box.bind("<<ComboboxSelected>>", lambda _event: self._show_staff_team())
         ttk.Button(top, text="重新读取", command=self._refresh_staff_teams).pack(side="left")
+        ttk.Button(top, text="批量修改属性", command=self._staff_batch_field).pack(side="left", padx=(6, 0))
+        ttk.Button(top, text="批量修改员工", command=self._staff_batch_edit).pack(side="left", padx=(6, 0))
         ttk.Label(page, text="可修改主教练、助理教练、训练师等员工的姓名、职位和主要能力。修改后点击保存员工；可单独撤销。",
                   style="Muted.TLabel").pack(anchor="w", pady=(8, 8))
 
         body = ttk.PanedWindow(page, orient="horizontal")
         body.pack(fill="both", expand=True)
         left = ttk.Frame(body, style="Card.TFrame", padding=8)
-        right = ttk.Frame(body, style="Card.TFrame", padding=14)
+        right_scroll = ScrollFrame(body, padding=14, style="Card.TFrame", background=P["panel"])
+        right = right_scroll.inner
         body.add(left, weight=2)
-        body.add(right, weight=3)
+        body.add(right_scroll, weight=3)
         tree_frame = ttk.Frame(left, style="Card.TFrame")
         tree_frame.pack(fill="both", expand=True)
         self.staff_tree = ttk.Treeview(tree_frame, columns=("job", "name", "slot"), show="headings",
-                                       selectmode="browse")
+                                       selectmode="extended")
         for key, title, width in (("job", "职位", 118), ("name", "姓名", 150), ("slot", "槽位", 48)):
             self.staff_tree.heading(key, text=title, anchor="w")
             self.staff_tree.column(key, width=width, minwidth=42, anchor="w")
@@ -1370,7 +1395,32 @@ class PlayerEditor(tk.Tk):
         ttk.Button(buttons, text="撤销员工修改", command=self._undo_staff).pack(side="left", padx=8)
         ttk.Label(right, textvariable=self.staff_status, style="Muted.TLabel", wraplength=380).grid(
             row=15, column=0, columnspan=3, sticky="w", pady=(12, 0))
+        ttk.Separator(right).grid(row=16, column=0, columnspan=3, sticky="ew", pady=(16, 8))
+        ttk.Label(right, text="高级员工字段（徽章 / 体系熟练度 / 合同 / 其他）",
+                  style="CardSection.TLabel").grid(row=17, column=0, columnspan=3, sticky="w", pady=(0, 6))
+        SearchBox(right, self.staff_field_search, "搜索字段，例如：徽章、熟练度、三角…", icons=self._icon).grid(
+            row=18, column=0, columnspan=3, sticky="ew", pady=(0, 6))
+        self.staff_field_search.trace_add("write", lambda *_: self._refresh_staff_fields())
+        field_frame = ttk.Frame(right, style="Card.TFrame")
+        field_frame.grid(row=19, column=0, columnspan=3, sticky="nsew")
+        self.staff_field_tree = ttk.Treeview(field_frame, columns=("category", "field", "value"),
+                                             show="headings", height=9)
+        for key, title, width in (("category", "类别", 92), ("field", "字段", 220), ("value", "值", 72)):
+            self.staff_field_tree.heading(key, text=title, anchor="w")
+            self.staff_field_tree.column(key, width=width, minwidth=50, anchor="w")
+        field_bar = ttk.Scrollbar(field_frame, orient="vertical", command=self.staff_field_tree.yview)
+        self.staff_field_tree.configure(yscrollcommand=field_bar.set)
+        self.staff_field_tree.pack(side="left", fill="both", expand=True)
+        field_bar.pack(side="right", fill="y")
+        self.staff_field_tree.bind("<<TreeviewSelect>>", self._staff_field_select)
+        field_controls = ttk.Frame(right, style="Card.TFrame")
+        field_controls.grid(row=20, column=0, columnspan=3, sticky="ew", pady=(7, 0))
+        ttk.Entry(field_controls, textvariable=self.staff_field_value, width=14, justify="center").pack(side="left")
+        ttk.Label(field_controls, text="按字段定义的原始值", style="Muted.TLabel").pack(side="left", padx=8)
+        ttk.Button(field_controls, text="保存此字段", command=self._save_staff_field).pack(side="right")
         right.columnconfigure(2, weight=1)
+        right.rowconfigure(19, weight=1)
+        right_scroll.bind_wheel()
 
     @staticmethod
     def _staff_job_choices() -> tuple[str, ...]:
@@ -1422,22 +1472,200 @@ class PlayerEditor(tk.Tk):
                     self.staff_tree.focus(first)
                     self.staff_tree.see(first)
             self.staff_status.set(f"{team['team']}：读取 {len(staff_list)} 名员工")
+            self._refresh_staff_fields()
         except Exception as exc:
             self._clear_staff_form()
             self.staff_status.set(str(exc))
 
     def _staff_select(self, _event=None):
         selected = self.staff_tree.selection()
-        item = self.staff_items.get(selected[0]) if selected else None
+        item = self.staff_items.get(selected[0]) if len(selected) == 1 else None
         self.staff_selected = item
         if not item:
             self._clear_staff_form()
+            self.staff_status.set(f"已选择 {len(selected)} 名员工；可使用批量修改") if selected else None
+            self._refresh_staff_fields()
             return
         self.staff_first_name.set(item["first_name"])
         self.staff_last_name.set(item["last_name"])
         self.staff_job.set(f"{item['job']} · {STAFF_JOB_NAMES.get(item['job'], f'未知职位 {item['job']}')}")
         for key, var in self.staff_attribute_inputs.items():
             var.set(str(item["attributes"].get(key, 0)))
+        self._refresh_staff_fields()
+
+    def _staff_selected_items(self) -> list[dict]:
+        return [self.staff_items[iid] for iid in self.staff_tree.selection() if iid in self.staff_items]
+
+    def _staff_field_raw(self, staff: dict, field: dict):
+        raw = self.memory.read(staff["address"] + field["offset"], 4)
+        if field["kind"] == "float":
+            return round(struct.unpack_from("<f", raw)[0], 5)
+        word = struct.unpack_from("<I", raw)[0]
+        return (word >> field["shift"]) & ((1 << field["bits"]) - 1)
+
+    @staticmethod
+    def _staff_field_pack(old_word: int, field: dict, value: int | float) -> bytes:
+        if field["kind"] == "float":
+            return struct.pack("<f", float(value))
+        maximum = (1 << field["bits"]) - 1
+        if not 0 <= int(value) <= maximum:
+            raise ValueError(f"{field['label']} 须在 0 到 {maximum} 之间")
+        mask = maximum << field["shift"]
+        return struct.pack("<I", (old_word & ~mask) | (int(value) << field["shift"]))
+
+    def _refresh_staff_fields(self):
+        if not hasattr(self, "staff_field_tree"):
+            return
+        self.staff_field_tree.delete(*self.staff_field_tree.get_children())
+        self.staff_field_items = {}
+        staff = self.staff_selected
+        if not self.memory or not staff:
+            self.staff_field_value.set("")
+            self.staff_field_selected = None
+            return
+        term = self.staff_field_search.get().strip().casefold()
+        for index, field in enumerate(self.staff_fields):
+            haystack = f"{field['section']} {field['group']} {field['id']} {field['label']}".casefold()
+            if term and term not in haystack:
+                continue
+            iid = f"field:{index}"
+            self.staff_field_items[iid] = field
+            self.staff_field_tree.insert("", "end", iid=iid,
+                                         values=(field["section"], field["label"], self._staff_field_raw(staff, field)))
+        self.staff_field_selected = None
+
+    def _staff_field_select(self, _event=None):
+        selected = self.staff_field_tree.selection()
+        field = self.staff_field_items.get(selected[0]) if selected else None
+        self.staff_field_selected = field
+        if field and self.staff_selected:
+            self.staff_field_value.set(str(self._staff_field_raw(self.staff_selected, field)))
+        else:
+            self.staff_field_value.set("")
+
+    def _staff_changes_for_field(self, staff: dict, field: dict, value: str) -> dict[int, bytes]:
+        try:
+            parsed = float(value.strip()) if field["kind"] == "float" else int(value.strip(), 0)
+        except ValueError:
+            raise ValueError(f"{field['label']}：请输入有效数值") from None
+        if field["kind"] == "float" and not -1e9 <= parsed <= 1e9:
+            raise ValueError(f"{field['label']} 超出允许范围")
+        old_word = self.memory.u32(staff["address"] + field["offset"])
+        packed = self._staff_field_pack(old_word, field, parsed)
+        if packed == self.memory.read(staff["address"] + field["offset"], 4):
+            return {}
+        return {field["offset"]: packed}
+
+    def _save_staff_field(self):
+        if not self.staff_selected or not self.staff_field_selected:
+            self.staff_status.set("请先选择一名员工和一个高级字段")
+            return
+        try:
+            changes = self._staff_changes_for_field(self.staff_selected, self.staff_field_selected,
+                                                    self.staff_field_value.get())
+            if not changes:
+                self.staff_status.set("该字段没有变化")
+                return
+            self.staff_last_backup = self.memory.apply_staff(self.staff_selected, changes,
+                                                              label=self.staff_selected["name"])
+            self._show_staff_team()
+            self.staff_status.set("已保存员工高级字段；可撤销")
+        except Exception as exc:
+            messagebox.showerror("保存员工字段失败", str(exc), parent=self)
+
+    def _staff_batch_field(self):
+        staff_list = self._staff_selected_items()
+        field = self.staff_field_selected
+        if not staff_list or not field:
+            messagebox.showinfo("批量修改属性", "请在左侧多选员工，并在高级字段列表中选择一个字段。", parent=self)
+            return
+        dialog = tk.Toplevel(self)
+        dialog.title("批量修改属性")
+        dialog.transient(self)
+        dialog.grab_set()
+        dialog.geometry("460x190")
+        ttk.Label(dialog, text=f"将「{field['label']}」应用到 {len(staff_list)} 名员工。", wraplength=410).pack(
+            anchor="w", padx=18, pady=(18, 10))
+        value = tk.StringVar(value=self.staff_field_value.get())
+        row = ttk.Frame(dialog)
+        row.pack(fill="x", padx=18)
+        ttk.Label(row, text="统一值").pack(side="left")
+        ttk.Entry(row, textvariable=value, width=18).pack(side="left", padx=10)
+        ttk.Label(row, text="原始值").pack(side="left")
+        buttons = ttk.Frame(dialog)
+        buttons.pack(fill="x", padx=18, pady=20)
+        def apply():
+            try:
+                updates = [(staff, self._staff_changes_for_field(staff, field, value.get()))
+                           for staff in staff_list]
+                updates = [(staff, changes) for staff, changes in updates if changes]
+                if not updates:
+                    raise ValueError("所有选中员工已经是这个值")
+                self.staff_last_backup = self.memory.apply_staff_many(updates, label=field["label"])
+                dialog.destroy()
+                self._show_staff_team()
+                self.staff_status.set(f"已批量修改 {len(updates)} 名员工的{field['label']}；可撤销")
+            except Exception as exc:
+                messagebox.showerror("批量修改属性失败", str(exc), parent=dialog)
+        ttk.Button(buttons, text="取消", command=dialog.destroy).pack(side="right")
+        ttk.Button(buttons, text="应用到选中员工", style="Accent.TButton", command=apply).pack(side="right", padx=8)
+        dialog.bind("<Escape>", lambda _e: dialog.destroy())
+
+    def _staff_batch_edit(self):
+        staff_list = self._staff_selected_items()
+        if not staff_list:
+            messagebox.showinfo("批量修改员工", "请先在左侧多选员工。", parent=self)
+            return
+        dialog = tk.Toplevel(self)
+        dialog.title("批量修改员工")
+        dialog.transient(self)
+        dialog.grab_set()
+        dialog.geometry("520x520")
+        ttk.Label(dialog, text=f"对 {len(staff_list)} 名员工应用；空白属性保持原值。", style="Muted.TLabel").pack(
+            anchor="w", padx=18, pady=(16, 10))
+        form = ttk.Frame(dialog)
+        form.pack(fill="both", expand=True, padx=18)
+        job = tk.StringVar(value="不修改")
+        ttk.Label(form, text="职位").grid(row=0, column=0, sticky="w", pady=5)
+        ttk.Combobox(form, textvariable=job, state="readonly", width=28,
+                     values=("不修改", *self._staff_job_choices())).grid(row=0, column=1, sticky="w", pady=5)
+        values: dict[str, tk.StringVar] = {}
+        for row, (key, label, _offset) in enumerate(STAFF_ATTRIBUTE_FIELDS, start=1):
+            values[key] = tk.StringVar()
+            ttk.Label(form, text=label).grid(row=row, column=0, sticky="w", pady=4)
+            ttk.Entry(form, textvariable=values[key], width=14).grid(row=row, column=1, sticky="w", pady=4)
+            ttk.Label(form, text="空白保持原值").grid(row=row, column=2, sticky="w", padx=8)
+        buttons = ttk.Frame(dialog)
+        buttons.pack(fill="x", padx=18, pady=16)
+        def apply():
+            try:
+                updates=[]
+                selected_job = None if job.get()=="不修改" else self._staff_job_value(job.get())
+                for staff in staff_list:
+                    changes={}
+                    if selected_job is not None:
+                        old=self.memory.u32(staff['address']+STAFF_JOB_OFFSET)
+                        mask=((1<<STAFF_JOB_BITS)-1)<<STAFF_JOB_SHIFT
+                        changes[STAFF_JOB_OFFSET]=struct.pack('<I',(old&~mask)|(selected_job<<STAFF_JOB_SHIFT))
+                        target=self.memory.u32(staff['address']+STAFF_TARGET_JOB_OFFSET)
+                        tmask=((1<<STAFF_JOB_BITS)-1)<<STAFF_TARGET_JOB_SHIFT
+                        changes[STAFF_TARGET_JOB_OFFSET]=struct.pack('<I',(target&~tmask)|(selected_job<<STAFF_TARGET_JOB_SHIFT))
+                    for key,label,offset in STAFF_ATTRIBUTE_FIELDS:
+                        text=values[key].get().strip()
+                        if not text: continue
+                        number=int(text,0)
+                        if not 0<=number<=255: raise ValueError(f'{label} 须在 0 到 255 之间')
+                        changes[offset]=bytes([number])
+                    if changes: updates.append((staff,changes))
+                if not updates: raise ValueError('没有填写要修改的内容')
+                self.staff_last_backup=self.memory.apply_staff_many(updates,label='职位和基础属性')
+                dialog.destroy(); self._show_staff_team()
+                self.staff_status.set(f'已批量修改 {len(updates)} 名员工；可撤销')
+            except (ValueError, RuntimeError, OSError) as exc:
+                messagebox.showerror('批量修改员工失败',str(exc),parent=dialog)
+        ttk.Button(buttons,text='取消',command=dialog.destroy).pack(side='right')
+        ttk.Button(buttons,text='应用到选中员工',style='Accent.TButton',command=apply).pack(side='right',padx=8)
+        dialog.bind('<Escape>',lambda _e:dialog.destroy())
 
     def _clear_staff_form(self):
         self.staff_selected = None
