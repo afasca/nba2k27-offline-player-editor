@@ -7,7 +7,7 @@ a = Analysis(
     binaries=[],
     datas=[('player_fields.json', '.'), ('player_extra_fields.json', '.'),
            ('player_advanced_fields.json', '.'), ('player_appearance_fields.json', '.'),
-           ('player_signature_options.json', '.'), ('playbook_plays.json', '.')],
+           ('player_signature_options.json', '.'), ('playbook_plays.json', '.'), ('staff_fields.json', '.')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},

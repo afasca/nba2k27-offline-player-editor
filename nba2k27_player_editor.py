@@ -20,6 +20,7 @@ from collections import Counter
 from decimal import Decimal, InvalidOperation, ROUND_FLOOR
 
 import psutil
+import staff_editor as staffui
 from playbook_catalog import DETAIL_ORDER, GROUP_DETAILS, POSITION_NAMES, TYPE_ORDER, classify_play
 from team_badges import BadgeFactory, colors_from_record, fallback_colors, mix, tier_color
 import ui_theme as theme
@@ -446,7 +447,7 @@ class GameMemory:
     def _load_players(self) -> list[dict]:
         data = self.read(self.table, self.count * PLAYER_STRIDE)
         stats = self.read(self.stats_table, self.stats_count * 64) if self.stats_table and 0 < self.stats_count < 100000 else b""
-        free_agent = {"team": FREE_AGENT, "league": FREE_AGENT, "nick": "", "abbr": "FA",
+        free_agent = {"team": FREE_AGENT, "league": FREE_AGENT, "nick": "", "abbr": "FA", "team_ptr": 0,
                       "colors": ("#343a46", "#8b93a1")}
         team_details: dict[int, dict] = {}
         self.teams = {(FREE_AGENT, FREE_AGENT): free_agent}
@@ -466,11 +467,11 @@ class GameMemory:
                         roster_type = (self.u32(team_ptr + 4668) >> 26) & 63
                         abbr = decode_name(self.read(team_ptr + TEAM_ABBR_OFFSET, 14))
                         colors = colors_from_record(self.read(team_ptr + TEAM_COLOR_OFFSET, 8))
-                        info = {"team": team_name, "league": classify_league(team_name, roster_type),
+                        info = {"team": team_name, "league": classify_league(team_name, roster_type), "team_ptr": team_ptr,
                                 "nick": nickname.strip(), "abbr": abbr.upper()[:4],
                                 "colors": colors or fallback_colors(team_name)}
                     except OSError:
-                        info = {"team": "球队未知", "league": "其他联赛", "nick": "", "abbr": "?",
+                        info = {"team": "球队未知", "league": "其他联赛", "nick": "", "abbr": "?", "team_ptr": team_ptr,
                                 "colors": fallback_colors("球队未知")}
                     if not info["abbr"]:
                         info["abbr"] = "".join(word[0] for word in info["team"].split()[:3]).upper() or "?"
@@ -492,6 +493,94 @@ class GameMemory:
 
     def team_info(self, player: dict) -> dict:
         return self.teams.get((player["league"], player["team"])) or self.teams[(FREE_AGENT, FREE_AGENT)]
+
+    def _staff_layout(self) -> tuple[int, int, int]:
+        if not self.build_verified:
+            raise RuntimeError("员工数据尚未适配当前游戏版本，已停止读取和写入。")
+        root = self.u64(self.base + ROOT_RVA)
+        roster = self.u64(root + 168) if root else 0
+        count = self.u32(roster + staffui.STAFF_COUNT_OFFSET) if roster else 0
+        table = self.u64(roster + staffui.STAFF_TABLE_OFFSET) if roster else 0
+        if not table or not 1 <= count <= 20000:
+            raise RuntimeError("员工表尚未载入。请进入已载入名单的游戏页面后重新读取员工。")
+        return roster, count, table
+
+    def refresh_staff(self) -> list[dict]:
+        roster, count, table = self._staff_layout()
+        data = self.read(table, count * staffui.STAFF_SIZE)
+        teams = {info["team_ptr"]: info for info in self.teams.values() if info.get("team_ptr")}
+        people = []
+        for index in range(count):
+            row = data[index * staffui.STAFF_SIZE:(index + 1) * staffui.STAFF_SIZE]
+            first = decode_name(row[staffui.STAFF_FIRST_OFFSET:staffui.STAFF_FIRST_OFFSET + 40])
+            last = decode_name(row[staffui.STAFF_LAST_OFFSET:staffui.STAFF_LAST_OFFSET + 40])
+            if not first or not last:
+                continue
+            team_ptr = struct.unpack_from("<Q", row, staffui.STAFF_TEAM_OFFSET)[0]
+            if team_ptr and team_ptr not in teams:
+                try:
+                    team_row = self.read(team_ptr + 762, 86)
+                    nickname = decode_name(team_row[:50])
+                    city = decode_name(team_row[50:86])
+                    name = f"{city} {nickname}".strip() or "球队未知"
+                    roster_type = (self.u32(team_ptr + 4668) >> 26) & 63
+                    teams[team_ptr] = {"team": name, "league": classify_league(name, roster_type)}
+                except OSError:
+                    teams[team_ptr] = {"team": "球队未知", "league": "其他联赛"}
+            info = teams.get(team_ptr, {"team": staffui.UNSIGNED, "league": staffui.UNSIGNED})
+            label = f"{info['team']} · {info['league']}" if team_ptr else staffui.UNSIGNED
+            people.append({"index": index, "address": table + index * staffui.STAFF_SIZE,
+                           "uid": struct.unpack_from("<H", row, staffui.STAFF_UID_OFFSET)[0],
+                           "team_ptr": team_ptr, "team": info["team"], "team_label": label, "league": info["league"],
+                           "name": f"{first} {last}", "first_name": first, "last_name": last, "job": row[386] & 31})
+        if not people or self._staff_layout() != (roster, count, table):
+            raise RuntimeError("游戏正在切换名单，员工记录已变化。请等待载入完成后重新读取。")
+        self.staff_roster, self.staff_count, self.staff_table = roster, count, table
+        self.staff = people
+        return people
+
+    def staff_snapshot(self, person: dict) -> bytes:
+        expected = (getattr(self, "staff_roster", None), getattr(self, "staff_count", None), getattr(self, "staff_table", None))
+        if self._staff_layout() != expected:
+            raise RuntimeError("员工名单已切换，请重新读取员工后再修改。")
+        index = person["index"]
+        if not 0 <= index < self.staff_count or person["address"] != self.staff_table + index * staffui.STAFF_SIZE:
+            raise RuntimeError("员工地址验证失败，已停止修改。")
+        row = self.read(person["address"], staffui.STAFF_SIZE)
+        if (struct.unpack_from("<H", row, staffui.STAFF_UID_OFFSET)[0] != person["uid"] or
+                struct.unpack_from("<Q", row, staffui.STAFF_TEAM_OFFSET)[0] != person["team_ptr"]):
+            raise RuntimeError("所选员工已变化，请重新读取员工。")
+        return row
+
+    def apply_staff_many(self, updates: list[tuple[dict, dict, dict]], fields: list[dict], *, label: str) -> Path | None:
+        if not updates:
+            raise ValueError("请选择要修改的员工")
+        changes, identities, seen = {}, [], set()
+        for person, values, names in updates:
+            if person["index"] in seen:
+                raise ValueError("批量列表包含重复员工")
+            seen.add(person["index"])
+            row = self.staff_snapshot(person)
+            parts = staffui.build_changes(row, fields, values, names)
+            changes.update({person["address"] + offset: value for offset, value in parts.items()})
+            if parts:
+                identities.append({key: person[key] for key in ("index", "address", "uid", "team_ptr")})
+        if not changes:
+            return None
+        context = {"kind": "staff", "roster": self.staff_roster, "count": self.staff_count,
+                   "table": self.staff_table, "people": identities}
+        return self.apply_many(changes, label=f"员工 · {label}", context=context)
+
+    def undo_staff(self, backup: Path):
+        saved = json.loads(backup.read_text(encoding="utf-8"))
+        context = saved.get("context", {})
+        if saved["pid"] != self.pid or context.get("kind") != "staff":
+            raise RuntimeError("这份员工备份不属于当前游戏进程。")
+        if self._staff_layout() != (context["roster"], context["count"], context["table"]):
+            raise RuntimeError("游戏已切换名单，不能用旧员工地址撤销。")
+        for person in context["people"]:
+            self.staff_snapshot(person)
+        self.undo(backup)
 
     def refresh_playbooks(self):
         """Read the live roster's authored playbook array and play CRC slots."""
@@ -712,22 +801,23 @@ class GameMemory:
         for entry in reversed(entries):
             self.write_verified(int(entry["address"]), bytes.fromhex(entry["before"]))
 
-    def apply_many(self, changes: dict[int, bytes], *, label: str) -> Path:
+    def apply_many(self, changes: dict[int, bytes], *, label: str, context: dict | None = None) -> Path:
         if not changes:
             raise ValueError("目标球员已有相同的 DNA，没有需要写入的变化")
         old = {address: self.read(address, len(value)) for address, value in changes.items()}
         BACKUP_DIR.mkdir(parents=True, exist_ok=True)
-        backup = BACKUP_DIR / f"{time.strftime('%Y%m%d_%H%M%S')}_{time.time_ns()}_{self.pid}_dna.json"
+        kind = "staff" if context and context.get("kind") == "staff" else "dna"
+        backup = BACKUP_DIR / f"{time.strftime('%Y%m%d_%H%M%S')}_{time.time_ns()}_{self.pid}_{kind}.json"
         backup.write_text(json.dumps({
-            "pid": self.pid, "player": label,
+            "pid": self.pid, "player": label, "context": context,
             "values": [{"address": address, "before": value.hex(), "after": changes[address].hex()}
                        for address, value in old.items()],
         }, ensure_ascii=False, indent=2), encoding="utf-8")
         written = []
         try:
             for address, value in changes.items():
-                self.write_verified(address, value)
                 written.append(address)
+                self.write_verified(address, value)
         except Exception:
             for address in reversed(written):
                 try:
@@ -958,12 +1048,14 @@ class PlayerEditor(tk.Tk):
         bottom = ttk.Frame(self, style="Bar.TFrame", padding=(16, 10))
         bottom.pack(side="bottom", fill="x")
         self.save_button = ttk.Button(bottom, text="保存修改", image=self._icon("save", P["accent_text"]),
-                                      compound="left", style="Accent.TButton", command=self.save)
+                                      compound="left", style="Accent.TButton", command=self._context_save)
         self.save_button.pack(side="right")
-        for text, icon, command in (("撤销上次保存", "undo", self.undo), ("重新读取", "refresh", self._reload_clicked),
-                                    ("批量修改", "edit", self.batch_edit), ("复制 DNA", "copy", self.copy_dna_dialog)):
-            ttk.Button(bottom, text=text, image=self._icon(icon), compound="left", style="Bar.TButton",
-                       command=command).pack(side="right", padx=(0, 8))
+        for text, icon, command in (("撤销上次保存", "undo", self._context_undo), ("重新读取", "refresh", self._context_reload),
+                                    ("批量修改", "edit", self._context_batch), ("复制 DNA", "copy", self.copy_dna_dialog)):
+            button = ttk.Button(bottom, text=text, image=self._icon(icon), compound="left", style="Bar.TButton", command=command)
+            button.pack(side="right", padx=(0, 8))
+            if icon == "copy":
+                self.dna_button = button
         ttk.Label(bottom, textvariable=self.dirty_text, style="Pending.TLabel").pack(side="right", padx=(0, 16))
         ttk.Label(bottom, textvariable=self.status, style="Status.TLabel").pack(side="left", fill="x", expand=True)
 
@@ -982,6 +1074,7 @@ class PlayerEditor(tk.Tk):
         self.tabs = ttk.Notebook(right)
         self.tabs.pack(fill="both", expand=True, pady=(10, 0))
         self._make_profile_tab()
+        self.staff_panel = staffui.StaffPanel(self.tabs, self)
         self._make_body_tab()
         self._make_rating_tab()
         self._make_extra_tabs()
@@ -1031,6 +1124,7 @@ class PlayerEditor(tk.Tk):
     def _make_player_card(self, parent):
         card = ttk.Frame(parent, style="Card.TFrame", padding=(0, 0, 16, 0))
         card.pack(fill="x")
+        self.player_card = card
         self.card_stripe = tk.Frame(card, width=5, bg=P["border"])
         self.card_stripe.pack(side="left", fill="y")
         self.card_badge = ttk.Label(card, style="Card.TLabel")
@@ -1129,13 +1223,35 @@ class PlayerEditor(tk.Tk):
         def run(action):
             return lambda _event: (action(), "break")[1]
         for sequence in ("<Control-s>", "<Control-S>"):
-            self.bind(sequence, run(self.save))
+            self.bind(sequence, run(self._context_save))
         for sequence in ("<Control-d>", "<Control-D>"):
-            self.bind(sequence, run(self.detect_current))
+            self.bind(sequence, run(lambda: None if self._staff_open() else self.detect_current()))
         for sequence in ("<Control-f>", "<Control-F>"):
-            self.bind(sequence, run(lambda: (self.search_entry.focus_set(),
-                                             self.search_entry.select_range(0, "end"))))
-        self.bind("<F5>", run(self._reload_clicked))
+            self.bind(sequence, run(self._context_search))
+        self.bind("<F5>", run(self._context_reload))
+
+    def _staff_open(self) -> bool:
+        return self.tabs.select() == str(self.staff_panel)
+
+    def _context_save(self):
+        return self.staff_panel.save() if self._staff_open() else self.save()
+
+    def _context_undo(self):
+        return self.staff_panel.undo() if self._staff_open() else self.undo()
+
+    def _context_batch(self):
+        return self.staff_panel.batch_dialog() if self._staff_open() else self.batch_edit()
+
+    def _context_reload(self):
+        return self.staff_panel.reload() if self._staff_open() else self._reload_clicked()
+
+    def _context_search(self):
+        if self._staff_open():
+            self.staff_panel.search_entry.focus_set()
+            self.staff_panel.search_entry.select_range(0, "end")
+        else:
+            self.search_entry.focus_set()
+            self.search_entry.select_range(0, "end")
 
     def _track(self, var: tk.Variable, widget: ttk.Widget, pages: list[tuple], changed):
         """Register an input so edits are highlighted and counted before saving."""
@@ -1942,6 +2058,8 @@ class PlayerEditor(tk.Tk):
     def connect(self, *, quiet: bool = False) -> bool:
         if not quiet and not self._confirm_discard("重新连接"):
             return False
+        if not quiet and not self.staff_panel.confirm_pending("重新连接"):
+            return False
         if self.detect_pending:
             self._finish_detect()
         try:
@@ -1952,6 +2070,7 @@ class PlayerEditor(tk.Tk):
         except Exception as exc:
             self.memory = None
             self._reset_player()
+            self.staff_panel.reset()
             self._set_connection(False, "未连接")
             if not quiet:
                 self.status.set(str(exc))
@@ -1959,11 +2078,14 @@ class PlayerEditor(tk.Tk):
         self.last_backup = None
         self.playbook_last_backup = None
         self._reset_player()
+        self.staff_panel.reset()
         version = "" if self.memory.build_verified else " · 游戏版本未验证"
         self._set_connection(True, f"已连接 · {len(self.memory.players)} 名球员{version}")
         self.status.set("已连接游戏。从左侧选择球员，或停在游戏「编辑球员」页面后点「内存识别当前球员」。")
         if self.tabs.select() == str(self.playbook_page):
             self._refresh_playbooks()
+        elif self._staff_open():
+            self.staff_panel.reload(confirm=False, reset_backup=True)
         return True
 
     def _reset_player(self):
@@ -1992,6 +2114,7 @@ class PlayerEditor(tk.Tk):
                 self.memory.close()
                 self.memory = None
                 self._reset_player()
+                self.staff_panel.reset()
                 self._set_connection(False, "游戏已关闭")
                 self.status.set("游戏已关闭。重新启动游戏后会自动连接。")
             elif not self.memory and not self.detect_pending:
@@ -2009,11 +2132,29 @@ class PlayerEditor(tk.Tk):
 
     def _tab_changed(self, _event=None):
         playbook_open = self.tabs.select() == str(self.playbook_page)
+        staff_open = self._staff_open()
         player_visible = str(self.player_panel) in self.main_panes.panes()
-        if playbook_open and player_visible:
+        if (playbook_open or staff_open) and player_visible:
             self.main_panes.forget(self.player_panel)
-        elif not playbook_open and not player_visible:
+        elif not (playbook_open or staff_open) and not player_visible:
             self.main_panes.insert(0, self.player_panel, weight=0)
+        if staff_open:
+            self.player_card.pack_forget()
+            self.dna_button.state(["disabled"])
+            self.detect_button.state(["disabled"])
+            self.deep_button.state(["disabled"])
+            self.status.set("员工修改：支持多选、整队、当前联赛和全部员工批量修改。")
+            if not self.memory:
+                self.connect()
+            elif not self.staff_panel.people:
+                self.staff_panel.reload(confirm=False)
+            return
+        if not self.player_card.winfo_manager():
+            self.player_card.pack(fill="x", before=self.tabs)
+        self.dna_button.state(["!disabled"])
+        if not self.detect_pending:
+            self.detect_button.state(["!disabled"])
+            self.deep_button.state(["!disabled"])
         if not playbook_open:
             return
         if not self.memory:
@@ -2888,6 +3029,8 @@ class PlayerEditor(tk.Tk):
 
     def _quit(self):
         if not self._confirm_discard("退出"):
+            return
+        if not self.staff_panel.confirm_pending("退出"):
             return
         zoomed = self.state() == "zoomed"
         self.settings["zoomed"] = zoomed
